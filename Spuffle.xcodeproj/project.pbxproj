@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC57F9612316593B0054F19C /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */; };
 		DCC0B52C23139181007F76A6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC0B52B23139181007F76A6 /* AppDelegate.swift */; };
 		DCC0B52E23139181007F76A6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC0B52D23139181007F76A6 /* ViewController.swift */; };
 		DCC0B53123139181007F76A6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCC0B52F23139181007F76A6 /* Main.storyboard */; };
@@ -15,6 +16,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyAuthentication.framework; path = Frameworks/SpotifyAuthentication.framework; sourceTree = "<group>"; };
+		DC57F96223165A850054F19C /* Spuffle-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Spuffle-Bridging-Header.h"; sourceTree = "<group>"; };
 		DCC0B52823139181007F76A6 /* Spuffle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spuffle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCC0B52B23139181007F76A6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DCC0B52D23139181007F76A6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -29,12 +32,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC57F9612316593B0054F19C /* SpotifyAuthentication.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DC57F95F2316593B0054F19C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		DCC0B52923139181007F76A6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -59,8 +71,10 @@
 		DCF828DC2312DB5C001FBFC2 = {
 			isa = PBXGroup;
 			children = (
+				DC57F96223165A850054F19C /* Spuffle-Bridging-Header.h */,
 				DCC0B52A23139181007F76A6 /* Spuffle */,
 				DCC0B52923139181007F76A6 /* Products */,
+				DC57F95F2316593B0054F19C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -201,6 +215,10 @@
 				DEVELOPMENT_TEAM = 49WVTKH5U8;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -274,6 +292,10 @@
 				DEVELOPMENT_TEAM = 49WVTKH5U8;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -304,12 +326,16 @@
 		DCF828E12312DB5C001FBFC2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_LDFLAGS = "-ObjC";
+				SWIFT_OBJC_BRIDGING_HEADER = "Spuffle-Bridging-Header.h";
 			};
 			name = Debug;
 		};
 		DCF828E22312DB5C001FBFC2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_LDFLAGS = "-ObjC";
+				SWIFT_OBJC_BRIDGING_HEADER = "Spuffle-Bridging-Header.h";
 			};
 			name = Release;
 		};
