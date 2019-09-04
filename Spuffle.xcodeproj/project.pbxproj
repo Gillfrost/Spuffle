@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		DC57F9612316593B0054F19C /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */; };
 		DCC0B52C23139181007F76A6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC0B52B23139181007F76A6 /* AppDelegate.swift */; };
-		DCC0B52E23139181007F76A6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC0B52D23139181007F76A6 /* ViewController.swift */; };
+		DCC0B52E23139181007F76A6 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC0B52D23139181007F76A6 /* SignInViewController.swift */; };
 		DCC0B53123139181007F76A6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCC0B52F23139181007F76A6 /* Main.storyboard */; };
 		DCC0B53323139182007F76A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCC0B53223139182007F76A6 /* Assets.xcassets */; };
 		DCC0B53623139182007F76A6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCC0B53423139182007F76A6 /* LaunchScreen.storyboard */; };
@@ -20,7 +20,7 @@
 		DC57F96223165A850054F19C /* Spuffle-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Spuffle-Bridging-Header.h"; sourceTree = "<group>"; };
 		DCC0B52823139181007F76A6 /* Spuffle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spuffle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCC0B52B23139181007F76A6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		DCC0B52D23139181007F76A6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		DCC0B52D23139181007F76A6 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		DCC0B53023139181007F76A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DCC0B53223139182007F76A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DCC0B53523139182007F76A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -59,7 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				DCC0B52B23139181007F76A6 /* AppDelegate.swift */,
-				DCC0B52D23139181007F76A6 /* ViewController.swift */,
+				DCC0B52D23139181007F76A6 /* SignInViewController.swift */,
 				DCC0B52F23139181007F76A6 /* Main.storyboard */,
 				DCC0B53223139182007F76A6 /* Assets.xcassets */,
 				DCC0B53423139182007F76A6 /* LaunchScreen.storyboard */,
@@ -148,7 +148,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCC0B52E23139181007F76A6 /* ViewController.swift in Sources */,
+				DCC0B52E23139181007F76A6 /* SignInViewController.swift in Sources */,
 				DCC0B52C23139181007F76A6 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
