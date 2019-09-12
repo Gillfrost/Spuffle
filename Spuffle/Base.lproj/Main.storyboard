@@ -26,7 +26,7 @@
                                     <constraint firstAttribute="width" constant="250" id="YwJ-Bt-a1R"/>
                                 </constraints>
                                 <connections>
-                                    <action selector="signIn" destination="BYZ-38-t0r" eventType="valueChanged" id="EC4-lv-96a"/>
+                                    <action selector="signIn" destination="BYZ-38-t0r" eventType="touchUpInside" id="Hpo-dl-FsT"/>
                                 </connections>
                             </view>
                         </subviews>
@@ -37,9 +37,40 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="signInButton" destination="6TK-SH-nSI" id="YUh-GX-lgK"/>
+                        <segue destination="Amm-qq-O7W" kind="show" identifier="spuffle" id="pPX-BD-Ef5"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="JfT-67-Iya">
+            <objects>
+                <viewController id="Amm-qq-O7W" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="XTp-eJ-aGH">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Spuffle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gva-Id-YFK">
+                                <rect key="frame" x="179.5" y="437.5" width="55" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Gva-Id-YFK" firstAttribute="centerX" secondItem="XTp-eJ-aGH" secondAttribute="centerX" id="TGa-ic-nqE"/>
+                            <constraint firstItem="Gva-Id-YFK" firstAttribute="centerY" secondItem="XTp-eJ-aGH" secondAttribute="centerY" id="yce-mY-4ow"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="1Yq-t0-fb6"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="55O-l6-jeB" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="48" y="723"/>
         </scene>
     </scenes>
 </document>
