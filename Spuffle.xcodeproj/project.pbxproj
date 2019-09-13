@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		DC57F9612316593B0054F19C /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */; };
+		DCAEADE7232B4E8D006FCC49 /* AppSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAEADE6232B4E8D006FCC49 /* AppSecrets.swift */; };
 		DCC0B52C23139181007F76A6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC0B52B23139181007F76A6 /* AppDelegate.swift */; };
 		DCC0B52E23139181007F76A6 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC0B52D23139181007F76A6 /* SignInViewController.swift */; };
 		DCC0B53123139181007F76A6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCC0B52F23139181007F76A6 /* Main.storyboard */; };
@@ -18,6 +19,7 @@
 /* Begin PBXFileReference section */
 		DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyAuthentication.framework; path = Frameworks/SpotifyAuthentication.framework; sourceTree = "<group>"; };
 		DC57F96223165A850054F19C /* Spuffle-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Spuffle-Bridging-Header.h"; sourceTree = "<group>"; };
+		DCAEADE6232B4E8D006FCC49 /* AppSecrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSecrets.swift; sourceTree = "<group>"; };
 		DCC0B52823139181007F76A6 /* Spuffle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spuffle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCC0B52B23139181007F76A6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DCC0B52D23139181007F76A6 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
@@ -64,6 +66,7 @@
 				DCC0B53223139182007F76A6 /* Assets.xcassets */,
 				DCC0B53423139182007F76A6 /* LaunchScreen.storyboard */,
 				DCC0B53723139182007F76A6 /* Info.plist */,
+				DCAEADE6232B4E8D006FCC49 /* AppSecrets.swift */,
 			);
 			path = Spuffle;
 			sourceTree = "<group>";
@@ -150,6 +153,7 @@
 			files = (
 				DCC0B52E23139181007F76A6 /* SignInViewController.swift in Sources */,
 				DCC0B52C23139181007F76A6 /* AppDelegate.swift in Sources */,
+				DCAEADE7232B4E8D006FCC49 /* AppSecrets.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
