@@ -45,10 +45,10 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
         </scene>
-        <!--View Controller-->
+        <!--Spuffle View Controller-->
         <scene sceneID="JfT-67-Iya">
             <objects>
-                <viewController id="Amm-qq-O7W" sceneMemberID="viewController">
+                <viewController id="Amm-qq-O7W" customClass="SpuffleViewController" customModule="Spuffle" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XTp-eJ-aGH">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -70,7 +70,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="55O-l6-jeB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="48" y="723"/>
+            <point key="canvasLocation" x="667" y="777"/>
         </scene>
     </scenes>
 </document>
