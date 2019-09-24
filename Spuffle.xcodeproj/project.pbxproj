@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC0EA8CF23387D08005FB35B /* SpotifyMetadata.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0EA8CE23387D08005FB35B /* SpotifyMetadata.framework */; };
 		DC57F9612316593B0054F19C /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */; };
 		DCAEADE7232B4E8D006FCC49 /* AppSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAEADE6232B4E8D006FCC49 /* AppSecrets.swift */; };
 		DCC0B52C23139181007F76A6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC0B52B23139181007F76A6 /* AppDelegate.swift */; };
@@ -14,9 +15,11 @@
 		DCC0B53123139181007F76A6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCC0B52F23139181007F76A6 /* Main.storyboard */; };
 		DCC0B53323139182007F76A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCC0B53223139182007F76A6 /* Assets.xcassets */; };
 		DCC0B53623139182007F76A6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCC0B53423139182007F76A6 /* LaunchScreen.storyboard */; };
+		DCEEFFA72331E15B00849984 /* SpuffleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEEFFA62331E15B00849984 /* SpuffleViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DC0EA8CE23387D08005FB35B /* SpotifyMetadata.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyMetadata.framework; path = Frameworks/SpotifyMetadata.framework; sourceTree = "<group>"; };
 		DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyAuthentication.framework; path = Frameworks/SpotifyAuthentication.framework; sourceTree = "<group>"; };
 		DC57F96223165A850054F19C /* Spuffle-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Spuffle-Bridging-Header.h"; sourceTree = "<group>"; };
 		DCAEADE6232B4E8D006FCC49 /* AppSecrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSecrets.swift; sourceTree = "<group>"; };
@@ -27,6 +30,7 @@
 		DCC0B53223139182007F76A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DCC0B53523139182007F76A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DCC0B53723139182007F76A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DCEEFFA62331E15B00849984 /* SpuffleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpuffleViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC0EA8CF23387D08005FB35B /* SpotifyMetadata.framework in Frameworks */,
 				DC57F9612316593B0054F19C /* SpotifyAuthentication.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -44,6 +49,7 @@
 		DC57F95F2316593B0054F19C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DC0EA8CE23387D08005FB35B /* SpotifyMetadata.framework */,
 				DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */,
 			);
 			name = Frameworks;
@@ -62,6 +68,7 @@
 			children = (
 				DCC0B52B23139181007F76A6 /* AppDelegate.swift */,
 				DCC0B52D23139181007F76A6 /* SignInViewController.swift */,
+				DCEEFFA62331E15B00849984 /* SpuffleViewController.swift */,
 				DCC0B52F23139181007F76A6 /* Main.storyboard */,
 				DCC0B53223139182007F76A6 /* Assets.xcassets */,
 				DCC0B53423139182007F76A6 /* LaunchScreen.storyboard */,
@@ -153,6 +160,7 @@
 			files = (
 				DCC0B52E23139181007F76A6 /* SignInViewController.swift in Sources */,
 				DCC0B52C23139181007F76A6 /* AppDelegate.swift in Sources */,
+				DCEEFFA72331E15B00849984 /* SpuffleViewController.swift in Sources */,
 				DCAEADE7232B4E8D006FCC49 /* AppSecrets.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

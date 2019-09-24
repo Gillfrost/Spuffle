@@ -66,6 +66,14 @@ final class SignInViewController: UIViewController {
         performSegue(withIdentifier: "spuffle", sender: nil)
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let spuffleController = segue.destination as? SpuffleViewController else {
+            assertionFailure()
+            return
+        }
+        spuffleController.session = auth.session
+    }
+
     private func dismissSpuffle() {
         guard presentedViewController != nil else {
             return

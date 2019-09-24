@@ -9,5 +9,6 @@
 #define Spuffle_Bridging_Header_h
 
 #import <SpotifyAuthentication/SpotifyAuthentication.h>
+#import <SpotifyMetadata/SpotifyMetadata.h>
 
 #endif /* Spuffle_Bridging_Header_h */
