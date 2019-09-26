@@ -7,14 +7,17 @@ final class SpuffleViewController: UIViewController {
 
     var session: SPTSession?
 
+    @IBOutlet weak private var tableView: UITableView!
+
     private var playlists: [String] = [] {
         didSet {
-            print(playlists)
+            tableView.reloadData()
         }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.tableFooterView = UIView()
         loadPlaylists()
     }
 
@@ -61,5 +64,18 @@ final class SpuffleViewController: UIViewController {
         } else {
             completion(playlists)
         }
+    }
+}
+
+extension SpuffleViewController: UITableViewDataSource {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return playlists.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "playlist_cell", for: indexPath)
+        cell.textLabel?.text = playlists[indexPath.row]
+        return cell
     }
 }
