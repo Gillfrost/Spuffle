@@ -8,10 +8,48 @@ final class SpuffleViewController: UIViewController {
     var session: SPTSession?
 
     @IBOutlet weak private var tableView: UITableView!
+    @IBOutlet weak private var listHeightConstraint: NSLayoutConstraint!
+
+    private var listPanStartingHeight: CGFloat = 0
+
+    private var minimumListHeight: CGFloat {
+        return view.safeAreaInsets.bottom + tableView.frame.minY
+    }
+
+    private var maximumListHeight: CGFloat {
+        let max = view.frame.height - view.safeAreaInsets.top
+        let preferred = minimumListHeight + tableView.contentSize.height
+        return min(max, preferred)
+    }
 
     private var playlists: [String] = [] {
         didSet {
             tableView.reloadData()
+        }
+    }
+
+    @IBAction func panList(_ pan: UIPanGestureRecognizer) {
+        switch pan.state {
+        case .began:
+            listPanStartingHeight = listHeightConstraint.constant
+        case .changed:
+            listHeightConstraint.constant = listPanStartingHeight - pan.translation(in: view).y
+        case .ended:
+            let endHeight: CGFloat
+            let velocity = pan.velocity(in: view).y
+            if abs(velocity) > 200 {
+                endHeight = velocity < 0 ? maximumListHeight : minimumListHeight
+            } else {
+                let currentHeight = listHeightConstraint.constant
+                let halfMaximumHeight = (maximumListHeight - minimumListHeight) / 2
+                endHeight = currentHeight < halfMaximumHeight
+                    ? minimumListHeight
+                    : maximumListHeight
+            }
+            listHeightConstraint.constant = endHeight
+            UIView.animate(withDuration: 0.25, animations: { self.view.layoutIfNeeded() })
+        default:
+            break
         }
     }
 
