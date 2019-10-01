@@ -5,6 +5,12 @@ import UIKit
 
 final class SpuffleViewController: UIViewController {
 
+    private struct Playlist {
+        let uri: URL
+        let name: String
+        let trackCount: UInt
+    }
+
     var session: SPTSession?
 
     @IBOutlet weak private var playButton: UIButton!
@@ -23,7 +29,7 @@ final class SpuffleViewController: UIViewController {
         return min(max, preferred)
     }
 
-    private var playlists: [String] = [] {
+    private var playlists: [Playlist] = [] {
         didSet {
             tableView.reloadData()
         }
@@ -85,7 +91,7 @@ final class SpuffleViewController: UIViewController {
         }
     }
 
-    private func getPlaylists(token: String, completion: @escaping ([String]) -> Void) {
+    private func getPlaylists(token: String, completion: @escaping ([Playlist]) -> Void) {
         SPTUser.requestCurrentUser(withAccessToken: token) { [weak self] error, result in
             guard let user = result as? SPTUser else {
                 return
@@ -94,7 +100,7 @@ final class SpuffleViewController: UIViewController {
         }
     }
 
-    private func getPlaylists(user: String, token: String, completion: @escaping ([String]) -> Void) {
+    private func getPlaylists(user: String, token: String, completion: @escaping ([Playlist]) -> Void) {
         SPTPlaylistList.playlists(forUser: user,
                                   withAccessToken: token) { [weak self] (error, result) in
                                     self?.playlistCallback(error: error, result: result, token: token, completion: completion)
@@ -102,14 +108,19 @@ final class SpuffleViewController: UIViewController {
         return
     }
 
-    private func playlistCallback(error: Error?, result: Any?, token: String, completion: @escaping ([String]) -> Void) {
+    private func playlistCallback(error: Error?, result: Any?, token: String, completion: @escaping ([Playlist]) -> Void) {
         guard let listPage = result as? SPTListPage else {
             fatalError()
         }
 
         let playlists = listPage.tracksForPlayback()?
             .compactMap { $0 as? SPTPartialPlaylist }
-            .map { $0.name } ?? []
+            .map {
+                Playlist(uri: $0.playableUri,
+                         name: $0.name,
+                         trackCount: $0.trackCount)
+
+            } ?? []
 
         if listPage.hasNextPage {
             listPage.requestNextPage(withAccessToken: token) { [weak self] in
@@ -129,7 +140,7 @@ extension SpuffleViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playlist_cell", for: indexPath)
-        cell.textLabel?.text = playlists[indexPath.row]
+        cell.textLabel?.text = playlists[indexPath.row].name
         return cell
     }
 }
