@@ -53,8 +53,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Q6-Ch-NDG">
+                                <rect key="frame" x="172" y="363" width="70" height="70"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="Hnf-AM-AUa"/>
+                                    <constraint firstAttribute="width" constant="70" id="w9h-pl-xvs"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="48"/>
+                                <state key="normal" title="▷">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="togglePlay" destination="Amm-qq-O7W" eventType="touchUpInside" id="6a0-DJ-713"/>
+                                </connections>
+                            </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eAD-b6-LMO">
-                                <rect key="frame" x="0.0" y="296" width="414" height="600"/>
+                                <rect key="frame" x="0.0" y="696" width="414" height="200"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YUI-XD-pr9">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="66"/>
@@ -92,7 +106,7 @@
                                         </connections>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="rWG-dn-b7R">
-                                        <rect key="frame" x="0.0" y="66" width="414" height="534"/>
+                                        <rect key="frame" x="0.0" y="66" width="414" height="134"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="playlist_cell" textLabel="YzF-qV-5TU" style="IBUITableViewCellStyleDefault" id="EmB-iP-ZR9">
@@ -105,15 +119,15 @@
                                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="YzF-qV-5TU">
                                                             <rect key="frame" x="20" y="0.0" width="374" height="44"/>
                                                             <autoresizingMask key="autoresizingMask"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
-                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </tableViewCellContentView>
-                                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </tableViewCell>
                                         </prototypes>
                                         <connections>
@@ -121,11 +135,11 @@
                                         </connections>
                                     </tableView>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="0.24829445422535212" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.25321852992957744" alpha="0.753080985915493" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstItem="YUI-XD-pr9" firstAttribute="leading" secondItem="eAD-b6-LMO" secondAttribute="leading" id="CAb-Td-5lt"/>
-                                    <constraint firstAttribute="height" constant="600" id="O6D-Ou-IXG"/>
+                                    <constraint firstAttribute="height" constant="200" id="O6D-Ou-IXG"/>
                                     <constraint firstAttribute="bottom" secondItem="rWG-dn-b7R" secondAttribute="bottom" id="O9g-Bo-UEK"/>
                                     <constraint firstAttribute="trailing" secondItem="YUI-XD-pr9" secondAttribute="trailing" id="QbI-qQ-KcK"/>
                                     <constraint firstAttribute="trailing" secondItem="rWG-dn-b7R" secondAttribute="trailing" id="WvV-fs-IAs"/>
@@ -140,11 +154,14 @@
                             <constraint firstAttribute="trailing" secondItem="eAD-b6-LMO" secondAttribute="trailing" id="DHI-6t-2Zn"/>
                             <constraint firstItem="eAD-b6-LMO" firstAttribute="leading" secondItem="XTp-eJ-aGH" secondAttribute="leading" id="MI8-LC-R3E"/>
                             <constraint firstAttribute="bottom" secondItem="eAD-b6-LMO" secondAttribute="bottom" id="Odk-je-eYr"/>
+                            <constraint firstItem="5Q6-Ch-NDG" firstAttribute="centerX" secondItem="XTp-eJ-aGH" secondAttribute="centerX" id="R3c-tn-3xu"/>
+                            <constraint firstItem="5Q6-Ch-NDG" firstAttribute="centerY" secondItem="XTp-eJ-aGH" secondAttribute="centerY" constant="-50" id="h3c-u2-HcT"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="1Yq-t0-fb6"/>
                     </view>
                     <connections>
                         <outlet property="listHeightConstraint" destination="O6D-Ou-IXG" id="ix8-73-qL0"/>
+                        <outlet property="playButton" destination="5Q6-Ch-NDG" id="eUJ-LB-zm9"/>
                         <outlet property="tableView" destination="rWG-dn-b7R" id="GD9-h2-L4P"/>
                     </connections>
                 </viewController>

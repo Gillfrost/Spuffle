@@ -7,6 +7,7 @@ final class SpuffleViewController: UIViewController {
 
     var session: SPTSession?
 
+    @IBOutlet weak private var playButton: UIButton!
     @IBOutlet weak private var tableView: UITableView!
     @IBOutlet weak private var listHeightConstraint: NSLayoutConstraint!
 
@@ -28,6 +29,22 @@ final class SpuffleViewController: UIViewController {
         }
     }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.tableFooterView = UIView()
+        loadPlaylists()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        listHeightConstraint.constant = minimumListHeight
+        animateLayout()
+    }
+
+    @IBAction private func togglePlay() {
+        playButton.setTitle(Bool.random() ? "||" : "▷", for: .normal)
+    }
+
     @IBAction func panList(_ pan: UIPanGestureRecognizer) {
         switch pan.state {
         case .began:
@@ -47,16 +64,15 @@ final class SpuffleViewController: UIViewController {
                     : maximumListHeight
             }
             listHeightConstraint.constant = endHeight
-            UIView.animate(withDuration: 0.25, animations: { self.view.layoutIfNeeded() })
+            animateLayout()
         default:
             break
         }
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        tableView.tableFooterView = UIView()
-        loadPlaylists()
+    private func animateLayout() {
+        UIView.animate(withDuration: 0.25,
+                       animations: { self.view.layoutIfNeeded() })
     }
 
     private func loadPlaylists() {
