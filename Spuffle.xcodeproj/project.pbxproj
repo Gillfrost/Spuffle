@@ -16,6 +16,7 @@
 		DCC0B53323139182007F76A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCC0B53223139182007F76A6 /* Assets.xcassets */; };
 		DCC0B53623139182007F76A6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCC0B53423139182007F76A6 /* LaunchScreen.storyboard */; };
 		DCEEFFA72331E15B00849984 /* SpuffleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEEFFA62331E15B00849984 /* SpuffleViewController.swift */; };
+		DCEF78842342FF28002E672E /* SpotifyAudioPlayback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCEF78832342FF28002E672E /* SpotifyAudioPlayback.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		DCC0B53523139182007F76A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DCC0B53723139182007F76A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DCEEFFA62331E15B00849984 /* SpuffleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpuffleViewController.swift; sourceTree = "<group>"; };
+		DCEF78832342FF28002E672E /* SpotifyAudioPlayback.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyAudioPlayback.framework; path = Frameworks/SpotifyAudioPlayback.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCEF78842342FF28002E672E /* SpotifyAudioPlayback.framework in Frameworks */,
 				DC0EA8CF23387D08005FB35B /* SpotifyMetadata.framework in Frameworks */,
 				DC57F9612316593B0054F19C /* SpotifyAuthentication.framework in Frameworks */,
 			);
@@ -49,6 +52,7 @@
 		DC57F95F2316593B0054F19C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DCEF78832342FF28002E672E /* SpotifyAudioPlayback.framework */,
 				DC0EA8CE23387D08005FB35B /* SpotifyMetadata.framework */,
 				DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */,
 			);
