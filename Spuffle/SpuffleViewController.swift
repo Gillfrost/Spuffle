@@ -2,8 +2,13 @@
 //  Licensed under the MIT license
 
 import UIKit
+import AVFoundation
 
 final class SpuffleViewController: UIViewController {
+
+    private enum State {
+        case initial, loaded, playing, paused
+    }
 
     private struct Playlist {
         let uri: URL
@@ -12,6 +17,12 @@ final class SpuffleViewController: UIViewController {
     }
 
     var session: SPTSession?
+
+    private var controller: SPTAudioStreamingController {
+        return .sharedInstance()
+    }
+
+    private var state = State.initial
 
     @IBOutlet weak private var playButton: UIButton!
     @IBOutlet weak private var tableView: UITableView!
@@ -32,11 +43,15 @@ final class SpuffleViewController: UIViewController {
     private var playlists: [Playlist] = [] {
         didSet {
             tableView.reloadData()
+            if state == .initial {
+                state = .loaded
+            }
         }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupAudioController()
         tableView.tableFooterView = UIView()
         loadPlaylists()
     }
@@ -47,9 +62,83 @@ final class SpuffleViewController: UIViewController {
         animateLayout()
     }
 
-    @IBAction private func togglePlay() {
-        playButton.setTitle(Bool.random() ? "||" : "▷", for: .normal)
+    deinit {
+        try? AVAudioSession.sharedInstance().setActive(false, options: [])
     }
+
+    private func setupAudioController() {
+        controller.delegate = self
+        do {
+            try controller.start(withClientId: SPTAuth.defaultInstance().clientID!)
+            try AVAudioSession.sharedInstance().setCategory(.playback)
+        } catch {
+            assertionFailure(error.localizedDescription)
+        }
+    }
+
+    // MARK: - Playback
+
+    @IBAction private func togglePlay() {
+        let isPlaying = state == .playing
+
+        let title = isPlaying ? "▷" : "||"
+        playButton.setTitle(title, for: .normal)
+
+        isPlaying ? pause() : play()
+    }
+
+    private var playingList: Playlist? = nil
+
+    private func play() {
+        guard let playlist = playlists.randomElement() else {
+            assertionFailure()
+            return
+        }
+        playingList = playlist
+
+        defer { state = .playing }
+        guard controller.loggedIn else {
+            login()
+            return
+        }
+        switch state {
+        case .initial:
+            assertionFailure()
+        case .playing, .loaded:
+            controller.playSpotifyURI(playlist.uri.absoluteString,
+                                      startingWith: UInt.random(in: 0..<playlist.trackCount),
+                                      startingWithPosition: 0) { error in
+                                        if let error = error {
+                                            assertionFailure(error.localizedDescription)
+                                        }
+            }
+        case .paused:
+            controller.setIsPlaying(true) { error in
+                if let error = error {
+                    assertionFailure(error.localizedDescription)
+                }
+            }
+        }
+    }
+
+    private func login() {
+        guard let token = session?.accessToken else {
+            assertionFailure()
+            return
+        }
+        controller.login(withAccessToken: token)
+    }
+
+    private func pause() {
+        controller.setIsPlaying(false) { error in
+            if let error = error {
+                assertionFailure(error.localizedDescription)
+            }
+        }
+        state = .paused
+    }
+
+    // MARK: - Playlists
 
     @IBAction func panList(_ pan: UIPanGestureRecognizer) {
         switch pan.state {
@@ -142,5 +231,15 @@ extension SpuffleViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playlist_cell", for: indexPath)
         cell.textLabel?.text = playlists[indexPath.row].name
         return cell
+    }
+}
+
+extension SpuffleViewController: SPTAudioStreamingDelegate {
+
+    func audioStreamingDidLogin(_ audioStreaming: SPTAudioStreamingController) {
+        try? AVAudioSession.sharedInstance().setActive(true, options: [])
+        if state == .playing {
+            play()
+        }
     }
 }
