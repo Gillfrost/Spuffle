@@ -67,6 +67,16 @@
                                     <action selector="togglePlay" destination="Amm-qq-O7W" eventType="touchUpInside" id="6a0-DJ-713"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tjl-Np-7Xe">
+                                <rect key="frame" x="354" y="370.5" width="40" height="55"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                                <state key="normal" title="►|">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="play" destination="Amm-qq-O7W" eventType="touchUpInside" id="zA5-Js-FpT"/>
+                                </connections>
+                            </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eAD-b6-LMO">
                                 <rect key="frame" x="0.0" y="696" width="414" height="200"/>
                                 <subviews>
@@ -155,6 +165,8 @@
                             <constraint firstItem="eAD-b6-LMO" firstAttribute="leading" secondItem="XTp-eJ-aGH" secondAttribute="leading" id="MI8-LC-R3E"/>
                             <constraint firstAttribute="bottom" secondItem="eAD-b6-LMO" secondAttribute="bottom" id="Odk-je-eYr"/>
                             <constraint firstItem="5Q6-Ch-NDG" firstAttribute="centerX" secondItem="XTp-eJ-aGH" secondAttribute="centerX" id="R3c-tn-3xu"/>
+                            <constraint firstItem="tjl-Np-7Xe" firstAttribute="centerY" secondItem="5Q6-Ch-NDG" secondAttribute="centerY" id="cvH-0V-0mM"/>
+                            <constraint firstItem="1Yq-t0-fb6" firstAttribute="trailing" secondItem="tjl-Np-7Xe" secondAttribute="trailing" constant="20" id="g9h-cJ-IaN"/>
                             <constraint firstItem="5Q6-Ch-NDG" firstAttribute="centerY" secondItem="XTp-eJ-aGH" secondAttribute="centerY" constant="-50" id="h3c-u2-HcT"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="1Yq-t0-fb6"/>
@@ -162,6 +174,7 @@
                     <connections>
                         <outlet property="listHeightConstraint" destination="O6D-Ou-IXG" id="ix8-73-qL0"/>
                         <outlet property="playButton" destination="5Q6-Ch-NDG" id="eUJ-LB-zm9"/>
+                        <outlet property="skipButton" destination="tjl-Np-7Xe" id="y6w-7F-qvQ"/>
                         <outlet property="tableView" destination="rWG-dn-b7R" id="GD9-h2-L4P"/>
                     </connections>
                 </viewController>

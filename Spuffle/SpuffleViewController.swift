@@ -22,9 +22,14 @@ final class SpuffleViewController: UIViewController {
         return .sharedInstance()
     }
 
-    private var state = State.initial
+    private var state = State.initial {
+        didSet {
+            setButtons()
+        }
+    }
 
     @IBOutlet weak private var playButton: UIButton!
+    @IBOutlet weak private var skipButton: UIButton!
     @IBOutlet weak private var tableView: UITableView!
     @IBOutlet weak private var listHeightConstraint: NSLayoutConstraint!
 
@@ -54,6 +59,7 @@ final class SpuffleViewController: UIViewController {
         setupAudioController()
         tableView.tableFooterView = UIView()
         loadPlaylists()
+        setButtons()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -79,17 +85,20 @@ final class SpuffleViewController: UIViewController {
     // MARK: - Playback
 
     @IBAction private func togglePlay() {
-        let isPlaying = state == .playing
+        state == .playing ? pause() : play()
+    }
 
-        let title = isPlaying ? "▷" : "||"
+    private func setButtons() {
+        let title = state == .playing ? "||" : "▷"
         playButton.setTitle(title, for: .normal)
+        playButton.isHidden = state == .initial
 
-        isPlaying ? pause() : play()
+        skipButton.isHidden = state != .playing
     }
 
     private var playingList: Playlist? = nil
 
-    private func play() {
+    @IBAction private func play() {
         guard let playlist = playlists.randomElement() else {
             assertionFailure()
             return
