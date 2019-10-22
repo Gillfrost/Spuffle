@@ -14,6 +14,18 @@ final class SpuffleViewController: UIViewController {
         let uri: URL
         let name: String
         let trackCount: UInt
+
+        private (set) var excluded = false
+
+        init(uri: URL, name: String, trackCount: UInt) {
+            self.uri = uri
+            self.name = name
+            self.trackCount = trackCount
+        }
+
+        mutating func toggleExcluded() {
+            excluded.toggle()
+        }
     }
 
     var session: SPTSession?
@@ -47,7 +59,6 @@ final class SpuffleViewController: UIViewController {
 
     private var playlists: [Playlist] = [] {
         didSet {
-            tableView.reloadData()
             if state == .initial {
                 state = .loaded
             }
@@ -99,7 +110,7 @@ final class SpuffleViewController: UIViewController {
     private var playingList: Playlist? = nil
 
     @IBAction private func play() {
-        guard let playlist = playlists.randomElement() else {
+        guard let playlist = playlists.filter({ !$0.excluded }).randomElement() else {
             assertionFailure()
             return
         }
@@ -186,6 +197,7 @@ final class SpuffleViewController: UIViewController {
         }
         getPlaylists(token: token) { [weak self] in
             self?.playlists = $0
+            self?.tableView.reloadData()
         }
     }
 
@@ -238,8 +250,30 @@ extension SpuffleViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playlist_cell", for: indexPath)
-        cell.textLabel?.text = playlists[indexPath.row].name
+
+        configure(cell, for: indexPath)
+
         return cell
+    }
+
+    private func configure(_ cell: UITableViewCell, for indexPath: IndexPath) {
+        let playlist = playlists[indexPath.row]
+        cell.textLabel?.text = playlist.name
+        cell.textLabel?.font = .systemFont(ofSize: 17, weight: playlist.excluded ? .regular : .semibold)
+        cell.textLabel?.textAlignment = playlist.excluded ? .right : .left
+    }
+}
+
+extension SpuffleViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        playlists[indexPath.row].toggleExcluded()
+
+        tableView.cellForRow(at: indexPath).map {
+            configure($0, for: indexPath)
+        }
     }
 }
 
