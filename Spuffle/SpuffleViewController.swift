@@ -43,6 +43,8 @@ final class SpuffleViewController: UIViewController {
     @IBOutlet weak private var playButton: UIButton!
     @IBOutlet weak private var skipButton: UIButton!
     @IBOutlet weak private var tableView: UITableView!
+    @IBOutlet weak private var includeLabel: UILabel!
+    @IBOutlet weak private var excludeLabel: UILabel!
     @IBOutlet weak private var listHeightConstraint: NSLayoutConstraint!
 
     private var listPanStartingHeight: CGFloat = 0
@@ -71,6 +73,7 @@ final class SpuffleViewController: UIViewController {
         tableView.tableFooterView = UIView()
         loadPlaylists()
         setButtons()
+        setLabelVisibilities()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -179,6 +182,7 @@ final class SpuffleViewController: UIViewController {
                     : maximumListHeight
             }
             listHeightConstraint.constant = endHeight
+            setLabelVisibilities()
             animateLayout()
         default:
             break
@@ -269,10 +273,52 @@ extension SpuffleViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
+        guard !isLastIncludedPlaylist(indexPath) else {
+            alertForLastIncludedPlaylist()
+            return
+        }
+
         playlists[indexPath.row].toggleExcluded()
 
         tableView.cellForRow(at: indexPath).map {
             configure($0, for: indexPath)
+        }
+
+        setLabelVisibilities(animated: true)
+    }
+
+    private func isLastIncludedPlaylist(_ indexPath: IndexPath) -> Bool {
+        return !playlists[indexPath.row].excluded
+            && playlists.filter { !$0.excluded }.count == 1
+    }
+
+    private func alertForLastIncludedPlaylist() {
+        includeLabel.transform = .init(scaleX: 1.2, y: 1.2)
+        UIView.animate(withDuration: 0.25) { [includeLabel] in
+            includeLabel?.transform = .identity
+        }
+    }
+
+    private func setLabelVisibilities(animated: Bool = false) {
+        let listIsCollapsed = listHeightConstraint.constant == minimumListHeight
+        let allPlaylistsAreIncluded = playlists.map { $0.excluded }.allSatisfy(!)
+
+        let hide = listIsCollapsed
+            || allPlaylistsAreIncluded
+
+        let set = { [includeLabel, excludeLabel] in
+            [includeLabel, excludeLabel].forEach {
+                $0?.alpha = hide ? 0 : 1
+            }
+        }
+
+        if animated {
+            UIView.animate(withDuration: 0.25,
+                           delay: 0,
+                           options: [.beginFromCurrentState],
+                           animations: set)
+        } else {
+            set()
         }
     }
 }
