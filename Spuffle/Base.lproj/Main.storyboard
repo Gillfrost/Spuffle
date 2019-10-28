@@ -176,11 +176,20 @@
                                     <constraint firstItem="rWG-dn-b7R" firstAttribute="leading" secondItem="eAD-b6-LMO" secondAttribute="leading" id="vdp-f5-jf7"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&quot;Track&quot;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7g7-QA-qkv">
+                                <rect key="frame" x="0.0" y="64" width="414" height="24"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="7g7-QA-qkv" firstAttribute="top" secondItem="1Yq-t0-fb6" secondAttribute="top" constant="20" id="1JD-1v-IAQ"/>
+                            <constraint firstItem="7g7-QA-qkv" firstAttribute="leading" secondItem="1Yq-t0-fb6" secondAttribute="leading" id="1ua-rr-f45"/>
                             <constraint firstAttribute="trailing" secondItem="eAD-b6-LMO" secondAttribute="trailing" id="DHI-6t-2Zn"/>
                             <constraint firstItem="tjl-Np-7Xe" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5Q6-Ch-NDG" secondAttribute="trailing" id="Dtq-me-kRt"/>
+                            <constraint firstItem="1Yq-t0-fb6" firstAttribute="trailing" secondItem="7g7-QA-qkv" secondAttribute="trailing" id="FkZ-C6-Rdq"/>
                             <constraint firstItem="eAD-b6-LMO" firstAttribute="leading" secondItem="XTp-eJ-aGH" secondAttribute="leading" id="MI8-LC-R3E"/>
                             <constraint firstAttribute="bottom" secondItem="eAD-b6-LMO" secondAttribute="bottom" id="Odk-je-eYr"/>
                             <constraint firstItem="5Q6-Ch-NDG" firstAttribute="centerX" secondItem="XTp-eJ-aGH" secondAttribute="centerX" id="R3c-tn-3xu"/>
@@ -197,6 +206,7 @@
                         <outlet property="playButton" destination="5Q6-Ch-NDG" id="eUJ-LB-zm9"/>
                         <outlet property="skipButton" destination="tjl-Np-7Xe" id="y6w-7F-qvQ"/>
                         <outlet property="tableView" destination="rWG-dn-b7R" id="GD9-h2-L4P"/>
+                        <outlet property="trackLabel" destination="7g7-QA-qkv" id="nBB-Gd-yE4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="55O-l6-jeB" userLabel="First Responder" sceneMemberID="firstResponder"/>
