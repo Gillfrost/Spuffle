@@ -36,10 +36,11 @@ final class SpuffleViewController: UIViewController {
 
     private var state = State.initial {
         didSet {
-            setButtons()
+            setButtonsAndMetadataVisibility()
         }
     }
 
+    @IBOutlet weak private var trackLabel: UILabel!
     @IBOutlet weak private var playButton: UIButton!
     @IBOutlet weak private var skipButton: UIButton!
     @IBOutlet weak private var tableView: UITableView!
@@ -72,8 +73,9 @@ final class SpuffleViewController: UIViewController {
         setupAudioController()
         tableView.tableFooterView = UIView()
         loadPlaylists()
-        setButtons()
-        setLabelVisibilities()
+        setButtonsAndMetadataVisibility()
+        setInclusionLabelVisibilities()
+        trackLabel.text = nil
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -88,6 +90,7 @@ final class SpuffleViewController: UIViewController {
 
     private func setupAudioController() {
         controller.delegate = self
+        controller.playbackDelegate = self
         do {
             try controller.start(withClientId: SPTAuth.defaultInstance().clientID!)
             try AVAudioSession.sharedInstance().setCategory(.playback)
@@ -102,12 +105,14 @@ final class SpuffleViewController: UIViewController {
         state == .playing ? pause() : play()
     }
 
-    private func setButtons() {
+    private func setButtonsAndMetadataVisibility() {
         let title = state == .playing ? "||" : "▷"
         playButton.setTitle(title, for: .normal)
         playButton.isHidden = state == .initial
 
         skipButton.isHidden = state != .playing
+
+        trackLabel.alpha = state == .playing ? 1 : 0.5
     }
 
     private var playingList: Playlist? = nil
@@ -182,7 +187,7 @@ final class SpuffleViewController: UIViewController {
                     : maximumListHeight
             }
             listHeightConstraint.constant = endHeight
-            setLabelVisibilities()
+            setInclusionLabelVisibilities()
             animateLayout()
         default:
             break
@@ -284,7 +289,7 @@ extension SpuffleViewController: UITableViewDelegate {
             configure($0, for: indexPath)
         }
 
-        setLabelVisibilities(animated: true)
+        setInclusionLabelVisibilities(animated: true)
     }
 
     private func isLastIncludedPlaylist(_ indexPath: IndexPath) -> Bool {
@@ -299,7 +304,7 @@ extension SpuffleViewController: UITableViewDelegate {
         }
     }
 
-    private func setLabelVisibilities(animated: Bool = false) {
+    private func setInclusionLabelVisibilities(animated: Bool = false) {
         let listIsCollapsed = listHeightConstraint.constant == minimumListHeight
         let allPlaylistsAreIncluded = playlists.map { $0.excluded }.allSatisfy(!)
 
@@ -330,5 +335,12 @@ extension SpuffleViewController: SPTAudioStreamingDelegate {
         if state == .playing {
             play()
         }
+    }
+}
+
+extension SpuffleViewController: SPTAudioStreamingPlaybackDelegate {
+
+    func audioStreaming(_ audioStreaming: SPTAudioStreamingController, didChange metadata: SPTPlaybackMetadata) {
+        trackLabel.text = metadata.currentTrack.map { "\"\($0.name)\"" }
     }
 }
