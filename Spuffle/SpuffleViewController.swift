@@ -41,6 +41,7 @@ final class SpuffleViewController: UIViewController {
     }
 
     @IBOutlet weak private var trackLabel: UILabel!
+    @IBOutlet weak private var artistLabel: UILabel!
     @IBOutlet weak private var playButton: UIButton!
     @IBOutlet weak private var skipButton: UIButton!
     @IBOutlet weak private var tableView: UITableView!
@@ -75,7 +76,7 @@ final class SpuffleViewController: UIViewController {
         loadPlaylists()
         setButtonsAndMetadataVisibility()
         setInclusionLabelVisibilities()
-        trackLabel.text = nil
+        clearMetadataLabels()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -86,6 +87,11 @@ final class SpuffleViewController: UIViewController {
 
     deinit {
         try? AVAudioSession.sharedInstance().setActive(false, options: [])
+    }
+
+    private func clearMetadataLabels() {
+        trackLabel.text = nil
+        artistLabel.text = nil
     }
 
     private func setupAudioController() {
@@ -112,7 +118,9 @@ final class SpuffleViewController: UIViewController {
 
         skipButton.isHidden = state != .playing
 
-        trackLabel.alpha = state == .playing ? 1 : 0.5
+        let metadataAlpha: CGFloat = state == .playing ? 1 : 0.5
+        trackLabel.alpha = metadataAlpha
+        artistLabel.alpha = metadataAlpha
     }
 
     private var playingList: Playlist? = nil
@@ -342,5 +350,6 @@ extension SpuffleViewController: SPTAudioStreamingPlaybackDelegate {
 
     func audioStreaming(_ audioStreaming: SPTAudioStreamingController, didChange metadata: SPTPlaybackMetadata) {
         trackLabel.text = metadata.currentTrack.map { "\"\($0.name)\"" }
+        artistLabel.text = metadata.currentTrack.map { $0.artistName }
     }
 }
