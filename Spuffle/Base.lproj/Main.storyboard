@@ -182,10 +182,17 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9qo-V3-Hu3">
+                                <rect key="frame" x="0.0" y="104" width="414" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="7g7-QA-qkv" firstAttribute="top" secondItem="1Yq-t0-fb6" secondAttribute="top" constant="20" id="1JD-1v-IAQ"/>
+                            <constraint firstItem="9qo-V3-Hu3" firstAttribute="leading" secondItem="1Yq-t0-fb6" secondAttribute="leading" id="1Y8-0U-mwV"/>
                             <constraint firstItem="7g7-QA-qkv" firstAttribute="leading" secondItem="1Yq-t0-fb6" secondAttribute="leading" id="1ua-rr-f45"/>
                             <constraint firstAttribute="trailing" secondItem="eAD-b6-LMO" secondAttribute="trailing" id="DHI-6t-2Zn"/>
                             <constraint firstItem="tjl-Np-7Xe" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5Q6-Ch-NDG" secondAttribute="trailing" id="Dtq-me-kRt"/>
@@ -196,10 +203,13 @@
                             <constraint firstItem="tjl-Np-7Xe" firstAttribute="centerY" secondItem="5Q6-Ch-NDG" secondAttribute="centerY" id="cvH-0V-0mM"/>
                             <constraint firstItem="1Yq-t0-fb6" firstAttribute="trailing" secondItem="tjl-Np-7Xe" secondAttribute="trailing" constant="20" id="g9h-cJ-IaN"/>
                             <constraint firstItem="5Q6-Ch-NDG" firstAttribute="centerY" secondItem="XTp-eJ-aGH" secondAttribute="centerY" constant="-50" id="h3c-u2-HcT"/>
+                            <constraint firstItem="9qo-V3-Hu3" firstAttribute="top" secondItem="7g7-QA-qkv" secondAttribute="bottom" constant="16" id="rLp-G6-oyG"/>
+                            <constraint firstItem="1Yq-t0-fb6" firstAttribute="trailing" secondItem="9qo-V3-Hu3" secondAttribute="trailing" id="vcX-Ev-Fan"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="1Yq-t0-fb6"/>
                     </view>
                     <connections>
+                        <outlet property="artistLabel" destination="9qo-V3-Hu3" id="rGL-jb-b9a"/>
                         <outlet property="excludeLabel" destination="Obv-OB-6b1" id="5YN-YH-1wD"/>
                         <outlet property="includeLabel" destination="9Z7-MP-u0Z" id="xP5-AT-exp"/>
                         <outlet property="listHeightConstraint" destination="O6D-Ou-IXG" id="ix8-73-qL0"/>
