@@ -3,6 +3,7 @@
 
 import UIKit
 import AVFoundation
+import MediaPlayer
 
 final class SpuffleViewController: UIViewController {
 
@@ -121,6 +122,53 @@ final class SpuffleViewController: UIViewController {
         let metadataAlpha: CGFloat = state == .playing ? 1 : 0.5
         trackLabel.alpha = metadataAlpha
         artistLabel.alpha = metadataAlpha
+
+        removeControlSubscriptions()
+        setupControlSubscriptions()
+    }
+
+    private var commandCenter: MPRemoteCommandCenter {
+        return .shared()
+    }
+    private var playControlSubscription: Any?
+    private var nextControlSubscription: Any?
+
+    private func removeControlSubscriptions() {
+        playControlSubscription.map(
+            commandCenter.togglePlayPauseCommand.removeTarget
+        )
+        nextControlSubscription = nil
+
+        nextControlSubscription.map(
+            commandCenter.nextTrackCommand.removeTarget
+        )
+        playControlSubscription = nil
+    }
+
+    private func setupControlSubscriptions() {
+        guard state != .initial else {
+            return
+        }
+        playControlSubscription = commandCenter
+            .togglePlayPauseCommand
+            .addTarget { [weak self] event in
+                guard let strongSelf = self else {
+                    return .commandFailed
+                }
+                strongSelf.togglePlay()
+                return .success
+        }
+        if state == .playing {
+            nextControlSubscription = commandCenter
+                .nextTrackCommand
+                .addTarget { [weak self] event in
+                    guard let strongSelf = self else {
+                        return .commandFailed
+                    }
+                    strongSelf.play()
+                    return .success
+            }
+        }
     }
 
     private var playingList: Playlist? = nil
