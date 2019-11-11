@@ -29,6 +29,11 @@ final class SpuffleViewController: UIViewController {
         }
     }
 
+    private struct Metadata {
+        let track: String
+        let artist: String
+    }
+
     var session: SPTSession?
 
     private var controller: SPTAudioStreamingController {
@@ -38,6 +43,19 @@ final class SpuffleViewController: UIViewController {
     private var state = State.initial {
         didSet {
             setButtonsAndMetadataVisibility()
+        }
+    }
+
+    private var metadata: Metadata? {
+        didSet {
+            trackLabel.text = metadata.map { "\"\($0.track)\"" }
+            artistLabel.text = metadata.map { $0.artist }
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = metadata.map {
+                [
+                    MPMediaItemPropertyTitle: $0.track,
+                    MPMediaItemPropertyArtist: $0.artist
+                ]
+            }
         }
     }
 
@@ -397,7 +415,8 @@ extension SpuffleViewController: SPTAudioStreamingDelegate {
 extension SpuffleViewController: SPTAudioStreamingPlaybackDelegate {
 
     func audioStreaming(_ audioStreaming: SPTAudioStreamingController, didChange metadata: SPTPlaybackMetadata) {
-        trackLabel.text = metadata.currentTrack.map { "\"\($0.name)\"" }
-        artistLabel.text = metadata.currentTrack.map { $0.artistName }
+        self.metadata = metadata.currentTrack
+            .map { ($0.name, $0.artistName) }
+            .map(Metadata.init)
     }
 }
