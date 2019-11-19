@@ -51,7 +51,6 @@ final class SpuffleViewController: UIViewController {
         didSet {
             trackLabel.text = metadata.map { "\"\($0.track)\"" }
             artistLabel.text = metadata.map { $0.artist }
-
             MPNowPlayingInfoCenter.default().nowPlayingInfo = metadata.map {
                 [
                     MPMediaItemPropertyTitle: $0.track,
@@ -65,6 +64,7 @@ final class SpuffleViewController: UIViewController {
 
     @IBOutlet weak private var trackLabel: UILabel!
     @IBOutlet weak private var artistLabel: UILabel!
+    @IBOutlet weak private var coverImage: UIImageView!
     @IBOutlet weak private var playButton: UIButton!
     @IBOutlet weak private var skipButton: UIButton!
     @IBOutlet weak private var tableView: UITableView!
@@ -144,6 +144,7 @@ final class SpuffleViewController: UIViewController {
         let metadataAlpha: CGFloat = state == .playing ? 1 : 0.5
         trackLabel.alpha = metadataAlpha
         artistLabel.alpha = metadataAlpha
+        coverImage.alpha = metadataAlpha
 
         removeControlSubscriptions()
         setupControlSubscriptions()
@@ -422,5 +423,20 @@ extension SpuffleViewController: SPTAudioStreamingPlaybackDelegate {
         self.metadata = metadata.currentTrack
             .map { ($0.name, $0.artistName, $0.duration) }
             .map(Metadata.init)
+
+
+        if let coverArtUrl = metadata.currentTrack?.albumCoverArtURL.flatMap(URL.init) {
+            URLSession.shared
+                .dataTask(with: coverArtUrl) { [weak self] (data, response, error) in
+                    guard let image = data.flatMap(UIImage.init) else {
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        self?.coverImage.image = image
+                    }
+            }.resume()
+        } else {
+            coverImage.image = nil
+        }
     }
 }
