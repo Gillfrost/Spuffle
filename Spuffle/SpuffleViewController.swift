@@ -51,14 +51,52 @@ final class SpuffleViewController: UIViewController {
         didSet {
             trackLabel.text = metadata.map { "\"\($0.track)\"" }
             artistLabel.text = metadata.map { $0.artist }
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = metadata.map {
-                [
-                    MPMediaItemPropertyTitle: $0.track,
-                    MPMediaItemPropertyArtist: $0.artist,
-                    MPMediaItemPropertyPlaybackDuration: NSNumber(value: $0.duration),
-                    MPNowPlayingInfoPropertyPlaybackRate: 1.0
+            setNowPlayingInfo()
+        }
+    }
+
+    private func setNowPlayingInfo() {
+        let artworkProperty = artwork.map { image in
+            MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+        }.map { [MPMediaItemPropertyArtwork: $0] }
+            ?? [:]
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = metadata.map {
+            [
+                MPMediaItemPropertyTitle: $0.track,
+                MPMediaItemPropertyArtist: $0.artist,
+                MPMediaItemPropertyPlaybackDuration: NSNumber(value: $0.duration),
+                MPNowPlayingInfoPropertyPlaybackRate: 1.0
                 ]
+                .merging(artworkProperty) { $1 }
+        }
+    }
+
+    private var artworkUrl: URL? {
+        didSet {
+            guard artworkUrl != oldValue else {
+                return
             }
+            artwork = nil
+            guard let artworkUrl = artworkUrl else {
+                return
+            }
+            URLSession.shared
+                .dataTask(with: artworkUrl) { [weak self] (data, response, error) in
+                    DispatchQueue.main.async {
+                        self?.artwork = data.flatMap(UIImage.init)
+                    }
+            }.resume()
+        }
+    }
+
+    private var artwork: UIImage? {
+        didSet {
+            guard let artwork = artwork else {
+                coverImage.image = nil
+                return
+            }
+            coverImage.image = artwork
+            setNowPlayingInfo()
         }
     }
 
@@ -424,19 +462,8 @@ extension SpuffleViewController: SPTAudioStreamingPlaybackDelegate {
             .map { ($0.name, $0.artistName, $0.duration) }
             .map(Metadata.init)
 
-
-        if let coverArtUrl = metadata.currentTrack?.albumCoverArtURL.flatMap(URL.init) {
-            URLSession.shared
-                .dataTask(with: coverArtUrl) { [weak self] (data, response, error) in
-                    guard let image = data.flatMap(UIImage.init) else {
-                        return
-                    }
-                    DispatchQueue.main.async {
-                        self?.coverImage.image = image
-                    }
-            }.resume()
-        } else {
-            coverImage.image = nil
-        }
+        artworkUrl = metadata.currentTrack?
+            .albumCoverArtURL
+            .flatMap(URL.init)
     }
 }
