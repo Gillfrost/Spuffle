@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		65BA947D23E9F4AF000E4E11 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BA947C23E9F4AF000E4E11 /* Log.swift */; };
 		DC0EA8CF23387D08005FB35B /* SpotifyMetadata.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0EA8CE23387D08005FB35B /* SpotifyMetadata.framework */; };
 		DC57F9612316593B0054F19C /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */; };
 		DCAEADE7232B4E8D006FCC49 /* AppSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAEADE6232B4E8D006FCC49 /* AppSecrets.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		65BA947C23E9F4AF000E4E11 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		DC0EA8CE23387D08005FB35B /* SpotifyMetadata.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyMetadata.framework; path = Frameworks/SpotifyMetadata.framework; sourceTree = "<group>"; };
 		DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyAuthentication.framework; path = Frameworks/SpotifyAuthentication.framework; sourceTree = "<group>"; };
 		DC57F96223165A850054F19C /* Spuffle-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Spuffle-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 				DCC0B53423139182007F76A6 /* LaunchScreen.storyboard */,
 				DCC0B53723139182007F76A6 /* Info.plist */,
 				DCAEADE6232B4E8D006FCC49 /* AppSecrets.swift */,
+				65BA947C23E9F4AF000E4E11 /* Log.swift */,
 			);
 			path = Spuffle;
 			sourceTree = "<group>";
@@ -169,6 +172,7 @@
 			files = (
 				DCC0B52E23139181007F76A6 /* SignInViewController.swift in Sources */,
 				DCC0B52C23139181007F76A6 /* AppDelegate.swift in Sources */,
+				65BA947D23E9F4AF000E4E11 /* Log.swift in Sources */,
 				DCEEFFA72331E15B00849984 /* SpuffleViewController.swift in Sources */,
 				DCAEADE7232B4E8D006FCC49 /* AppSecrets.swift in Sources */,
 			);
