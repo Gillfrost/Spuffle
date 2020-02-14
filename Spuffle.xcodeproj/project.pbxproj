@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		654D536023F662DA007E65A8 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654D535F23F662DA007E65A8 /* Alert.swift */; };
 		65BA947D23E9F4AF000E4E11 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BA947C23E9F4AF000E4E11 /* Log.swift */; };
 		DC0EA8CF23387D08005FB35B /* SpotifyMetadata.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0EA8CE23387D08005FB35B /* SpotifyMetadata.framework */; };
 		DC57F9612316593B0054F19C /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		654D535F23F662DA007E65A8 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		65BA947C23E9F4AF000E4E11 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		DC0EA8CE23387D08005FB35B /* SpotifyMetadata.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyMetadata.framework; path = Frameworks/SpotifyMetadata.framework; sourceTree = "<group>"; };
 		DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyAuthentication.framework; path = Frameworks/SpotifyAuthentication.framework; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				DCC0B52B23139181007F76A6 /* AppDelegate.swift */,
+				654D535F23F662DA007E65A8 /* Alert.swift */,
 				DCC0B52D23139181007F76A6 /* SignInViewController.swift */,
 				DCEEFFA62331E15B00849984 /* SpuffleViewController.swift */,
 				DCC0B52F23139181007F76A6 /* Main.storyboard */,
@@ -170,6 +173,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				654D536023F662DA007E65A8 /* Alert.swift in Sources */,
 				DCC0B52E23139181007F76A6 /* SignInViewController.swift in Sources */,
 				DCC0B52C23139181007F76A6 /* AppDelegate.swift in Sources */,
 				65BA947D23E9F4AF000E4E11 /* Log.swift in Sources */,
