@@ -14,6 +14,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
+        #if DEBUG
+        Log.errorAction = Alert.show
+        #endif
+
         auth.clientID = AppSecrets.clientId
         auth.requestedScopes = [SPTAuthPlaylistReadPrivateScope]
         auth.redirectURL = URL(string: "spuffle://spotify-login-callback")
@@ -23,14 +27,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+
         guard auth.canHandle(url) else {
-            assertionFailure(url.absoluteString)
+            Log.error("Could not open unexpected url \(url)")
             return false
         }
         auth.handleAuthCallback(withTriggeredAuthURL: url) { error, session in
             if let error = error {
                 // TODO: Handle error
-                assertionFailure(error.localizedDescription)
+                Log.error(error.localizedDescription)
                 return
             }
             SPTAuth.defaultInstance().session = session

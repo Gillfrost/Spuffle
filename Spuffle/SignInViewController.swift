@@ -37,11 +37,12 @@ final class SignInViewController: UIViewController {
 
     @objc private func checkSession() {
         let isSessionValid = auth.session?.isValid() == true
-
         if isSessionValid {
+            Log.info("Session is valid")
             NotificationCenter.default.removeObserver(self, name: .sessionAcquired, object: nil)
             showSpuffle()
         } else {
+            Log.info("No valid session")
             dismissSpuffle()
             showSignInButton()
         }
@@ -49,8 +50,8 @@ final class SignInViewController: UIViewController {
 
     @IBAction private func signIn() {
         guard SPTAuth.supportsApplicationAuthentication() else {
+            Log.info("Flip-flop authentication not supported")
             // TODO: Handle
-            assertionFailure()
             return
         }
         hideSignInButton()
@@ -61,6 +62,7 @@ final class SignInViewController: UIViewController {
 
     private func showSpuffle() {
         guard presentedViewController == nil else {
+            Log.error("Sign-in tried to perform segue with controller \(String(describing: presentedViewController)) already presented")
             return
         }
         performSegue(withIdentifier: "spuffle", sender: nil)
@@ -68,7 +70,7 @@ final class SignInViewController: UIViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let spuffleController = segue.destination as? SpuffleViewController else {
-            assertionFailure()
+            Log.error("Unexpected segue \(segue) from sign-in controller")
             return
         }
         spuffleController.session = auth.session
