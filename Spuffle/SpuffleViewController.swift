@@ -235,7 +235,7 @@ final class SpuffleViewController: UIViewController {
     private var playingList: Playlist? = nil
 
     @IBAction private func play() {
-        guard let playlist = playlists.filter({ !$0.excluded }).randomElement() else {
+        guard let playlist = randomPlaylist() else {
             Log.error("Play called without playlists")
             return
         }
@@ -256,6 +256,31 @@ final class SpuffleViewController: UIViewController {
         case .paused:
             controller.setIsPlaying(true) { $0.map(Log.error) }
         }
+    }
+
+    private func randomPlaylist() -> Playlist? {
+        let includedPlaylists = playlists.filter { !$0.excluded }
+
+        guard !includedPlaylists.isEmpty else {
+            return nil
+        }
+
+        func playlist(containing trackIndex: UInt, playlistIndex: Int = 0) -> Playlist {
+            let list = includedPlaylists[playlistIndex]
+
+            return trackIndex <= list.trackCount
+                ? list
+                : playlist(containing: trackIndex - list.trackCount,
+                           playlistIndex: playlistIndex + 1)
+        }
+
+        let includedTrackCount = includedPlaylists
+            .map { $0.trackCount }
+            .reduce(0, +)
+
+        let randomTrackIndex = UInt.random(in: 0...includedTrackCount)
+
+        return playlist(containing: randomTrackIndex)
     }
 
     private func login() {
