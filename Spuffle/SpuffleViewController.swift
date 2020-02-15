@@ -105,7 +105,6 @@ final class SpuffleViewController: UIViewController {
     @IBOutlet weak private var coverImage: UIImageView!
     @IBOutlet weak private var playButton: UIButton!
     @IBOutlet weak private var skipButton: UIButton!
-    @IBOutlet weak private var errorLabel: UILabel!
     @IBOutlet weak private var tableView: UITableView!
     @IBOutlet weak private var includeLabel: UILabel!
     @IBOutlet weak private var excludeLabel: UILabel!
@@ -139,7 +138,6 @@ final class SpuffleViewController: UIViewController {
         setButtonsAndMetadataVisibility()
         setInclusionLabelVisibilities()
         clearMetadataLabels()
-        errorLabel.text = nil
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -164,7 +162,7 @@ final class SpuffleViewController: UIViewController {
             try controller.start(withClientId: SPTAuth.defaultInstance().clientID!)
             try AVAudioSession.sharedInstance().setCategory(.playback)
         } catch {
-            assertionFailure(error.localizedDescription)
+            Log.error(error.localizedDescription)
         }
     }
 
@@ -238,7 +236,7 @@ final class SpuffleViewController: UIViewController {
 
     @IBAction private func play() {
         guard let playlist = playlists.filter({ !$0.excluded }).randomElement() else {
-            errorLabel.text = "Play called without playlists"
+            Log.error("Play called without playlists")
             return
         }
         playingList = playlist
@@ -250,38 +248,26 @@ final class SpuffleViewController: UIViewController {
         }
         switch state {
         case .initial:
-            errorLabel.text = "Play called when state was .initial"
+            Log.error("Play called when state was .initial")
         case .playing, .loaded:
             controller.playSpotifyURI(playlist.uri.absoluteString,
                                       startingWith: UInt.random(in: 0..<playlist.trackCount),
-                                      startingWithPosition: 0) { [errorLabel] error in
-                                        if let error = error {
-                                            errorLabel?.text = error.localizedDescription
-                                        }
-            }
+                                      startingWithPosition: 0) { $0.map(Log.error) }
         case .paused:
-            controller.setIsPlaying(true) { [errorLabel] error in
-                if let error = error {
-                    errorLabel?.text = error.localizedDescription
-                }
-            }
+            controller.setIsPlaying(true) { $0.map(Log.error) }
         }
     }
 
     private func login() {
         guard let token = session?.accessToken else {
-            errorLabel.text = "Login called without session"
+            Log.error("Login called without session")
             return
         }
         controller.login(withAccessToken: token)
     }
 
     private func pause() {
-        controller.setIsPlaying(false) { [errorLabel] error in
-            if let error = error {
-                errorLabel?.text = error.localizedDescription
-            }
-        }
+        controller.setIsPlaying(false) { $0.map(Log.error) }
         state = .paused
     }
 
@@ -320,7 +306,7 @@ final class SpuffleViewController: UIViewController {
 
     private func loadPlaylists() {
         guard let token = session?.accessToken else {
-            errorLabel.text = "Load playlists called without token"
+            Log.error("Load playlists called without token")
             return
         }
         getPlaylists(token: token) { [weak self] in
@@ -332,7 +318,7 @@ final class SpuffleViewController: UIViewController {
     private func getPlaylists(token: String, completion: @escaping ([Playlist]) -> Void) {
         SPTUser.requestCurrentUser(withAccessToken: token) { [weak self] error, result in
             if let error = error {
-                self?.errorLabel.text = error.localizedDescription
+                Log.error(error.localizedDescription)
                 return
             }
             guard let user = result as? SPTUser else {
@@ -352,15 +338,15 @@ final class SpuffleViewController: UIViewController {
 
     private func playlistCallback(error: Error?, result: Any?, token: String, completion: @escaping ([Playlist]) -> Void) {
         if let error = error {
-            errorLabel.text = error.localizedDescription
+            Log.error(error.localizedDescription)
             return
         }
         guard let result = result else {
-            errorLabel.text = "Nil result in playlist callback"
+            Log.error("Nil result in playlist callback")
             return
         }
         guard let listPage = result as? SPTListPage else {
-            errorLabel.text = "Playlist callback result is not SPTListPage"
+            Log.error("Playlist callback result is not SPTListPage")
             return
         }
 
@@ -470,27 +456,27 @@ extension SpuffleViewController: SPTAudioStreamingDelegate {
     }
 
     func audioStreamingDidLogout(_ audioStreaming: SPTAudioStreamingController) {
-        errorLabel.text = #function
+        Log.info(#function)
     }
 
     func audioStreamingDidDisconnect(_ audioStreaming: SPTAudioStreamingController) {
-        errorLabel.text = #function
+        Log.info(#function)
     }
 
     func audioStreamingDidReconnect(_ audioStreaming: SPTAudioStreamingController) {
-        errorLabel.text = #function
+        Log.info(#function)
     }
 
     func audioStreamingDidLosePermission(forPlayback audioStreaming: SPTAudioStreamingController) {
-        errorLabel.text = #function
+        Log.info(#function)
     }
 
     func audioStreaming(_ audioStreaming: SPTAudioStreamingController, didReceiveError error: Error) {
-        errorLabel.text = error.localizedDescription
+        Log.error(error)
     }
 
     func audioStreamingDidEncounterTemporaryConnectionError(_ audioStreaming: SPTAudioStreamingController) {
-        errorLabel.text = #function
+        Log.info(#function)
     }
 }
 

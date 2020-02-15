@@ -8,6 +8,7 @@ enum Alert {
     static func show(_ message: String) {
         var window: UIWindow? = UIWindow()
         window?.windowLevel = .alert
+        window?.backgroundColor = .clear
 
         let releaseWindow = { window = nil }
 
