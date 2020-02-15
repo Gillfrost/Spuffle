@@ -162,7 +162,7 @@ final class SpuffleViewController: UIViewController {
             try controller.start(withClientId: SPTAuth.defaultInstance().clientID!)
             try AVAudioSession.sharedInstance().setCategory(.playback)
         } catch {
-            Log.error(error.localizedDescription)
+            Log.error(error)
         }
     }
 
@@ -318,7 +318,7 @@ final class SpuffleViewController: UIViewController {
     private func getPlaylists(token: String, completion: @escaping ([Playlist]) -> Void) {
         SPTUser.requestCurrentUser(withAccessToken: token) { [weak self] error, result in
             if let error = error {
-                Log.error(error.localizedDescription)
+                Log.error(error)
                 return
             }
             guard let user = result as? SPTUser else {
@@ -338,7 +338,7 @@ final class SpuffleViewController: UIViewController {
 
     private func playlistCallback(error: Error?, result: Any?, token: String, completion: @escaping ([Playlist]) -> Void) {
         if let error = error {
-            Log.error(error.localizedDescription)
+            Log.error(error)
             return
         }
         guard let result = result else {
