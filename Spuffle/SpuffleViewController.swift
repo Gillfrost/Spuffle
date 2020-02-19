@@ -16,12 +16,13 @@ final class SpuffleViewController: UIViewController {
         let name: String
         let trackCount: UInt
 
-        private (set) var excluded = false
+        private (set) var excluded: Bool
 
-        init(uri: URL, name: String, trackCount: UInt) {
+        init(uri: URL, name: String, trackCount: UInt, excluded: Bool) {
             self.uri = uri
             self.name = name
             self.trackCount = trackCount
+            self.excluded = excluded
         }
 
         mutating func toggleExcluded() {
@@ -126,6 +127,34 @@ final class SpuffleViewController: UIViewController {
         didSet {
             if state == .initial {
                 state = .loaded
+            }
+        }
+    }
+
+    private enum StorageKey: String {
+        case excludedPlaylistUris
+    }
+
+    private var excludedPlaylistUris: Set<String> {
+        get {
+            return UserDefaults.standard
+                .data(forKey: StorageKey.excludedPlaylistUris.rawValue)
+                .flatMap {
+                    try? JSONDecoder()
+                        .decode(Set<String>.self, from: $0)
+                }
+                ?? []
+        }
+        set {
+            do {
+                let data = try JSONEncoder()
+                    .encode(newValue)
+
+                UserDefaults.standard
+                    .set(data, forKey: StorageKey.excludedPlaylistUris.rawValue)
+
+            } catch {
+                Log.error(error)
             }
         }
     }
@@ -252,9 +281,9 @@ final class SpuffleViewController: UIViewController {
         case .playing, .loaded:
             controller.playSpotifyURI(playlist.uri.absoluteString,
                                       startingWith: UInt.random(in: 0..<playlist.trackCount),
-                                      startingWithPosition: 0) { $0.map(Log.error) }
+                                      startingWithPosition: 0) { $0.map { Log.error($0) }}
         case .paused:
-            controller.setIsPlaying(true) { $0.map(Log.error) }
+            controller.setIsPlaying(true) { $0.map { Log.error($0) }}
         }
     }
 
@@ -292,7 +321,7 @@ final class SpuffleViewController: UIViewController {
     }
 
     private func pause() {
-        controller.setIsPlaying(false) { $0.map(Log.error) }
+        controller.setIsPlaying(false) { $0.map { Log.error($0) }}
         state = .paused
     }
 
@@ -375,12 +404,15 @@ final class SpuffleViewController: UIViewController {
             return
         }
 
+        let excludedPlaylistUris = self.excludedPlaylistUris
+
         let playlists = listPage.tracksForPlayback()?
             .compactMap { $0 as? SPTPartialPlaylist }
             .map {
                 Playlist(uri: $0.playableUri,
                          name: $0.name,
-                         trackCount: $0.trackCount)
+                         trackCount: $0.trackCount,
+                         excluded: excludedPlaylistUris.contains($0.playableUri.absoluteString))
 
             } ?? []
 
@@ -427,6 +459,12 @@ extension SpuffleViewController: UITableViewDelegate {
         }
 
         playlists[indexPath.row].toggleExcluded()
+        let playlist = playlists[indexPath.row]
+        if playlist.excluded {
+            excludedPlaylistUris.insert(playlist.uri.absoluteString)
+        } else {
+            excludedPlaylistUris.remove(playlist.uri.absoluteString)
+        }
 
         tableView.cellForRow(at: indexPath).map {
             configure($0, for: indexPath)

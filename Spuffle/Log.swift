@@ -11,8 +11,13 @@ enum Log {
         log(.info, message)
     }
 
-    static func error(_ error: Error) {
-        self.error(error.localizedDescription)
+    static func error(_ error: Error,
+                      file: StaticString = #file,
+                      line: UInt = #line) {
+
+        self.error(error.localizedDescription,
+                   file: file,
+                   line: line)
     }
 
     static func error(_ message: String,
