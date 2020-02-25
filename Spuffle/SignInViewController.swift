@@ -12,7 +12,6 @@ final class SignInViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         hideSignInButton()
-        checkSessionWhenResumingApp()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -28,18 +27,13 @@ final class SignInViewController: UIViewController {
         signInButton.isHidden = true
     }
 
-    private func checkSessionWhenResumingApp() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(checkSession),
-                                               name: UIApplication.didBecomeActiveNotification,
-                                               object: nil)
-    }
-
     @objc private func checkSession() {
         let isSessionValid = auth.session?.isValid() == true
         if isSessionValid {
             Log.info("Session is valid")
-            NotificationCenter.default.removeObserver(self, name: .sessionAcquired, object: nil)
+            NotificationCenter.default.removeObserver(self,
+                                                      name: .sessionAcquired,
+                                                      object: nil)
             showSpuffle()
         } else {
             Log.info("No valid session")
@@ -57,7 +51,9 @@ final class SignInViewController: UIViewController {
         hideSignInButton()
         let url = auth.spotifyAppAuthenticationURL()
         UIApplication.shared.open(url)
-        NotificationCenter.default.addObserver(self, selector: #selector(checkSession), name: .sessionAcquired, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(checkSession),
+                                               name: .sessionAcquired,
+                                               object: nil)
     }
 
     private func showSpuffle() {
