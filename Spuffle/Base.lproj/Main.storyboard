@@ -208,6 +208,12 @@
                                     <constraint firstItem="rWG-dn-b7R" firstAttribute="leading" secondItem="eAD-b6-LMO" secondAttribute="leading" id="vdp-f5-jf7"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bluetooth" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HEj-X4-bJm">
+                                <rect key="frame" x="170" y="527" width="74" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -219,10 +225,12 @@
                             <constraint firstItem="tjl-Np-7Xe" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5Q6-Ch-NDG" secondAttribute="trailing" id="Dtq-me-kRt"/>
                             <constraint firstItem="1Yq-t0-fb6" firstAttribute="trailing" secondItem="7g7-QA-qkv" secondAttribute="trailing" id="FkZ-C6-Rdq"/>
                             <constraint firstItem="1Yq-t0-fb6" firstAttribute="trailing" secondItem="fLV-89-A5I" secondAttribute="trailing" id="L2A-AG-bz3"/>
+                            <constraint firstItem="HEj-X4-bJm" firstAttribute="centerY" secondItem="XTp-eJ-aGH" secondAttribute="centerY" multiplier="1.2" id="LEe-F0-h32"/>
                             <constraint firstItem="eAD-b6-LMO" firstAttribute="leading" secondItem="XTp-eJ-aGH" secondAttribute="leading" constant="10" id="MI8-LC-R3E"/>
                             <constraint firstItem="fLV-89-A5I" firstAttribute="centerX" secondItem="XTp-eJ-aGH" secondAttribute="centerX" id="MpV-C7-Mrb"/>
                             <constraint firstAttribute="bottom" secondItem="eAD-b6-LMO" secondAttribute="bottom" id="Odk-je-eYr"/>
                             <constraint firstItem="5Q6-Ch-NDG" firstAttribute="centerX" secondItem="XTp-eJ-aGH" secondAttribute="centerX" id="R3c-tn-3xu"/>
+                            <constraint firstItem="HEj-X4-bJm" firstAttribute="centerX" secondItem="XTp-eJ-aGH" secondAttribute="centerX" id="V1F-e9-Fkd"/>
                             <constraint firstItem="fLV-89-A5I" firstAttribute="leading" secondItem="1Yq-t0-fb6" secondAttribute="leading" id="ZDL-9X-CZm"/>
                             <constraint firstItem="tjl-Np-7Xe" firstAttribute="centerY" secondItem="5Q6-Ch-NDG" secondAttribute="centerY" id="cvH-0V-0mM"/>
                             <constraint firstItem="1Yq-t0-fb6" firstAttribute="trailing" secondItem="tjl-Np-7Xe" secondAttribute="trailing" constant="20" id="g9h-cJ-IaN"/>
@@ -235,6 +243,7 @@
                     </view>
                     <connections>
                         <outlet property="artistLabel" destination="9qo-V3-Hu3" id="rGL-jb-b9a"/>
+                        <outlet property="bluetoothLabel" destination="HEj-X4-bJm" id="gRj-3u-4T4"/>
                         <outlet property="coverImage" destination="fLV-89-A5I" id="Sh7-Fv-BYp"/>
                         <outlet property="excludeLabel" destination="Obv-OB-6b1" id="5YN-YH-1wD"/>
                         <outlet property="includeLabel" destination="9Z7-MP-u0Z" id="xP5-AT-exp"/>
