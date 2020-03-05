@@ -107,6 +107,7 @@ final class SpuffleViewController: UIViewController {
     @IBOutlet weak private var playButton: UIButton!
     @IBOutlet weak private var skipButton: UIButton!
     @IBOutlet weak private var playlistHandle: UIView!
+    @IBOutlet weak private var bluetoothLabel: UILabel!
     @IBOutlet weak private var tableView: UITableView!
     @IBOutlet weak private var includeLabel: UILabel!
     @IBOutlet weak private var excludeLabel: UILabel!
@@ -168,6 +169,7 @@ final class SpuffleViewController: UIViewController {
         setButtonsAndMetadataVisibility()
         setInclusionLabelVisibilities(playlistVisibility: .collapsed)
         clearMetadataLabels()
+        setBluetoothLabel()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -177,6 +179,14 @@ final class SpuffleViewController: UIViewController {
     }
 
     deinit {
+        deactivateAudioSession()
+    }
+
+    private func activateAudioSession() {
+        try? AVAudioSession.sharedInstance().setActive(true, options: [])
+    }
+
+    private func deactivateAudioSession() {
         try? AVAudioSession.sharedInstance().setActive(false, options: [])
     }
 
@@ -191,9 +201,51 @@ final class SpuffleViewController: UIViewController {
         do {
             try controller.start(withClientId: SPTAuth.defaultInstance().clientID!)
             try AVAudioSession.sharedInstance().setCategory(.playback)
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(handleAudioRouteChange),
+                                                   name: AVAudioSession.routeChangeNotification,
+                                                   object: nil)
         } catch {
             Log.error(error)
         }
+    }
+
+    @objc
+    private func handleAudioRouteChange(notification: Notification) {
+        DispatchQueue.main.async {
+
+            self.setBluetoothLabel()
+
+            guard let previousRoute = notification.userInfo?[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription else {
+                return
+            }
+
+            if self.state == .playing &&
+                previousRoute
+                    .outputs
+                    .contains(where: self.isBluetooth) {
+
+                self.pause()
+            }
+        }
+    }
+
+    private func isBluetooth(port: AVAudioSessionPortDescription) -> Bool {
+        return [AVAudioSession.Port.bluetoothA2DP,
+                .bluetoothHFP,
+                .bluetoothLE]
+            .contains(port.portType)
+    }
+
+    private func setBluetoothLabel() {
+        let name = AVAudioSession
+            .sharedInstance()
+            .currentRoute
+            .outputs
+            .first(where: isBluetooth)?
+            .portName
+
+        bluetoothLabel.text = name
     }
 
     // MARK: - Playback
@@ -545,7 +597,7 @@ extension SpuffleViewController: UITableViewDelegate {
 extension SpuffleViewController: SPTAudioStreamingDelegate {
 
     func audioStreamingDidLogin(_ audioStreaming: SPTAudioStreamingController) {
-        try? AVAudioSession.sharedInstance().setActive(true, options: [])
+        activateAudioSession()
         if state == .playing {
             play()
         }
