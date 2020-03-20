@@ -266,6 +266,11 @@ final class SpuffleViewController: UIViewController {
         artistLabel.alpha = metadataAlpha
         coverImage.alpha = metadataAlpha
 
+        let playlistHandleAlpha: CGFloat = state == .paused || playlistEditorIsNotCollapsed
+            ? 1
+            : 0.5
+        playlistHandle.alpha = playlistHandleAlpha
+
         removeControlSubscriptions()
         setupControlSubscriptions()
     }
@@ -382,6 +387,7 @@ final class SpuffleViewController: UIViewController {
 
     @IBAction private func highlightPlaylistHandle() {
         playlistHandle.backgroundColor = UIColor(white: 0.25, alpha: 1)
+        playlistHandle.alpha = 1
     }
 
     private func unhighlightPlaylistHandle() {
@@ -389,14 +395,17 @@ final class SpuffleViewController: UIViewController {
     }
 
     @IBAction private func togglePlaylistVisibility() {
-        let isNotCollapsed = listHeightConstraint.constant != minimumListHeight
-        let newVisibility = isNotCollapsed
+        let newVisibility = playlistEditorIsNotCollapsed
             ? PlaylistVisibility.collapsed
             : .expanded
 
         unhighlightPlaylistHandle()
         setPlaylistVisibility(newVisibility)
         animateLayout()
+    }
+
+    private var playlistEditorIsNotCollapsed: Bool {
+        listHeightConstraint.constant != minimumListHeight
     }
 
     @IBAction func panList(_ pan: UIPanGestureRecognizer) {
@@ -435,6 +444,9 @@ final class SpuffleViewController: UIViewController {
 
         listHeightConstraint.constant = endHeight
         setInclusionLabelVisibilities(playlistVisibility: visibility)
+        playlistHandle.alpha = visibility == .expanded || state == .paused
+            ? 1
+            : 0.5
         animateLayout()
     }
 
