@@ -32,9 +32,7 @@ final class SignInViewController: UIViewController {
         let isSessionValid = auth.session?.isValid() == true
         if isSessionValid {
             Log.info("Session is valid")
-            NotificationCenter.default.removeObserver(self,
-                                                      name: .sessionAcquired,
-                                                      object: nil)
+            removeAuthenticationStatusObservers()
             showSpuffle()
         } else {
             Log.info("No valid session")
@@ -55,9 +53,38 @@ final class SignInViewController: UIViewController {
             let webController = SFSafariViewController(url: url)
             present(webController, animated: true)
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(checkSession),
-                                               name: .sessionAcquired,
-                                               object: nil)
+        addAuthenticationStatusObservers()
+    }
+
+    private func addAuthenticationStatusObservers() {
+        notificationCenter
+            .addObserver(self,
+                         selector: #selector(checkSession),
+                         name: .sessionAcquired,
+                         object: nil)
+        notificationCenter
+            .addObserver(self,
+                         selector: #selector(showAuthenticationFailureAlert),
+                         name: .authenticationFailed,
+                         object: nil)
+    }
+
+    private var notificationCenter: NotificationCenter { .default }
+
+    private func removeAuthenticationStatusObservers() {
+        notificationCenter
+            .removeObserver(self,
+                            name: .sessionAcquired,
+                            object: nil)
+        notificationCenter
+            .removeObserver(self,
+                            name: .authenticationFailed,
+                            object: nil)
+    }
+
+    @objc private func showAuthenticationFailureAlert() {
+        Alert.show("There was a problem authenticating your Spotify account. Please try again")
+        checkSession()
     }
 
     private func showSpuffle() {
