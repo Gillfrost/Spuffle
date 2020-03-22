@@ -101,6 +101,7 @@ final class SpuffleViewController: UIViewController {
         }
     }
 
+    @IBOutlet weak private var playerContainer: UIView!
     @IBOutlet weak private var trackLabel: UILabel!
     @IBOutlet weak private var artistLabel: UILabel!
     @IBOutlet weak private var coverImage: UIImageView!
@@ -402,7 +403,6 @@ final class SpuffleViewController: UIViewController {
 
         unhighlightPlaylistHandle()
         setPlaylistVisibility(newVisibility)
-        animateLayout()
     }
 
     private var playlistEditorIsNotCollapsed: Bool {
@@ -459,6 +459,7 @@ final class SpuffleViewController: UIViewController {
         let quotient = min(max(0, currentHeightInSpan / span), 1)
 
         safeAreaBottomCover.alpha = 1 - quotient
+        playerContainer.alpha = 1 - quotient
     }
 
     private func animateLayout() {
