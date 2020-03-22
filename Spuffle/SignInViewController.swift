@@ -2,6 +2,7 @@
 //  Licensed under the MIT license
 
 import UIKit
+import SafariServices
 
 final class SignInViewController: UIViewController {
 
@@ -43,20 +44,27 @@ final class SignInViewController: UIViewController {
     }
 
     @IBAction private func signIn() {
-        guard SPTAuth.supportsApplicationAuthentication() else {
-            Log.info("Flip-flop authentication not supported")
-            // TODO: Handle
-            return
-        }
         hideSignInButton()
-        let url = auth.spotifyAppAuthenticationURL()
-        UIApplication.shared.open(url)
+        if SPTAuth.supportsApplicationAuthentication() {
+            Log.info("Starting app authentication")
+            let url = auth.spotifyAppAuthenticationURL()
+            UIApplication.shared.open(url)
+        } else {
+            Log.info("Starting web authentication")
+            let url = SPTAuth.defaultInstance().spotifyWebAuthenticationURL()
+            let webController = SFSafariViewController(url: url)
+            present(webController, animated: true)
+        }
         NotificationCenter.default.addObserver(self, selector: #selector(checkSession),
                                                name: .sessionAcquired,
                                                object: nil)
     }
 
     private func showSpuffle() {
+        if presentedViewController is SFSafariViewController {
+            dismiss(animated: true)
+            return
+        }
         guard presentedViewController == nil else {
             Log.error("Sign-in tried to perform segue with controller \(String(describing: presentedViewController)) already presented")
             return
