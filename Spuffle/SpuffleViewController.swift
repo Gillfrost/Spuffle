@@ -111,6 +111,7 @@ final class SpuffleViewController: UIViewController {
     @IBOutlet weak private var tableView: UITableView!
     @IBOutlet weak private var includeLabel: UILabel!
     @IBOutlet weak private var excludeLabel: UILabel!
+    @IBOutlet weak private var safeAreaBottomCover: UIView!
     @IBOutlet weak private var listHeightConstraint: NSLayoutConstraint!
 
     private var listPanStartingHeight: CGFloat = 0
@@ -414,6 +415,7 @@ final class SpuffleViewController: UIViewController {
             listPanStartingHeight = listHeightConstraint.constant
         case .changed:
             listHeightConstraint.constant = listPanStartingHeight - pan.translation(in: view).y
+            fadeViewsByListHeight()
         case .ended:
             let visibility: PlaylistVisibility
             let velocity = pan.velocity(in: view).y
@@ -447,7 +449,16 @@ final class SpuffleViewController: UIViewController {
         playlistHandle.alpha = visibility == .expanded || state == .paused
             ? 1
             : 0.5
+        fadeViewsByListHeight()
         animateLayout()
+    }
+
+    private func fadeViewsByListHeight() {
+        let span = maximumListHeight - minimumListHeight
+        let currentHeightInSpan = listHeightConstraint.constant - minimumListHeight
+        let quotient = min(max(0, currentHeightInSpan / span), 1)
+
+        safeAreaBottomCover.alpha = 1 - quotient
     }
 
     private func animateLayout() {
