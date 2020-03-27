@@ -43,6 +43,8 @@ final class SignInViewController: UIViewController {
 
     @IBAction private func signIn() {
         hideSignInButton()
+        removeAuthenticationStatusObservers()
+        addAuthenticationStatusObservers()
         if SPTAuth.supportsApplicationAuthentication() {
             Log.info("Starting app authentication")
             let url = auth.spotifyAppAuthenticationURL()
@@ -53,7 +55,6 @@ final class SignInViewController: UIViewController {
             let webController = SFSafariViewController(url: url)
             present(webController, animated: true)
         }
-        addAuthenticationStatusObservers()
     }
 
     private func addAuthenticationStatusObservers() {

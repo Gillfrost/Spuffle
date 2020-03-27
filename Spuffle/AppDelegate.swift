@@ -34,7 +34,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         auth.handleAuthCallback(withTriggeredAuthURL: url) { error, session in
             if let error = error {
-                Log.error(error.localizedDescription)
+                error.localizedDescription == "user_canceled"
+                    ? Log.info("User canceled")
+                    : Log.error(error.localizedDescription)
                 NotificationCenter.default.post(name: .authenticationFailed, object: nil)
                 return
             }
