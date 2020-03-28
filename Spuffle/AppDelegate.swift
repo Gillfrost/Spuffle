@@ -34,8 +34,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         auth.handleAuthCallback(withTriggeredAuthURL: url) { error, session in
             if let error = error {
-                // TODO: Handle error
-                Log.error(error.localizedDescription)
+                error.localizedDescription == "user_canceled"
+                    ? Log.info("User canceled authentication")
+                    : Log.error(error.localizedDescription)
+                NotificationCenter.default.post(name: .authenticationFailed, object: nil)
                 return
             }
             SPTAuth.defaultInstance().session = session
@@ -46,5 +48,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 extension Notification.Name {
-    static let sessionAcquired = Notification.Name("sessionAcquired")
+    static let sessionAcquired = Self("sessionAcquired")
+    static let authenticationFailed = Self(rawValue: "authenticationFailed")
 }

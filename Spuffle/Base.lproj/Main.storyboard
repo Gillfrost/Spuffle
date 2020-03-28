@@ -160,7 +160,6 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c7i-U1-iH3">
                                                 <rect key="frame" x="0.0" y="0.0" width="394" height="80"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <state key="highlighted" title="Highlighted"/>
                                                 <connections>
                                                     <action selector="highlightPlaylistHandle" destination="Amm-qq-O7W" eventType="touchDown" id="vjX-GP-b4m"/>
                                                     <action selector="togglePlaylistVisibility" destination="Amm-qq-O7W" eventType="touchUpInside" id="GTa-yM-aYS"/>
