@@ -68,6 +68,11 @@ final class SignInViewController: UIViewController {
                          selector: #selector(showAuthenticationFailureAlert),
                          name: .authenticationFailed,
                          object: nil)
+        notificationCenter
+            .addObserver(self,
+                         selector: #selector(checkSession),
+                         name: UIApplication.didBecomeActiveNotification,
+                         object: nil)
     }
 
     private var notificationCenter: NotificationCenter { .default }
@@ -80,6 +85,10 @@ final class SignInViewController: UIViewController {
         notificationCenter
             .removeObserver(self,
                             name: .authenticationFailed,
+                            object: nil)
+        notificationCenter
+            .removeObserver(self,
+                            name: UIApplication.didBecomeActiveNotification,
                             object: nil)
     }
 
