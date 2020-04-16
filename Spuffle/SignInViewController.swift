@@ -13,6 +13,10 @@ final class SignInViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         hideContent()
+
+        #if DEBUG
+        addDebugButton()
+        #endif
     }
 
     override func viewDidAppear(_ animated: Bool) {

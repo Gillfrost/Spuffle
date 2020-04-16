@@ -172,6 +172,10 @@ final class SpuffleViewController: UIViewController {
         setInclusionLabelVisibilities(playlistVisibility: .collapsed)
         clearMetadataLabels()
         setBluetoothLabel()
+
+        #if DEBUG
+        addDebugButton()
+        #endif
     }
 
     override func viewDidAppear(_ animated: Bool) {
