@@ -16,27 +16,63 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6TK-SH-nSI" customClass="SPTConnectButton">
-                                <rect key="frame" x="82" y="425.5" width="250" height="55"/>
-                                <color key="backgroundColor" red="0.0" green="1" blue="0.56470588235294117" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dpo-Gi-69L">
+                                <rect key="frame" x="10" y="24" width="394" height="838"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cSk-HT-JrD">
+                                        <rect key="frame" x="20" y="20" width="354" height="371.5"/>
+                                        <string key="text">Sign in to your Spotify premium
+account, and get ready to Spuffle!</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="0.75" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6TK-SH-nSI" customClass="SPTConnectButton">
+                                        <rect key="frame" x="72" y="391.5" width="250" height="55"/>
+                                        <color key="backgroundColor" red="0.0" green="1" blue="0.56470588235294117" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="55" id="36j-6C-23c"/>
+                                            <constraint firstAttribute="width" constant="250" id="YwJ-Bt-a1R"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="signIn" destination="BYZ-38-t0r" eventType="touchUpInside" id="Hpo-dl-FsT"/>
+                                        </connections>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZTe-gl-DKr">
+                                        <rect key="frame" x="144" y="785" width="106" height="33"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <state key="normal" title="Privacy Policy">
+                                            <color key="titleColor" red="0.0" green="1" blue="0.56470588239999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showPrivacyPolicy" destination="BYZ-38-t0r" eventType="touchUpInside" id="dyi-e6-Tnu"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="55" id="36j-6C-23c"/>
-                                    <constraint firstAttribute="width" constant="250" id="YwJ-Bt-a1R"/>
+                                    <constraint firstAttribute="trailing" secondItem="cSk-HT-JrD" secondAttribute="trailing" constant="20" id="9fY-Ex-KcG"/>
+                                    <constraint firstItem="cSk-HT-JrD" firstAttribute="top" secondItem="dpo-Gi-69L" secondAttribute="top" constant="20" id="BNL-zf-7yz"/>
+                                    <constraint firstItem="ZTe-gl-DKr" firstAttribute="centerX" secondItem="dpo-Gi-69L" secondAttribute="centerX" id="RhZ-tt-Sxa"/>
+                                    <constraint firstItem="cSk-HT-JrD" firstAttribute="leading" secondItem="dpo-Gi-69L" secondAttribute="leading" constant="20" id="SVl-Ry-91n"/>
+                                    <constraint firstItem="6TK-SH-nSI" firstAttribute="top" secondItem="cSk-HT-JrD" secondAttribute="bottom" id="byt-re-MPA"/>
+                                    <constraint firstItem="6TK-SH-nSI" firstAttribute="centerY" secondItem="dpo-Gi-69L" secondAttribute="centerY" id="lIT-hS-Hvm"/>
+                                    <constraint firstAttribute="bottom" secondItem="ZTe-gl-DKr" secondAttribute="bottom" constant="20" id="lxz-Un-wiX"/>
+                                    <constraint firstItem="6TK-SH-nSI" firstAttribute="centerX" secondItem="dpo-Gi-69L" secondAttribute="centerX" id="z72-DC-bbI"/>
                                 </constraints>
-                                <connections>
-                                    <action selector="signIn" destination="BYZ-38-t0r" eventType="touchUpInside" id="Hpo-dl-FsT"/>
-                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="6TK-SH-nSI" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="ZOD-EL-3iF"/>
-                            <constraint firstItem="6TK-SH-nSI" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="ogD-xH-ZAZ"/>
+                            <constraint firstItem="dpo-Gi-69L" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="HdC-WQ-x3X"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="dpo-Gi-69L" secondAttribute="bottom" id="SIp-b9-MFq"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="dpo-Gi-69L" secondAttribute="top" constant="20" id="Z7O-pO-dgC"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="dpo-Gi-69L" secondAttribute="trailing" constant="10" id="qBL-4h-oGJ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="signInButton" destination="6TK-SH-nSI" id="YUh-GX-lgK"/>
+                        <outlet property="contentView" destination="dpo-Gi-69L" id="l7Q-gI-tnc"/>
                         <segue destination="Amm-qq-O7W" kind="show" identifier="spuffle" id="pPX-BD-Ef5"/>
                     </connections>
                 </viewController>

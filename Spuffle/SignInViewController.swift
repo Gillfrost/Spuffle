@@ -6,13 +6,13 @@ import SafariServices
 
 final class SignInViewController: UIViewController {
 
-    @IBOutlet private weak var signInButton: UIView!
+    @IBOutlet private weak var contentView: UIView!
 
     private var auth: SPTAuth { return SPTAuth.defaultInstance() }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        hideSignInButton()
+        hideContent()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -20,12 +20,19 @@ final class SignInViewController: UIViewController {
         checkSession()
     }
 
-    private func showSignInButton() {
-        signInButton.isHidden = false
+    private func showContent() {
+        contentView.alpha = 1
     }
 
-    private func hideSignInButton() {
-        signInButton.isHidden = true
+    private func hideContent() {
+        contentView.alpha = 0
+    }
+
+    private func hideContentAnimated() {
+        UIView.animate(withDuration: 0.25,
+                       delay: 0,
+                       options: [.beginFromCurrentState],
+                       animations: hideContent)
     }
 
     @objc private func checkSession() {
@@ -37,24 +44,33 @@ final class SignInViewController: UIViewController {
         } else {
             Log.info("No valid session")
             dismissSpuffle()
-            showSignInButton()
+            showContent()
         }
     }
 
     @IBAction private func signIn() {
-        hideSignInButton()
+        hideContentAnimated()
         removeAuthenticationStatusObservers()
         addAuthenticationStatusObservers()
-        if SPTAuth.supportsApplicationAuthentication() {
-            Log.info("Starting app authentication")
-            let url = auth.spotifyAppAuthenticationURL()
-            UIApplication.shared.open(url)
-        } else {
-            Log.info("Starting web authentication")
-            let url = SPTAuth.defaultInstance().spotifyWebAuthenticationURL()
-            let webController = SFSafariViewController(url: url)
-            present(webController, animated: true)
-        }
+
+        SPTAuth.supportsApplicationAuthentication()
+            ? performAppAuthentication()
+            : performWebAuthentication()
+    }
+
+    private func performAppAuthentication() {
+        Log.info("Starting app authentication")
+        let url = auth.spotifyAppAuthenticationURL()
+
+        UIApplication.shared.open(url)
+    }
+
+    private func performWebAuthentication() {
+        Log.info("Starting web authentication")
+        let url = SPTAuth.defaultInstance().spotifyWebAuthenticationURL()
+        let webController = SFSafariViewController(url: url)
+
+        present(webController, animated: true)
     }
 
     private func addAuthenticationStatusObservers() {
@@ -95,6 +111,17 @@ final class SignInViewController: UIViewController {
     @objc private func showAuthenticationFailureAlert() {
         Alert.show("There was a problem authenticating your Spotify account. Please try again")
         checkSession()
+    }
+
+    @IBAction private func showPrivacyPolicy() {
+        let url = URL(string: "https://gillfrost.github.io/Spuffle/privacy.html")!
+        let webController = SFSafariViewController(url: url)
+
+        hideContentAnimated()
+
+        present(webController,
+                animated: true,
+                completion: showContent)
     }
 
     private func showSpuffle() {
