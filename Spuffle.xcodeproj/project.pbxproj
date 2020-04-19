@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		654D536023F662DA007E65A8 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654D535F23F662DA007E65A8 /* Alert.swift */; };
+		657C299224480FF100EE8066 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657C299124480FF100EE8066 /* Extensions.swift */; };
 		65BA947D23E9F4AF000E4E11 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BA947C23E9F4AF000E4E11 /* Log.swift */; };
 		DC0EA8CF23387D08005FB35B /* SpotifyMetadata.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0EA8CE23387D08005FB35B /* SpotifyMetadata.framework */; };
 		DC57F9612316593B0054F19C /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */; };
@@ -23,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		654D535F23F662DA007E65A8 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		657C299124480FF100EE8066 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		65BA947C23E9F4AF000E4E11 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		DC0EA8CE23387D08005FB35B /* SpotifyMetadata.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyMetadata.framework; path = Frameworks/SpotifyMetadata.framework; sourceTree = "<group>"; };
 		DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyAuthentication.framework; path = Frameworks/SpotifyAuthentication.framework; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 				DCC0B53723139182007F76A6 /* Info.plist */,
 				DCAEADE6232B4E8D006FCC49 /* AppSecrets.swift */,
 				65BA947C23E9F4AF000E4E11 /* Log.swift */,
+				657C299124480FF100EE8066 /* Extensions.swift */,
 			);
 			path = Spuffle;
 			sourceTree = "<group>";
@@ -179,6 +182,7 @@
 				65BA947D23E9F4AF000E4E11 /* Log.swift in Sources */,
 				DCEEFFA72331E15B00849984 /* SpuffleViewController.swift in Sources */,
 				DCAEADE7232B4E8D006FCC49 /* AppSecrets.swift in Sources */,
+				657C299224480FF100EE8066 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
