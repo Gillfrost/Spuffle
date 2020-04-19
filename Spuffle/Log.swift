@@ -3,7 +3,24 @@
 
 import Foundation
 
-enum Log {
+struct Log {
+
+    enum Level { case info, error }
+
+    #if DEBUG
+    static private (set) var logs: [Log] = []
+
+    let date: Date
+    let level: Level
+    let message: String
+    let location: String?
+
+    #else
+    private init() {}
+    #endif
+}
+
+extension Log {
 
     static var errorAction: ((String) -> Void)?
 
@@ -31,8 +48,6 @@ enum Log {
 
 extension Log {
 
-    private enum Level { case info, error }
-
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .none
@@ -54,9 +69,15 @@ extension Log {
                             _ message: String,
                             location: String? = nil) {
 
-        let log = format(level, message, location: location)
-
         #if DEBUG
+        let date = Date()
+        logs.insert(.init(date: date,
+                          level: level,
+                          message: message,
+                          location: location),
+                    at: 0)
+
+        let log = format(date, level, message, location: location)
         print(log)
         #endif
 
@@ -65,9 +86,9 @@ extension Log {
         }
     }
 
-    private static func format(_ level: Level, _ message: String, location: String?) -> String {
+    private static func format(_ date: Date, _ level: Level, _ message: String, location: String?) -> String {
 
-        let date = dateFormatter.string(from: Date())
+        let date = dateFormatter.string(from: date)
 
         let logLevel = "\(level)"
             .uppercased()
