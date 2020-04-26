@@ -219,6 +219,7 @@ final class SpuffleViewController: UIViewController {
     @objc
     private func handleAudioRouteChange(notification: Notification) {
         DispatchQueue.main.async {
+            Log.info(#function)
 
             self.setBluetoothLabel()
 
@@ -307,6 +308,7 @@ final class SpuffleViewController: UIViewController {
             .togglePlayPauseCommand
             .addTarget { [weak self] event in
                 guard let strongSelf = self else {
+                    Log.info("Toggle play pause command failed")
                     return .commandFailed
                 }
                 strongSelf.togglePlay()
@@ -317,6 +319,7 @@ final class SpuffleViewController: UIViewController {
                 .nextTrackCommand
                 .addTarget { [weak self] event in
                     guard let strongSelf = self else {
+                        Log.info("Next track command failed")
                         return .commandFailed
                     }
                     strongSelf.play()
@@ -328,6 +331,7 @@ final class SpuffleViewController: UIViewController {
     private var playingList: Playlist? = nil
 
     @IBAction private func play() {
+        Log.info(#function)
         guard let playlist = randomPlaylist() else {
             Log.error("Play called without playlists")
             return
@@ -343,6 +347,7 @@ final class SpuffleViewController: UIViewController {
         case .initial:
             Log.error("Play called when state was .initial")
         case .playing, .loaded:
+            Log.info("Play Spotify URI")
             controller.playSpotifyURI(playlist.uri.absoluteString,
                                       startingWith: UInt.random(in: 0..<playlist.trackCount),
                                       startingWithPosition: 0) { $0.map { Log.error($0) }}
@@ -385,6 +390,7 @@ final class SpuffleViewController: UIViewController {
     }
 
     private func pause() {
+        Log.info(#function)
         controller.setIsPlaying(false) { $0.map { Log.error($0) }}
         state = .paused
     }
