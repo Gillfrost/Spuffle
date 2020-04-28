@@ -88,8 +88,33 @@ account, and get ready to Spuffle!</string>
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="iL7-oh-9Fc">
+                                <rect key="frame" x="16" y="44" width="382" height="57.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rv4-nw-mKX">
+                                        <rect key="frame" x="8" y="0.0" width="366" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="1" green="0.35398955815202798" blue="0.23388574822052111" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vtf-OS-bND">
+                                        <rect key="frame" x="8" y="24.5" width="366" height="33"/>
+                                        <color key="backgroundColor" red="1" green="0.26219446680000003" blue="0.18823529410000001" alpha="0.66235017126712337" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <state key="normal" title="Try again">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </button>
+                                </subviews>
+                                <edgeInsets key="layoutMargins" top="0.0" left="8" bottom="0.0" right="8"/>
+                            </stackView>
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dx3-Ek-WAh">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="101.5" width="414" height="760.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&quot;Track&quot;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7g7-QA-qkv">
                                         <rect key="frame" x="0.0" y="20" width="414" height="24"/>
@@ -98,16 +123,16 @@ account, and get ready to Spuffle!</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9qo-V3-Hu3">
-                                        <rect key="frame" x="0.0" y="60" width="414" height="21"/>
+                                        <rect key="frame" x="0.0" y="60" width="414" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fLV-89-A5I">
-                                        <rect key="frame" x="0.0" y="97" width="414" height="269"/>
+                                        <rect key="frame" x="0.0" y="96.5" width="414" height="241"/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Q6-Ch-NDG">
-                                        <rect key="frame" x="172" y="374" width="70" height="70"/>
+                                        <rect key="frame" x="172" y="345.5" width="70" height="70"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="70" id="Hnf-AM-AUa"/>
                                             <constraint firstAttribute="width" constant="70" id="w9h-pl-xvs"/>
@@ -121,7 +146,7 @@ account, and get ready to Spuffle!</string>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tjl-Np-7Xe">
-                                        <rect key="frame" x="380" y="381.5" width="34" height="55"/>
+                                        <rect key="frame" x="380" y="353" width="34" height="55"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="36"/>
                                         <state key="normal" title="►|">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -131,7 +156,7 @@ account, and get ready to Spuffle!</string>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bluetooth" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HEj-X4-bJm">
-                                        <rect key="frame" x="170" y="480.5" width="74" height="21"/>
+                                        <rect key="frame" x="170" y="446" width="74" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -182,13 +207,13 @@ account, and get ready to Spuffle!</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Include:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Z7-MP-u0Z">
-                                                <rect key="frame" x="16" y="55" width="60.5" height="21"/>
+                                                <rect key="frame" x="16" y="55.5" width="60.5" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Exclude:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Obv-OB-6b1">
-                                                <rect key="frame" x="313.5" y="55" width="64.5" height="21"/>
+                                                <rect key="frame" x="313.5" y="55.5" width="64.5" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -281,14 +306,17 @@ account, and get ready to Spuffle!</string>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="iL7-oh-9Fc" firstAttribute="leading" secondItem="1Yq-t0-fb6" secondAttribute="leading" constant="16" id="158-wv-M58"/>
                             <constraint firstItem="Dx3-Ek-WAh" firstAttribute="trailing" secondItem="1Yq-t0-fb6" secondAttribute="trailing" id="2ka-vN-OKy"/>
                             <constraint firstAttribute="trailing" secondItem="eAD-b6-LMO" secondAttribute="trailing" constant="10" id="DHI-6t-2Zn"/>
+                            <constraint firstItem="Dx3-Ek-WAh" firstAttribute="top" secondItem="iL7-oh-9Fc" secondAttribute="bottom" id="F0n-ya-Phf"/>
                             <constraint firstItem="1Yq-t0-fb6" firstAttribute="bottom" secondItem="Cop-IJ-HVq" secondAttribute="top" id="HVb-C3-T9q"/>
                             <constraint firstItem="eAD-b6-LMO" firstAttribute="leading" secondItem="XTp-eJ-aGH" secondAttribute="leading" constant="10" id="MI8-LC-R3E"/>
-                            <constraint firstItem="Dx3-Ek-WAh" firstAttribute="top" secondItem="1Yq-t0-fb6" secondAttribute="top" id="OX5-mS-bnY"/>
                             <constraint firstAttribute="bottom" secondItem="eAD-b6-LMO" secondAttribute="bottom" id="Odk-je-eYr"/>
                             <constraint firstItem="eAD-b6-LMO" firstAttribute="trailing" secondItem="Cop-IJ-HVq" secondAttribute="trailing" id="aD7-rj-5kS"/>
                             <constraint firstItem="1Yq-t0-fb6" firstAttribute="bottom" secondItem="Dx3-Ek-WAh" secondAttribute="bottom" id="d5t-Yj-LYl"/>
+                            <constraint firstItem="iL7-oh-9Fc" firstAttribute="top" secondItem="1Yq-t0-fb6" secondAttribute="top" id="gGq-Fg-SnC"/>
+                            <constraint firstItem="1Yq-t0-fb6" firstAttribute="trailing" secondItem="iL7-oh-9Fc" secondAttribute="trailing" constant="16" id="nid-7x-IBT"/>
                             <constraint firstItem="eAD-b6-LMO" firstAttribute="bottom" secondItem="Cop-IJ-HVq" secondAttribute="bottom" id="p9L-Po-A0A"/>
                             <constraint firstItem="1Yq-t0-fb6" firstAttribute="leading" secondItem="Dx3-Ek-WAh" secondAttribute="leading" id="qYd-Um-TxM"/>
                             <constraint firstItem="Cop-IJ-HVq" firstAttribute="leading" secondItem="eAD-b6-LMO" secondAttribute="leading" id="yAr-Bw-Wz1"/>
@@ -299,6 +327,7 @@ account, and get ready to Spuffle!</string>
                         <outlet property="artistLabel" destination="9qo-V3-Hu3" id="rGL-jb-b9a"/>
                         <outlet property="bluetoothLabel" destination="HEj-X4-bJm" id="gRj-3u-4T4"/>
                         <outlet property="coverImage" destination="fLV-89-A5I" id="Sh7-Fv-BYp"/>
+                        <outlet property="errorLabel" destination="Rv4-nw-mKX" id="B7s-sU-ISj"/>
                         <outlet property="excludeLabel" destination="Obv-OB-6b1" id="5YN-YH-1wD"/>
                         <outlet property="includeLabel" destination="9Z7-MP-u0Z" id="xP5-AT-exp"/>
                         <outlet property="listHeightConstraint" destination="O6D-Ou-IXG" id="ix8-73-qL0"/>
@@ -309,6 +338,7 @@ account, and get ready to Spuffle!</string>
                         <outlet property="skipButton" destination="tjl-Np-7Xe" id="y6w-7F-qvQ"/>
                         <outlet property="tableView" destination="rWG-dn-b7R" id="GD9-h2-L4P"/>
                         <outlet property="trackLabel" destination="7g7-QA-qkv" id="nBB-Gd-yE4"/>
+                        <outlet property="tryAgainButton" destination="Vtf-OS-bND" id="DfV-aZ-Tqo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="55O-l6-jeB" userLabel="First Responder" sceneMemberID="firstResponder"/>

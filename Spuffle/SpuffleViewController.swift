@@ -101,6 +101,8 @@ final class SpuffleViewController: UIViewController {
         }
     }
 
+    @IBOutlet weak private var errorLabel: UILabel!
+    @IBOutlet weak private var tryAgainButton: UIButton!
     @IBOutlet weak private var playerContainer: UIView!
     @IBOutlet weak private var trackLabel: UILabel!
     @IBOutlet weak private var artistLabel: UILabel!
@@ -172,6 +174,9 @@ final class SpuffleViewController: UIViewController {
         setInclusionLabelVisibilities(playlistVisibility: .collapsed)
         clearMetadataLabels()
         setBluetoothLabel()
+
+        errorLabel.isHidden = true
+        tryAgainButton.isHidden = true
 
         #if DEBUG
         addDebugButton()
