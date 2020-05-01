@@ -89,16 +89,23 @@ account, and get ready to Spuffle!</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="iL7-oh-9Fc">
-                                <rect key="frame" x="16" y="44" width="382" height="57.5"/>
+                                <rect key="frame" x="16" y="44" width="382" height="61.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rv4-nw-mKX">
-                                        <rect key="frame" x="8" y="0.0" width="366" height="20.5"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LJ9-OJ-U1d">
+                                        <rect key="frame" x="0.0" y="0.0" width="382" height="0.0"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" id="n7p-sN-6yM"/>
+                                        </constraints>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rv4-nw-mKX">
+                                        <rect key="frame" x="0.0" y="4" width="382" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="1" green="0.35398955815202798" blue="0.23388574822052111" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vtf-OS-bND">
-                                        <rect key="frame" x="8" y="24.5" width="366" height="33"/>
+                                        <rect key="frame" x="0.0" y="28.5" width="382" height="33"/>
                                         <color key="backgroundColor" red="1" green="0.26219446680000003" blue="0.18823529410000001" alpha="0.66235017126712337" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <state key="normal" title="Try again">
@@ -111,10 +118,9 @@ account, and get ready to Spuffle!</string>
                                         </userDefinedRuntimeAttributes>
                                     </button>
                                 </subviews>
-                                <edgeInsets key="layoutMargins" top="0.0" left="8" bottom="0.0" right="8"/>
                             </stackView>
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dx3-Ek-WAh">
-                                <rect key="frame" x="0.0" y="101.5" width="414" height="760.5"/>
+                                <rect key="frame" x="0.0" y="105.5" width="414" height="756.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&quot;Track&quot;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7g7-QA-qkv">
                                         <rect key="frame" x="0.0" y="20" width="414" height="24"/>
@@ -129,10 +135,10 @@ account, and get ready to Spuffle!</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fLV-89-A5I">
-                                        <rect key="frame" x="0.0" y="96.5" width="414" height="241"/>
+                                        <rect key="frame" x="0.0" y="96.5" width="414" height="239"/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Q6-Ch-NDG">
-                                        <rect key="frame" x="172" y="345.5" width="70" height="70"/>
+                                        <rect key="frame" x="172" y="343.5" width="70" height="70"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="70" id="Hnf-AM-AUa"/>
                                             <constraint firstAttribute="width" constant="70" id="w9h-pl-xvs"/>
@@ -146,7 +152,7 @@ account, and get ready to Spuffle!</string>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tjl-Np-7Xe">
-                                        <rect key="frame" x="380" y="353" width="34" height="55"/>
+                                        <rect key="frame" x="380" y="351" width="34" height="55"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="36"/>
                                         <state key="normal" title="►|">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -156,7 +162,7 @@ account, and get ready to Spuffle!</string>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bluetooth" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HEj-X4-bJm">
-                                        <rect key="frame" x="170" y="446" width="74" height="20.5"/>
+                                        <rect key="frame" x="170" y="443.5" width="74" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
