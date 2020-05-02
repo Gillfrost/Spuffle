@@ -56,6 +56,12 @@ private final class LogViewController: UITableViewController {
         super.viewDidLoad()
 
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+
+        NotificationCenter.default
+            .addObserver(tableView!,
+                         selector: #selector(UITableView.reloadData),
+                         name: UIApplication.didBecomeActiveNotification,
+                         object: nil)
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

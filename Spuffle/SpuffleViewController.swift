@@ -167,17 +167,22 @@ final class SpuffleViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        setupViews()
         setupAudioController()
-        tableView.tableFooterView = UIView()
-        loadPlaylists()
+    }
+
+    private func setupViews() {
+        errorLabel.isHidden = true
+        tryAgainButton.isHidden = true
+        tryAgainButton.addTarget(self,
+                                 action: #selector(didPressTryAgain),
+                                 for: .touchUpInside)
         setButtonsAndMetadataVisibility()
         setInclusionLabelVisibilities(playlistVisibility: .collapsed)
         clearMetadataLabels()
         setBluetoothLabel()
-
-        errorLabel.isHidden = true
-        tryAgainButton.isHidden = true
-
+        tableView.tableFooterView = UIView()
         #if DEBUG
         addDebugButton()
         #endif
@@ -207,6 +212,7 @@ final class SpuffleViewController: UIViewController {
     }
 
     private func setupAudioController() {
+        Log.info(#function)
         controller.delegate = self
         controller.playbackDelegate = self
         do {
@@ -216,8 +222,13 @@ final class SpuffleViewController: UIViewController {
                                                    selector: #selector(handleAudioRouteChange),
                                                    name: AVAudioSession.routeChangeNotification,
                                                    object: nil)
+
+            loadPlaylists()
         } catch {
             Log.error(error)
+            showError("There was a problem setting up music playback. Please try again.") { [weak self] in
+                self?.setupAudioController()
+            }
         }
     }
 
@@ -297,12 +308,12 @@ final class SpuffleViewController: UIViewController {
         playControlSubscription.map(
             commandCenter.togglePlayPauseCommand.removeTarget
         )
-        nextControlSubscription = nil
+        playControlSubscription = nil
 
         nextControlSubscription.map(
             commandCenter.nextTrackCommand.removeTarget
         )
-        playControlSubscription = nil
+        nextControlSubscription = nil
     }
 
     private func setupControlSubscriptions() {
@@ -312,8 +323,8 @@ final class SpuffleViewController: UIViewController {
         playControlSubscription = commandCenter
             .togglePlayPauseCommand
             .addTarget { [weak self] event in
+                Log.info("MPRemote: togglePlayPauseCommand")
                 guard let strongSelf = self else {
-                    Log.info("Toggle play pause command failed")
                     return .commandFailed
                 }
                 strongSelf.togglePlay()
@@ -323,8 +334,8 @@ final class SpuffleViewController: UIViewController {
             nextControlSubscription = commandCenter
                 .nextTrackCommand
                 .addTarget { [weak self] event in
+                    Log.info("MPRemote: nextTrackCommand")
                     guard let strongSelf = self else {
-                        Log.info("Next track command failed")
                         return .commandFailed
                     }
                     strongSelf.play()
@@ -478,8 +489,14 @@ final class SpuffleViewController: UIViewController {
     }
 
     private func animateLayout() {
+        animate { self.view.layoutIfNeeded() }
+    }
+
+    private func animate(_ animations: @escaping () -> Void) {
         UIView.animate(withDuration: 0.25,
-                       animations: { self.view.layoutIfNeeded() })
+                       delay: 0,
+                       options: .curveEaseOut,
+                       animations: animations)
     }
 
     private func loadPlaylists() {
@@ -487,44 +504,60 @@ final class SpuffleViewController: UIViewController {
             Log.error("Load playlists called without token")
             return
         }
-        getPlaylists(token: token) { [weak self] in
-            self?.playlists = $0
-            self?.tableView.reloadData()
+        getPlaylists(token: token) { [weak self] result in
+            switch result {
+            case .success(let playlists):
+                self?.playlists = playlists
+                self?.tableView.reloadData()
+            case .failure(let error):
+                Log.error(error)
+                self?.showError("There was a problem loading your playlists. Please try again.") {
+                    self?.loadPlaylists()
+                }
+            }
         }
     }
 
-    private func getPlaylists(token: String, completion: @escaping ([Playlist]) -> Void) {
+    private func getPlaylists(token: String, completion: @escaping (Result<[Playlist], Error>) -> Void) {
         SPTUser.requestCurrentUser(withAccessToken: token) { [weak self] error, result in
             if let error = error {
-                Log.error(error)
+                completion(.failure(error))
                 return
             }
             guard let user = result as? SPTUser else {
+                assertionFailure()
                 return
             }
             self?.getPlaylists(user: user.canonicalUserName, token: token, completion: completion)
         }
     }
 
-    private func getPlaylists(user: String, token: String, completion: @escaping ([Playlist]) -> Void) {
+    private func getPlaylists(user: String,
+                              token: String,
+                              completion: @escaping (Result<[Playlist], Error>) -> Void) {
+
         SPTPlaylistList.playlists(forUser: user,
                                   withAccessToken: token) { [weak self] (error, result) in
                                     self?.playlistCallback(error: error, result: result, token: token, completion: completion)
         }
-        return
     }
 
-    private func playlistCallback(error: Error?, result: Any?, token: String, completion: @escaping ([Playlist]) -> Void) {
+    private func playlistCallback(error: Error?,
+                                  result: Any?,
+                                  token: String,
+                                  completion: @escaping (Result<[Playlist], Error>) -> Void) {
         if let error = error {
-            Log.error(error)
+            completion(.failure(error))
             return
         }
         guard let result = result else {
             Log.error("Nil result in playlist callback")
+            assertionFailure()
             return
         }
         guard let listPage = result as? SPTListPage else {
             Log.error("Playlist callback result is not SPTListPage")
+            assertionFailure()
             return
         }
 
@@ -542,10 +575,53 @@ final class SpuffleViewController: UIViewController {
 
         if listPage.hasNextPage {
             listPage.requestNextPage(withAccessToken: token) { [weak self] in
-                self?.playlistCallback(error: $0, result: $1, token: token, completion: { completion(playlists + $0) })
+                self?.playlistCallback(error: $0,
+                                       result: $1,
+                                       token: token,
+                                       completion: {
+                                        guard case .success(let morePlaylists) = $0 else {
+                                            completion($0)
+                                            return
+                                        }
+                                        completion(.success(playlists + morePlaylists))
+                })
             }
         } else {
-            completion(playlists)
+            completion(.success(playlists))
+        }
+    }
+
+    // MARK: - Error Handling
+
+    @objc private func didPressTryAgain() {
+        tryAgain?()
+    }
+
+    private var tryAgain: (() -> Void)?
+
+    private func showError(_ message: String, tryAgain: (() -> Void)? = nil) {
+        errorLabel.text = message
+        self.tryAgain = tryAgain
+            .map { tryAgain in
+                { [weak self] in
+                    self?.hideError()
+                    tryAgain()
+                }
+        }
+        animate {
+            self.errorLabel.isHidden = false
+            self.errorLabel.alpha = 1
+            self.tryAgainButton.isHidden = tryAgain == nil
+            self.tryAgainButton.alpha = tryAgain == nil ? 0 : 1
+        }
+    }
+
+    private func hideError() {
+        animate {
+            self.errorLabel.alpha = 0
+            self.errorLabel.isHidden = true
+            self.tryAgainButton.alpha = 0
+            self.tryAgainButton.isHidden = true
         }
     }
 }
