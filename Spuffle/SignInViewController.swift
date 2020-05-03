@@ -8,7 +8,16 @@ final class SignInViewController: UIViewController {
 
     @IBOutlet private weak var contentView: UIView!
 
-    private var auth: SPTAuth { return SPTAuth.defaultInstance() }
+    private let configuration: SPTConfiguration = {
+        let configuration = SPTConfiguration(clientID: AppSecrets.clientId,
+                                             redirectURL: URL(string: "spuffle://spotify-login-callback")!)
+        configuration.tokenSwapURL = URL(string: "https://spuffle.herokuapp.com/swap")
+        configuration.tokenRefreshURL = URL(string: "https://spuffle.herokuapp.com/refresh")
+        return configuration
+    }()
+
+    private (set) lazy var sessionManager = SPTSessionManager(configuration: configuration,
+                                                              delegate: self)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +31,10 @@ final class SignInViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         checkSession()
+    }
+
+    func showLoadingIndicator() {
+        hideContent()
     }
 
     private func showContent() {
@@ -40,10 +53,9 @@ final class SignInViewController: UIViewController {
     }
 
     @objc private func checkSession() {
-        let isSessionValid = auth.session?.isValid() == true
-        if isSessionValid {
+        if sessionManager.session != nil {
             Log.info("Session is valid")
-            removeAuthenticationStatusObservers()
+            hideContentAnimated()
             showSpuffle()
         } else {
             Log.info("No valid session")
@@ -53,68 +65,14 @@ final class SignInViewController: UIViewController {
     }
 
     @IBAction private func signIn() {
-        hideContentAnimated()
-        removeAuthenticationStatusObservers()
-        addAuthenticationStatusObservers()
+        sessionManager.isSpotifyAppInstalled
+            ? Log.info("Sign in with app")
+            : Log.info("Sign in with credentials")
 
-        SPTAuth.supportsApplicationAuthentication()
-            ? performAppAuthentication()
-            : performWebAuthentication()
-    }
-
-    private func performAppAuthentication() {
-        Log.info("Starting app authentication")
-        let url = auth.spotifyAppAuthenticationURL()
-
-        UIApplication.shared.open(url)
-    }
-
-    private func performWebAuthentication() {
-        Log.info("Starting web authentication")
-        let url = SPTAuth.defaultInstance().spotifyWebAuthenticationURL()
-        let webController = SFSafariViewController(url: url)
-
-        present(webController, animated: true)
-    }
-
-    private func addAuthenticationStatusObservers() {
-        notificationCenter
-            .addObserver(self,
-                         selector: #selector(checkSession),
-                         name: .sessionAcquired,
-                         object: nil)
-        notificationCenter
-            .addObserver(self,
-                         selector: #selector(showAuthenticationFailureAlert),
-                         name: .authenticationFailed,
-                         object: nil)
-        notificationCenter
-            .addObserver(self,
-                         selector: #selector(checkSession),
-                         name: UIApplication.didBecomeActiveNotification,
-                         object: nil)
-    }
-
-    private var notificationCenter: NotificationCenter { .default }
-
-    private func removeAuthenticationStatusObservers() {
-        notificationCenter
-            .removeObserver(self,
-                            name: .sessionAcquired,
-                            object: nil)
-        notificationCenter
-            .removeObserver(self,
-                            name: .authenticationFailed,
-                            object: nil)
-        notificationCenter
-            .removeObserver(self,
-                            name: UIApplication.didBecomeActiveNotification,
-                            object: nil)
-    }
-
-    @objc private func showAuthenticationFailureAlert() {
-        Alert.show("There was a problem authenticating your Spotify account. Please try again")
-        checkSession()
+        sessionManager
+            .initiateSession(with: [.playlistReadPrivate,
+                                    .streaming],
+                             options: .default)
     }
 
     @IBAction private func showPrivacyPolicy() {
@@ -129,15 +87,20 @@ final class SignInViewController: UIViewController {
     }
 
     private func showSpuffle() {
-        if presentedViewController is SFSafariViewController {
-            dismiss(animated: true)
-            return
-        }
         guard presentedViewController == nil else {
-            Log.error("Sign-in tried to perform segue with controller \(String(describing: presentedViewController)) already presented")
+            Log.info("Sign-in tried to perform segue with controller \(String(describing: presentedViewController)) already presented")
+            retry { [weak self] in self?.showSpuffle() }
             return
         }
         performSegue(withIdentifier: "spuffle", sender: nil)
+    }
+
+    private func retry(_ block: @escaping () -> Void) {
+        Timer.scheduledTimer(withTimeInterval: 0.25,
+                             repeats: false,
+                             block:  { _ in
+                                block()
+        })
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -145,7 +108,7 @@ final class SignInViewController: UIViewController {
             Log.error("Unexpected segue \(segue) from sign-in controller")
             return
         }
-        spuffleController.session = auth.session
+        spuffleController.session = sessionManager.session
     }
 
     private func dismissSpuffle() {
@@ -153,5 +116,25 @@ final class SignInViewController: UIViewController {
             return
         }
         dismiss(animated: true)
+    }
+}
+
+extension SignInViewController: SPTSessionManagerDelegate {
+
+    func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
+        Log.info(#function)
+        DispatchQueue.main.async(execute: checkSession)
+    }
+
+    func sessionManager(manager: SPTSessionManager, didFailWith error: Error) {
+        assert(Thread.isMainThread)
+        Log.error(error)
+        Alert.show("There was a problem authenticating your Spotify account. Please try again")
+        checkSession()
+    }
+
+    func sessionManager(manager: SPTSessionManager, didRenew session: SPTSession) {
+        Log.info(#function)
+        (presentedViewController as? SpuffleViewController)?.session = session
     }
 }

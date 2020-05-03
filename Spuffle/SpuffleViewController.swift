@@ -216,7 +216,7 @@ final class SpuffleViewController: UIViewController {
         controller.delegate = self
         controller.playbackDelegate = self
         do {
-            try controller.start(withClientId: SPTAuth.defaultInstance().clientID!)
+            try controller.start(withClientId: AppSecrets.clientId)
             try AVAudioSession.sharedInstance().setCategory(.playback)
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(handleAudioRouteChange),
