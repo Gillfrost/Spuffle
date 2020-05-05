@@ -10,8 +10,8 @@
 		654D536023F662DA007E65A8 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654D535F23F662DA007E65A8 /* Alert.swift */; };
 		657C299224480FF100EE8066 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657C299124480FF100EE8066 /* Extensions.swift */; };
 		65BA947D23E9F4AF000E4E11 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BA947C23E9F4AF000E4E11 /* Log.swift */; };
+		65EDB8F2245F3D64008D01EA /* SpotifyiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65EDB8F1245F3D64008D01EA /* SpotifyiOS.framework */; };
 		DC0EA8CF23387D08005FB35B /* SpotifyMetadata.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0EA8CE23387D08005FB35B /* SpotifyMetadata.framework */; };
-		DC57F9612316593B0054F19C /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */; };
 		DCAEADE7232B4E8D006FCC49 /* AppSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAEADE6232B4E8D006FCC49 /* AppSecrets.swift */; };
 		DCC0B52C23139181007F76A6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC0B52B23139181007F76A6 /* AppDelegate.swift */; };
 		DCC0B52E23139181007F76A6 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC0B52D23139181007F76A6 /* SignInViewController.swift */; };
@@ -26,8 +26,8 @@
 		654D535F23F662DA007E65A8 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		657C299124480FF100EE8066 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		65BA947C23E9F4AF000E4E11 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		65EDB8F1245F3D64008D01EA /* SpotifyiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyiOS.framework; path = Frameworks/SpotifyiOS.framework; sourceTree = "<group>"; };
 		DC0EA8CE23387D08005FB35B /* SpotifyMetadata.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyMetadata.framework; path = Frameworks/SpotifyMetadata.framework; sourceTree = "<group>"; };
-		DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyAuthentication.framework; path = Frameworks/SpotifyAuthentication.framework; sourceTree = "<group>"; };
 		DC57F96223165A850054F19C /* Spuffle-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Spuffle-Bridging-Header.h"; sourceTree = "<group>"; };
 		DCAEADE6232B4E8D006FCC49 /* AppSecrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSecrets.swift; sourceTree = "<group>"; };
 		DCC0B52823139181007F76A6 /* Spuffle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spuffle.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,8 +47,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCEF78842342FF28002E672E /* SpotifyAudioPlayback.framework in Frameworks */,
+				65EDB8F2245F3D64008D01EA /* SpotifyiOS.framework in Frameworks */,
 				DC0EA8CF23387D08005FB35B /* SpotifyMetadata.framework in Frameworks */,
-				DC57F9612316593B0054F19C /* SpotifyAuthentication.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,9 +58,9 @@
 		DC57F95F2316593B0054F19C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				65EDB8F1245F3D64008D01EA /* SpotifyiOS.framework */,
 				DCEF78832342FF28002E672E /* SpotifyAudioPlayback.framework */,
 				DC0EA8CE23387D08005FB35B /* SpotifyMetadata.framework */,
-				DC57F9602316593B0054F19C /* SpotifyAuthentication.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -244,6 +244,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 202005032005;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 49WVTKH5U8;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -321,6 +322,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 202005032005;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 49WVTKH5U8;
 				ENABLE_NS_ASSERTIONS = NO;

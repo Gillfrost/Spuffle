@@ -8,8 +8,8 @@
 #ifndef Spuffle_Bridging_Header_h
 #define Spuffle_Bridging_Header_h
 
+#import <SpotifyiOS/SpotifyiOS.h>
 #import <SpotifyAudioPlayback/SpotifyAudioPlayback.h>
-#import <SpotifyAuthentication/SpotifyAuthentication.h>
 #import <SpotifyMetadata/SpotifyMetadata.h>
 
 #endif /* Spuffle_Bridging_Header_h */

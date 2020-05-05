@@ -16,6 +16,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="gNF-FY-clg">
+                                <rect key="frame" x="197" y="438" width="20" height="20"/>
+                                <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </activityIndicatorView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dpo-Gi-69L">
                                 <rect key="frame" x="10" y="24" width="394" height="838"/>
                                 <subviews>
@@ -27,17 +31,26 @@ account, and get ready to Spuffle!</string>
                                         <color key="textColor" white="0.75" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6TK-SH-nSI" customClass="SPTConnectButton">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fOM-kB-tcB">
                                         <rect key="frame" x="72" y="391.5" width="250" height="55"/>
-                                        <color key="backgroundColor" red="0.0" green="1" blue="0.56470588235294117" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" red="0.11372549019607843" green="0.72549019607843135" blue="0.32941176470588235" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="55" id="36j-6C-23c"/>
-                                            <constraint firstAttribute="width" constant="250" id="YwJ-Bt-a1R"/>
+                                            <constraint firstAttribute="width" constant="250" id="4Ui-Io-wb4"/>
+                                            <constraint firstAttribute="height" constant="55" id="uex-aG-tGS"/>
                                         </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                        <state key="normal" title="Sign in">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <real key="value" value="27.5"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="signIn" destination="BYZ-38-t0r" eventType="touchUpInside" id="Hpo-dl-FsT"/>
+                                            <action selector="signIn" destination="BYZ-38-t0r" eventType="touchUpInside" id="F6Z-CT-WAs"/>
                                         </connections>
-                                    </view>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZTe-gl-DKr">
                                         <rect key="frame" x="144" y="785" width="106" height="33"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -53,12 +66,12 @@ account, and get ready to Spuffle!</string>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="cSk-HT-JrD" secondAttribute="trailing" constant="20" id="9fY-Ex-KcG"/>
                                     <constraint firstItem="cSk-HT-JrD" firstAttribute="top" secondItem="dpo-Gi-69L" secondAttribute="top" constant="20" id="BNL-zf-7yz"/>
+                                    <constraint firstItem="fOM-kB-tcB" firstAttribute="centerY" secondItem="dpo-Gi-69L" secondAttribute="centerY" id="DPw-a9-S5P"/>
                                     <constraint firstItem="ZTe-gl-DKr" firstAttribute="centerX" secondItem="dpo-Gi-69L" secondAttribute="centerX" id="RhZ-tt-Sxa"/>
                                     <constraint firstItem="cSk-HT-JrD" firstAttribute="leading" secondItem="dpo-Gi-69L" secondAttribute="leading" constant="20" id="SVl-Ry-91n"/>
-                                    <constraint firstItem="6TK-SH-nSI" firstAttribute="top" secondItem="cSk-HT-JrD" secondAttribute="bottom" id="byt-re-MPA"/>
-                                    <constraint firstItem="6TK-SH-nSI" firstAttribute="centerY" secondItem="dpo-Gi-69L" secondAttribute="centerY" id="lIT-hS-Hvm"/>
+                                    <constraint firstItem="fOM-kB-tcB" firstAttribute="centerX" secondItem="dpo-Gi-69L" secondAttribute="centerX" id="VZy-G0-XdY"/>
                                     <constraint firstAttribute="bottom" secondItem="ZTe-gl-DKr" secondAttribute="bottom" constant="20" id="lxz-Un-wiX"/>
-                                    <constraint firstItem="6TK-SH-nSI" firstAttribute="centerX" secondItem="dpo-Gi-69L" secondAttribute="centerX" id="z72-DC-bbI"/>
+                                    <constraint firstItem="fOM-kB-tcB" firstAttribute="top" secondItem="cSk-HT-JrD" secondAttribute="bottom" id="tHw-NA-y4a"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -66,8 +79,10 @@ account, and get ready to Spuffle!</string>
                         <constraints>
                             <constraint firstItem="dpo-Gi-69L" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="HdC-WQ-x3X"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="dpo-Gi-69L" secondAttribute="bottom" id="SIp-b9-MFq"/>
+                            <constraint firstItem="gNF-FY-clg" firstAttribute="centerX" secondItem="fOM-kB-tcB" secondAttribute="centerX" id="WqL-j3-cpm"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="dpo-Gi-69L" secondAttribute="top" constant="20" id="Z7O-pO-dgC"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="dpo-Gi-69L" secondAttribute="trailing" constant="10" id="qBL-4h-oGJ"/>
+                            <constraint firstItem="gNF-FY-clg" firstAttribute="centerY" secondItem="fOM-kB-tcB" secondAttribute="centerY" id="x23-ab-y0I"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
