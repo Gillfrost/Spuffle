@@ -127,7 +127,6 @@ extension SignInViewController: SPTSessionManagerDelegate {
     }
 
     func sessionManager(manager: SPTSessionManager, didFailWith error: Error) {
-        assert(Thread.isMainThread)
         Log.error(error)
         Alert.show("There was a problem authenticating your Spotify account. Please try again")
         checkSession()
@@ -136,5 +135,10 @@ extension SignInViewController: SPTSessionManagerDelegate {
     func sessionManager(manager: SPTSessionManager, didRenew session: SPTSession) {
         Log.info(#function)
         (presentedViewController as? SpuffleViewController)?.session = session
+    }
+
+    func sessionManager(manager: SPTSessionManager, shouldRequestAccessTokenWith code: String) -> Bool {
+        hideContentAnimated()
+        return true
     }
 }
