@@ -485,7 +485,7 @@ final class SpuffleViewController: UIViewController {
         let quotient = min(max(0, currentHeightInSpan / span), 1)
 
         safeAreaBottomCover.alpha = 1 - quotient
-        playerContainer.alpha = 1 - quotient
+        playerContainer.alpha = 1 - quotient / 2
     }
 
     private func animateLayout() {

@@ -137,20 +137,24 @@ account, and get ready to Spuffle!</string>
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dx3-Ek-WAh">
                                 <rect key="frame" x="0.0" y="105.5" width="414" height="756.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&quot;Track&quot;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7g7-QA-qkv">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&quot;Spuffle It Real Good&quot;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7g7-QA-qkv">
                                         <rect key="frame" x="0.0" y="20" width="414" height="24"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9qo-V3-Hu3">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The Spufflers" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9qo-V3-Hu3">
                                         <rect key="frame" x="0.0" y="60" width="414" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fLV-89-A5I">
-                                        <rect key="frame" x="0.0" y="96.5" width="414" height="239"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="fLV-89-A5I">
+                                        <rect key="frame" x="87.5" y="96.5" width="239" height="239"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="fLV-89-A5I" secondAttribute="height" id="SGC-2U-6eu"/>
+                                        </constraints>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Q6-Ch-NDG">
                                         <rect key="frame" x="172" y="343.5" width="70" height="70"/>
@@ -176,8 +180,8 @@ account, and get ready to Spuffle!</string>
                                             <action selector="play" destination="Amm-qq-O7W" eventType="touchUpInside" id="zA5-Js-FpT"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bluetooth" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HEj-X4-bJm">
-                                        <rect key="frame" x="170" y="443.5" width="74" height="20.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Bluetooth Headphones" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HEj-X4-bJm">
+                                        <rect key="frame" x="105.5" y="443.5" width="203.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -186,7 +190,6 @@ account, and get ready to Spuffle!</string>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="5Q6-Ch-NDG" firstAttribute="centerY" secondItem="Dx3-Ek-WAh" secondAttribute="centerY" id="2Px-4y-VOr"/>
-                                    <constraint firstAttribute="trailing" secondItem="fLV-89-A5I" secondAttribute="trailing" id="89g-vw-6Dv"/>
                                     <constraint firstAttribute="trailing" secondItem="9qo-V3-Hu3" secondAttribute="trailing" id="8bh-CA-fPd"/>
                                     <constraint firstItem="tjl-Np-7Xe" firstAttribute="centerY" secondItem="5Q6-Ch-NDG" secondAttribute="centerY" id="A4V-vN-PUD"/>
                                     <constraint firstItem="5Q6-Ch-NDG" firstAttribute="centerX" secondItem="Dx3-Ek-WAh" secondAttribute="centerX" id="JP1-UX-Uy4"/>
@@ -195,7 +198,7 @@ account, and get ready to Spuffle!</string>
                                     <constraint firstItem="9qo-V3-Hu3" firstAttribute="leading" secondItem="Dx3-Ek-WAh" secondAttribute="leading" id="KtO-G4-icH"/>
                                     <constraint firstAttribute="trailing" secondItem="7g7-QA-qkv" secondAttribute="trailing" id="M4w-g4-7Li"/>
                                     <constraint firstItem="9qo-V3-Hu3" firstAttribute="top" secondItem="7g7-QA-qkv" secondAttribute="bottom" constant="16" id="TOg-hZ-vgZ"/>
-                                    <constraint firstItem="fLV-89-A5I" firstAttribute="leading" secondItem="Dx3-Ek-WAh" secondAttribute="leading" id="Uwm-kH-heM"/>
+                                    <constraint firstItem="fLV-89-A5I" firstAttribute="centerX" secondItem="Dx3-Ek-WAh" secondAttribute="centerX" id="URo-3E-B9F"/>
                                     <constraint firstItem="7g7-QA-qkv" firstAttribute="top" secondItem="Dx3-Ek-WAh" secondAttribute="top" constant="20" id="fb1-OJ-hXS"/>
                                     <constraint firstItem="tjl-Np-7Xe" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5Q6-Ch-NDG" secondAttribute="trailing" id="fjl-DO-vBS"/>
                                     <constraint firstItem="5Q6-Ch-NDG" firstAttribute="top" secondItem="fLV-89-A5I" secondAttribute="bottom" constant="8" id="gmY-SZ-CgQ"/>
@@ -372,4 +375,7 @@ account, and get ready to Spuffle!</string>
             <point key="canvasLocation" x="666.66666666666674" y="776.78571428571422"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="logo" width="390" height="390"/>
+    </resources>
 </document>
