@@ -724,10 +724,12 @@ extension SpuffleViewController: SPTAudioStreamingDelegate {
 
     func audioStreamingDidDisconnect(_ audioStreaming: SPTAudioStreamingController) {
         Log.info(#function)
+        showError("Bad connection")
     }
 
     func audioStreamingDidReconnect(_ audioStreaming: SPTAudioStreamingController) {
         Log.info(#function)
+        hideError()
     }
 
     func audioStreamingDidLosePermission(forPlayback audioStreaming: SPTAudioStreamingController) {
