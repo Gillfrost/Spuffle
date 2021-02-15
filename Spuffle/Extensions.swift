@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SwiftUI
+import Combine
 
 #if DEBUG
 
@@ -31,18 +33,43 @@ extension UIViewController {
     }
 
     @objc private func showDebugController() {
-        let debugController = LogViewController()
-        let navController = UINavigationController(rootViewController: debugController)
+        let logView = LogView(viewModel: .init(logs: Log.logs))
+        let logViewController = UIHostingController(rootView: logView)
+        let navController = UINavigationController(rootViewController: logViewController)
 
-        debugController.title = "Logs"
+        logViewController.title = "Logs"
 
         self.present(navController, animated: true)
     }
 }
 
-private final class LogViewController: UITableViewController {
+extension Log: Identifiable {
 
-    private let dateFormatter: DateFormatter = {
+    var id: Int {
+        hashValue
+    }
+}
+
+final class LogViewModel: ObservableObject {
+
+    @Published private (set) var logs: [Log] = []
+
+    private var cancellable: AnyCancellable?
+
+    init(logs: AnyPublisher<[Log], Never>) {
+        cancellable = logs
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] logs in
+                self?.logs = logs.reversed()
+            }
+    }
+}
+
+private struct LogView: View {
+
+    @ObservedObject var viewModel: LogViewModel
+
+    private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .none
         formatter.timeStyle = .medium
@@ -50,34 +77,18 @@ private final class LogViewController: UITableViewController {
         return formatter
     }()
 
-    var reuseIdentifier: String { #function }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
-
-        NotificationCenter.default
-            .addObserver(tableView!,
-                         selector: #selector(UITableView.reloadData),
-                         name: UIApplication.didBecomeActiveNotification,
-                         object: nil)
+    var body: some View {
+        List(viewModel.logs, rowContent: logRow)
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Log.logs.count
-    }
+    private func logRow(log: Log) -> some View {
+        let date = LogView.dateFormatter.string(from: log.date)
+        let text = "\(date) \(log.message)"
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
-
-        let log = Log.logs[indexPath.row]
-
-        let date = dateFormatter.string(from: log.date)
-        cell.textLabel?.text = "\(date) \(log.message)"
-        cell.contentView.backgroundColor = backgroundColor(for: log.level)
-
-        return cell
+        return ZStack(alignment: .leading) {
+            Color(backgroundColor(for: log.level))
+            Text(text)
+        }
     }
 
     private func backgroundColor(for level: Log.Level) -> UIColor {
@@ -87,6 +98,26 @@ private final class LogViewController: UITableViewController {
         case .info:
             return UIColor.green.withAlphaComponent(0.15)
         }
+    }
+}
+
+struct Extensions_Previews: PreviewProvider {
+    static var previews: some View {
+        LogView(
+            viewModel: LogViewModel(
+                logs: Just([
+                    .init(date: .init(),
+                          level: .info,
+                          message: "info",
+                          location: nil),
+                    .init(date: .init(),
+                          level: .error,
+                          message: "error",
+                          location: nil)
+                ])
+                .eraseToAnyPublisher()
+            )
+        )
     }
 }
 
