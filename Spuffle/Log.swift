@@ -2,13 +2,18 @@
 //  Licensed under the MIT license
 
 import Foundation
+import Combine
 
-struct Log {
+struct Log: Hashable {
 
     enum Level { case info, error }
 
     #if DEBUG
-    static private (set) var logs: [Log] = []
+    static var logs: AnyPublisher<[Log], Never> {
+        logsSubject.eraseToAnyPublisher()
+    }
+
+    private static let logsSubject = CurrentValueSubject<[Log], Never>([])
 
     let date: Date
     let level: Level
@@ -71,14 +76,15 @@ extension Log {
 
         #if DEBUG
         let date = Date()
-        logs.insert(.init(date: date,
-                          level: level,
-                          message: message,
-                          location: location),
-                    at: 0)
+        let log = Log(date: date,
+                      level: level,
+                      message: message,
+                      location: location)
 
-        let log = format(date, level, message, location: location)
-        print(log)
+        logsSubject.value += [log]
+
+        let formattedLog = format(date, level, message, location: location)
+        print(formattedLog)
         #endif
 
         if level == .error {
