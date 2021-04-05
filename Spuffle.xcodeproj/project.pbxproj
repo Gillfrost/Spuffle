@@ -15,6 +15,9 @@
 		658E844F2607CFF000DDACBA /* PlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E844E2607CFF000DDACBA /* PlayerState.swift */; };
 		658E84542607D31100DDACBA /* Spotify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E84532607D31100DDACBA /* Spotify.swift */; };
 		658E8458260858CD00DDACBA /* SpotifyPlayerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E8457260858CD00DDACBA /* SpotifyPlayerError.swift */; };
+		658E84622609A3EB00DDACBA /* SpotifyPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E84612609A3EB00DDACBA /* SpotifyPlayerTests.swift */; };
+		658E846B2609A6C300DDACBA /* SpotifyAudioPlayback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCEF78832342FF28002E672E /* SpotifyAudioPlayback.framework */; };
+		658F1E9D261B5E8C001C4BA4 /* SpotifyMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658F1E9C261B5E8C001C4BA4 /* SpotifyMock.swift */; };
 		65BA947D23E9F4AF000E4E11 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BA947C23E9F4AF000E4E11 /* Log.swift */; };
 		65EDB8F2245F3D64008D01EA /* SpotifyiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65EDB8F1245F3D64008D01EA /* SpotifyiOS.framework */; };
 		65F436BB25FF9BA10047B3FD /* SpPlaybackEvent+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F436BA25FF9BA10047B3FD /* SpPlaybackEvent+CustomStringConvertible.swift */; };
@@ -28,8 +31,17 @@
 		DCC0B53323139182007F76A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCC0B53223139182007F76A6 /* Assets.xcassets */; };
 		DCC0B53623139182007F76A6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCC0B53423139182007F76A6 /* LaunchScreen.storyboard */; };
 		DCEEFFA72331E15B00849984 /* SpuffleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEEFFA62331E15B00849984 /* SpuffleViewController.swift */; };
-		DCEF78842342FF28002E672E /* SpotifyAudioPlayback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCEF78832342FF28002E672E /* SpotifyAudioPlayback.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		658E84642609A3EB00DDACBA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DCF828DD2312DB5C001FBFC2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC0B52723139181007F76A6;
+			remoteInfo = Spuffle;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		65209EAB25DE2D5900A93346 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
@@ -40,6 +52,10 @@
 		658E844E2607CFF000DDACBA /* PlayerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerState.swift; sourceTree = "<group>"; };
 		658E84532607D31100DDACBA /* Spotify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spotify.swift; sourceTree = "<group>"; };
 		658E8457260858CD00DDACBA /* SpotifyPlayerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyPlayerError.swift; sourceTree = "<group>"; };
+		658E845F2609A3EB00DDACBA /* SpuffleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpuffleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		658E84612609A3EB00DDACBA /* SpotifyPlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyPlayerTests.swift; sourceTree = "<group>"; };
+		658E84632609A3EB00DDACBA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		658F1E9C261B5E8C001C4BA4 /* SpotifyMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyMock.swift; sourceTree = "<group>"; };
 		65BA947C23E9F4AF000E4E11 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		65EDB8F1245F3D64008D01EA /* SpotifyiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyiOS.framework; path = Frameworks/SpotifyiOS.framework; sourceTree = "<group>"; };
 		65F436BA25FF9BA10047B3FD /* SpPlaybackEvent+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SpPlaybackEvent+CustomStringConvertible.swift"; sourceTree = "<group>"; };
@@ -60,13 +76,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		658E845C2609A3EB00DDACBA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DCC0B52523139181007F76A6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCEF78842342FF28002E672E /* SpotifyAudioPlayback.framework in Frameworks */,
 				65EDB8F2245F3D64008D01EA /* SpotifyiOS.framework in Frameworks */,
 				DC0EA8CF23387D08005FB35B /* SpotifyMetadata.framework in Frameworks */,
+				658E846B2609A6C300DDACBA /* SpotifyAudioPlayback.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +128,16 @@
 			path = SpotifyController;
 			sourceTree = "<group>";
 		};
+		658E84602609A3EB00DDACBA /* SpuffleTests */ = {
+			isa = PBXGroup;
+			children = (
+				658E84612609A3EB00DDACBA /* SpotifyPlayerTests.swift */,
+				658F1E9C261B5E8C001C4BA4 /* SpotifyMock.swift */,
+				658E84632609A3EB00DDACBA /* Info.plist */,
+			);
+			path = SpuffleTests;
+			sourceTree = "<group>";
+		};
 		DC57F95F2316593B0054F19C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -119,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				DCC0B52823139181007F76A6 /* Spuffle.app */,
+				658E845F2609A3EB00DDACBA /* SpuffleTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -147,6 +181,7 @@
 			children = (
 				DC57F96223165A850054F19C /* Spuffle-Bridging-Header.h */,
 				DCC0B52A23139181007F76A6 /* Spuffle */,
+				658E84602609A3EB00DDACBA /* SpuffleTests */,
 				DCC0B52923139181007F76A6 /* Products */,
 				DC57F95F2316593B0054F19C /* Frameworks */,
 			);
@@ -155,6 +190,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		658E845E2609A3EB00DDACBA /* SpuffleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 658E84662609A3EB00DDACBA /* Build configuration list for PBXNativeTarget "SpuffleTests" */;
+			buildPhases = (
+				658E845B2609A3EB00DDACBA /* Sources */,
+				658E845C2609A3EB00DDACBA /* Frameworks */,
+				658E845D2609A3EB00DDACBA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				658E84652609A3EB00DDACBA /* PBXTargetDependency */,
+			);
+			name = SpuffleTests;
+			productName = SpuffleTests;
+			productReference = 658E845F2609A3EB00DDACBA /* SpuffleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		DCC0B52723139181007F76A6 /* Spuffle */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DCC0B53A23139182007F76A6 /* Build configuration list for PBXNativeTarget "Spuffle" */;
@@ -178,9 +231,13 @@
 		DCF828DD2312DB5C001FBFC2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1030;
+				LastSwiftUpdateCheck = 1240;
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
+					658E845E2609A3EB00DDACBA = {
+						CreatedOnToolsVersion = 12.4;
+						TestTargetID = DCC0B52723139181007F76A6;
+					};
 					DCC0B52723139181007F76A6 = {
 						CreatedOnToolsVersion = 10.3;
 						SystemCapabilities = {
@@ -205,11 +262,19 @@
 			projectRoot = "";
 			targets = (
 				DCC0B52723139181007F76A6 /* Spuffle */,
+				658E845E2609A3EB00DDACBA /* SpuffleTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		658E845D2609A3EB00DDACBA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DCC0B52623139181007F76A6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -223,6 +288,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		658E845B2609A3EB00DDACBA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				658F1E9D261B5E8C001C4BA4 /* SpotifyMock.swift in Sources */,
+				658E84622609A3EB00DDACBA /* SpotifyPlayerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DCC0B52423139181007F76A6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -248,6 +322,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		658E84652609A3EB00DDACBA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCC0B52723139181007F76A6 /* Spuffle */;
+			targetProxy = 658E84642609A3EB00DDACBA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		DCC0B52F23139181007F76A6 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -268,6 +350,108 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		658E84672609A3EB00DDACBA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 49WVTKH5U8;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = SpuffleTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = se.gillfrost.SpuffleTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spuffle.app/Spuffle";
+			};
+			name = Debug;
+		};
+		658E84682609A3EB00DDACBA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 49WVTKH5U8;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = SpuffleTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = se.gillfrost.SpuffleTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spuffle.app/Spuffle";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		DCC0B53823139182007F76A6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -491,6 +675,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		658E84662609A3EB00DDACBA /* Build configuration list for PBXNativeTarget "SpuffleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				658E84672609A3EB00DDACBA /* Debug */,
+				658E84682609A3EB00DDACBA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		DCC0B53A23139182007F76A6 /* Build configuration list for PBXNativeTarget "Spuffle" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

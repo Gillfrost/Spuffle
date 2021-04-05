@@ -9,8 +9,7 @@ final class SpotifyPlayer: Player {
 
     let state: AnyPublisher<PlayerState, Never>
 
-    init(token: AnyPublisher<String, Never>) {
-        let spotify = Spotify()
+    init(spotify: SpotifyController, token: AnyPublisher<String, Never>) {
         state = SpotifyPlayer.setup(spotify, token: token)
     }
 }
@@ -31,6 +30,7 @@ extension SpotifyPlayer {
                             .setFailureType(to: Error.self)
                     }
                     .replaceError(with: .error(SpotifyPlayerError.setupError, retry: setup.send))
+                    .prepend(.loading)
             }
             .eraseToAnyPublisher()
     }
