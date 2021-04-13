@@ -10,13 +10,15 @@ final class SpotifyPlayerTests: XCTestCase {
     private var cancellables: Set<AnyCancellable> = []
 
     func test_initialStateIsLoading() {
+
         let expectation = self.expectation(description: #function)
 
         player()
             .state
+            .prefix(1)
             .sink { state in
                 guard case .loading = state else {
-                    XCTFail()
+                    XCTFail(state.description)
                     return
                 }
                 expectation.fulfill()
@@ -26,10 +28,10 @@ final class SpotifyPlayerTests: XCTestCase {
         waitForExpectations(timeout: 0)
     }
 
-    func testSetup_retryAfterError() throws {
+    func testSetup_retryAfterError() {
 
         let errorExpectation = expectation(description: "error")
-        let successExpectation = expectation(description: #function)
+        let loadingExpectation = expectation(description: "loading")
 
         let startResults = futureFactory(of: .failure(error), .success(()))
 
@@ -38,20 +40,52 @@ final class SpotifyPlayerTests: XCTestCase {
         player(spotify: mock)
             .state
             .dropFirst()
+            .prefix(2)
             .sink { state in
                 switch state {
                 case .error(_, let retry):
                     errorExpectation.fulfill()
                     retry()
                 case .loading:
-                    successExpectation.fulfill()
+                    loadingExpectation.fulfill()
                 default:
-                    XCTFail()
+                    XCTFail(state.description)
                 }
             }
             .store(in: &cancellables)
 
-        wait(for: [errorExpectation, successExpectation], timeout: 0, enforceOrder: true)
+        wait(for: [errorExpectation, loadingExpectation], timeout: 0, enforceOrder: true)
+    }
+
+    func testLoadPlaylists_retryAfterError() {
+
+        let errorExpectation = expectation(description: "error")
+        let loadedExpectation = expectation(description: "loaded")
+
+        let playlistsResults = futureFactory(of: .failure(error),
+                                             .success([SPTPartialPlaylist]()))
+
+        let mock = SpotifyMock(
+            playlists: { (_, _) in playlistsResults() })
+
+        player(spotify: mock)
+            .state
+            .dropFirst()
+            .prefix(2)
+            .sink { state in
+                switch state {
+                case .error(_, let retry):
+                    errorExpectation.fulfill()
+                    retry()
+                case .loaded:
+                    loadedExpectation.fulfill()
+                default:
+                    XCTFail(state.description)
+                }
+            }
+            .store(in: &cancellables)
+
+        wait(for: [errorExpectation, loadedExpectation], timeout: 1, enforceOrder: true)
     }
 }
 
@@ -60,7 +94,7 @@ private extension SpotifyPlayerTests {
     var error: Error { SpotifyPlayerError.genericError }
 
     func player(spotify: SpotifyMock = .init(),
-                token: AnyPublisher<String, Never> = Empty().eraseToAnyPublisher()) -> SpotifyPlayer {
+                token: AnyPublisher<String, Never> = Just("").eraseToAnyPublisher()) -> SpotifyPlayer {
 
         SpotifyPlayer(spotify: spotify, token: token)
     }
