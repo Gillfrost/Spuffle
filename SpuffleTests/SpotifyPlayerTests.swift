@@ -11,7 +11,8 @@ final class SpotifyPlayerTests: XCTestCase {
 
     func test_initialStateIsLoading() {
 
-        verifyStates(.loading, for: player())
+        verifyStates(.loading,
+                     for: player())
     }
 
     func testSetup_retryAfterErrorInStartRequest() {
@@ -21,7 +22,10 @@ final class SpotifyPlayerTests: XCTestCase {
 
         let mock = SpotifyMock(start: { _ in startResults() })
 
-        verifyStates(.loading, .error, .loading, for: player(spotify: mock))
+        verifyStates(.loading,
+                     .error,
+                     .loading,
+                     for: player(spotify: mock))
     }
 
     func testLoading_retryAfterErrorInUserRequest() {
@@ -32,7 +36,11 @@ final class SpotifyPlayerTests: XCTestCase {
         let mock = SpotifyMock(
             requestCurrentUser: { _ in requestCurrentUserResults() })
 
-        verifyStates(.loading, .error, .loaded, for: player(spotify: mock))
+        verifyStates(.loading,
+                     .error,
+                     .loading,
+                     .loaded,
+                     for: player(spotify: mock))
     }
 
     func testLoading_retryAfterErrorInPlaylistsRequest() {
@@ -43,7 +51,11 @@ final class SpotifyPlayerTests: XCTestCase {
         let mock = SpotifyMock(
             playlists: { (_, _) in playlistsResults() })
 
-        verifyStates(.loading, .error, .loaded, for: player(spotify: mock))
+        verifyStates(.loading,
+                     .error,
+                     .loading,
+                     .loaded,
+                     for: player(spotify: mock))
     }
 }
 
@@ -72,7 +84,7 @@ private extension SpotifyPlayerTests {
         }
     }
 
-    func verifyStates(_ states: State..., for player: Player) {
+    func verifyStates(_ states: State..., for player: Player, line: UInt = #line) {
 
         let expectations = states.map { expectation(description: "\($0)") }
 
@@ -89,9 +101,12 @@ private extension SpotifyPlayerTests {
                     expectation.fulfill()
                 case (.error(_, let retry), .error):
                     expectation.fulfill()
-                    retry()
+                    DispatchQueue.main.async {
+                        retry()
+                    }
                 default:
-                    XCTFail("Expected state \(states[index]), but got \(state)")
+                    XCTFail("Expected state \(states[index]), but got \(state)",
+                            line: line)
                 }
             }
             .store(in: &cancellables)

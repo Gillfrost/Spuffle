@@ -32,6 +32,12 @@ extension SpotifyPlayer {
                     .replaceError(with: .error(SpotifyPlayerError.setupError, retry: setup.send))
                     .prepend(.loading)
             }
+            .removeDuplicates { previous, next in
+                if case .loading = previous, case .loading = next {
+                    return true
+                }
+                return false
+            }
             .eraseToAnyPublisher()
     }
 
@@ -52,6 +58,7 @@ extension SpotifyPlayer {
                         pauseLoaded(spotify, token, playlists)
                     }
                     .catch { Just(.error($0, retry: load.send)) }
+                    .prepend(.loading)
             }
             .eraseToAnyPublisher()
     }
