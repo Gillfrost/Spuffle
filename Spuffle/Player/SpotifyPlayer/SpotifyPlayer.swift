@@ -16,6 +16,13 @@ final class SpotifyPlayer: Player {
 
 extension SpotifyPlayer {
 
+    static var playlistAdapter = { (sptPlaylist: SPTPartialPlaylist) in
+        Playlist(uri: sptPlaylist.uri,
+                 name: sptPlaylist.name,
+                 trackCount: sptPlaylist.trackCount,
+                 excluded: false)
+    }
+
     private static func setup(_ spotify: SpotifyController,
                               token: AnyPublisher<String, Never>) -> AnyPublisher<PlayerState, Never> {
 
@@ -29,7 +36,8 @@ extension SpotifyPlayer {
                         load(spotify, token: token)
                             .setFailureType(to: Error.self)
                     }
-                    .replaceError(with: .error(SpotifyPlayerError.setupError, retry: setup.send))
+                    .replaceError(with: .error(SpotifyPlayerError.setupError,
+                                               retry: setup.send))
                     .prepend(.loading)
             }
             .removeDuplicates { previous, next in
@@ -56,6 +64,7 @@ extension SpotifyPlayer {
                     }
                     .flatMap { playlists in
                         pauseLoaded(spotify, token, playlists)
+                            .setFailureType(to: Error.self)
                     }
                     .catch { Just(.error($0, retry: load.send)) }
                     .prepend(.loading)
@@ -68,25 +77,27 @@ extension SpotifyPlayer {
         spotify
             .requestCurrentUser(withAccessToken: token)
             .flatMap { spotify.playlists(user: $0, token: token) }
-            .map { sptPlaylists in
-                sptPlaylists.map {
-                    Playlist(uri: $0.uri,
-                             name: $0.name,
-                             trackCount: $0.trackCount,
-                             excluded: false)
-                }
-            }
+            .map { $0.map(playlistAdapter) }
             .eraseToAnyPublisher()
     }
 
     private static func pauseLoaded(_ spotify: SpotifyController,
                                     _ token: AnyPublisher<String, Never>,
-                                    _ playlists: [Playlist]) -> AnyPublisher<PlayerState, Error> {
-        let loginAndPlay = token
-            .setFailureType(to: Error.self)
-            .flatMap(spotify.login)
+                                    _ playlists: [Playlist]) -> AnyPublisher<PlayerState, Never> {
+
+        let login = CurrentValueSubject<Void, Never>(())
+
+        let loginAndPlay = login
             .flatMap {
-                self.play(spotify, playlists)
+                token
+                    .setFailureType(to: Error.self)
+                    .flatMap(spotify.login)
+                    .flatMap {
+                        self.play(spotify, playlists)
+                    }
+                    .replaceError(with: .error(SpotifyPlayerError.genericError,
+                                               retry: login.send))
+                    .prepend(.loading)
             }
 
         if spotify.isPlaying {
@@ -95,13 +106,12 @@ extension SpotifyPlayer {
                 .eraseToAnyPublisher()
         }
 
-        let play = PassthroughSubject<Void, Error>()
+        let play = PassthroughSubject<Void, Never>()
 
         return play
             .prefix(1)
             .flatMap {
                 loginAndPlay
-                    .prepend(.loading)
             }
             .prepend(.loaded(playlists: playlists),
                      .paused(play: play.send))

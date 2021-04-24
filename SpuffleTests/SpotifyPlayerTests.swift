@@ -20,7 +20,9 @@ final class SpotifyPlayerTests: XCTestCase {
         let startResults = futureFactory(.failure(error),
                                          .success(()))
 
-        let mock = SpotifyMock(start: { _ in startResults() })
+        let mock = SpotifyMock(
+            start: { _ in startResults() }
+        )
 
         verifyStates(.loading,
                      .error,
@@ -34,7 +36,8 @@ final class SpotifyPlayerTests: XCTestCase {
                                                       .success(SPTUser()))
 
         let mock = SpotifyMock(
-            requestCurrentUser: { _ in requestCurrentUserResults() })
+            requestCurrentUser: { _ in requestCurrentUserResults() }
+        )
 
         verifyStates(.loading,
                      .error,
@@ -49,12 +52,31 @@ final class SpotifyPlayerTests: XCTestCase {
                                              .success([SPTPartialPlaylist]()))
 
         let mock = SpotifyMock(
-            playlists: { (_, _) in playlistsResults() })
+            playlists: { (_, _) in playlistsResults() }
+        )
 
         verifyStates(.loading,
                      .error,
                      .loading,
                      .loaded,
+                     for: player(spotify: mock))
+    }
+
+    func testPlay_retryAfterLoginError() {
+
+        let loginResults = publisherFactory(.failure(error),
+                                            .success(()))
+
+        let mock = SpotifyMock(
+            login: { _ in loginResults() }
+        )
+
+        verifyStates(.loading,
+                     .loaded,
+                     .paused,
+                     .loading,
+                     .error,
+                     .loading,
                      for: player(spotify: mock))
     }
 }
@@ -63,7 +85,7 @@ private extension SpotifyPlayerTests {
 
     var error: Error { SpotifyPlayerError.genericError }
 
-    enum State { case loading, error, loaded }
+    enum State { case loading, error, loaded, paused }
 
     func player(spotify: SpotifyMock = .init(),
                 token: AnyPublisher<String, Never> = Just("").eraseToAnyPublisher()) -> SpotifyPlayer {
@@ -71,7 +93,19 @@ private extension SpotifyPlayerTests {
         SpotifyPlayer(spotify: spotify, token: token)
     }
 
+    func publisherFactory<Output, Failure>(_ sequentialResults: Result<Output, Failure>...) -> () -> AnyPublisher<Output, Failure> {
+        let factory = futureFactory(sequentialResults)
+
+        return {
+            factory().eraseToAnyPublisher()
+        }
+    }
+
     func futureFactory<Output, Failure>(_ sequentialResults: Result<Output, Failure>...) -> () -> Future<Output, Failure> {
+        futureFactory(sequentialResults)
+    }
+
+    func futureFactory<Output, Failure>(_ sequentialResults: [Result<Output, Failure>]) -> () -> Future<Output, Failure> {
         var count = 0
         return {
             defer { count += 1 }
@@ -97,15 +131,21 @@ private extension SpotifyPlayerTests {
                 let expectation = expectations[index]
 
                 switch (state, states[index]) {
-                case (.loading, .loading), (.loaded, .loaded):
+                case (.loading, .loading),
+                     (.loaded, .loaded):
+
                     expectation.fulfill()
-                case (.error(_, let retry), .error):
+
+                case (.error(_, let action), .error),
+                     (.paused(let action), .paused):
+
                     expectation.fulfill()
                     DispatchQueue.main.async {
-                        retry()
+                        action()
                     }
+
                 default:
-                    XCTFail("Expected state \(states[index]), but got \(state)",
+                    XCTFail("Expected state \(states[index]) at index \(index), but got \(state)",
                             line: line)
                 }
             }
