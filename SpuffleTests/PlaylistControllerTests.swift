@@ -50,6 +50,32 @@ final class PlaylistControllerTests: XCTestCase {
 
         waitForExpectations(timeout: 0.1)
     }
+
+    func testExcludePlaylist() {
+
+        let includedExpectation = expectation(description: "included")
+        let excludedExpectation = expectation(description: "excluded")
+
+        let playlist = MockPlaylist(name: "Mock Playlist")
+
+        let controller = self.controller()
+
+        cancellable = controller.playlists
+            .sink { playlists in
+                XCTAssertEqual(playlists.count, 1)
+                playlists.first?.isExcluded == true
+                    ? excludedExpectation.fulfill()
+                    : includedExpectation.fulfill()
+            }
+
+        controller.load([playlist])
+
+        controller.exclude(id: playlist.name)
+
+        wait(for: [includedExpectation, excludedExpectation],
+             timeout: 0.1,
+             enforceOrder: true)
+    }
 }
 
 extension PlaylistControllerTests {
@@ -66,10 +92,19 @@ extension PlaylistControllerTests {
 struct PlaylistController {
 
     var playlists: AnyPublisher<[PlaylistX], Never> {
-        playlistsSubject.eraseToAnyPublisher()
+        publishPlaylistsTrigger
+            .map { [playlistsSubject, getExcludedIds] in
+                playlistsSubject.value
+                    .map { playlist in
+                        PlaylistX(name: playlist.name,
+                                  isExcluded: getExcludedIds().contains(playlist.name))
+                    }
+            }
+            .eraseToAnyPublisher()
     }
 
-    private let playlistsSubject = PassthroughSubject<[PlaylistX], Never>()
+    private let playlistsSubject = CurrentValueSubject<[MockPlaylist], Never>([])
+    private let publishPlaylistsTrigger = PassthroughSubject<Void, Never>()
 
     private let getExcludedIds: () -> Set<String>
     private let setExcludedIds: (Set<String>) -> Void
@@ -82,13 +117,14 @@ struct PlaylistController {
     }
 
     func load(_ playlists: [MockPlaylist]) {
-
-        let playlists = playlists.map {
-            PlaylistX(name: $0.name,
-                      isExcluded: getExcludedIds().contains($0.name))
-
-        }
         playlistsSubject.send(playlists)
+        publishPlaylistsTrigger.send(())
+    }
+
+    func exclude(id: String) {
+        let excludedIds = getExcludedIds().union([id])
+        setExcludedIds(excludedIds)
+        publishPlaylistsTrigger.send(())
     }
 }
 
