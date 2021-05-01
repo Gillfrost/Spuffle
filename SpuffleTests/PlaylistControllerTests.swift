@@ -76,6 +76,32 @@ final class PlaylistControllerTests: XCTestCase {
              timeout: 0.1,
              enforceOrder: true)
     }
+
+    func testIncludePlaylist() {
+
+        let excludedExpectation = expectation(description: "excluded")
+        let includedExpectation = expectation(description: "included")
+
+        let playlist = MockPlaylist(name: "Mock Playlist")
+
+        let controller = self.controller(initiallyExcludedPlaylists: [playlist.name])
+
+        cancellable = controller.playlists
+            .sink { playlists in
+                XCTAssertEqual(playlists.count, 1)
+                playlists.first?.isExcluded == true
+                    ? excludedExpectation.fulfill()
+                    : includedExpectation.fulfill()
+            }
+
+        controller.load([playlist])
+
+        controller.include(id: playlist.name)
+
+        wait(for: [excludedExpectation, includedExpectation],
+             timeout: 0.1,
+             enforceOrder: true)
+    }
 }
 
 extension PlaylistControllerTests {
@@ -123,6 +149,12 @@ struct PlaylistController {
 
     func exclude(id: String) {
         let excludedIds = getExcludedIds().union([id])
+        setExcludedIds(excludedIds)
+        publishPlaylistsTrigger.send(())
+    }
+
+    func include(id: String) {
+        let excludedIds = getExcludedIds().subtracting([id])
         setExcludedIds(excludedIds)
         publishPlaylistsTrigger.send(())
     }
