@@ -44,7 +44,11 @@ final class PlaylistControllerTests: XCTestCase {
 
         let playlist = Playlist(name: "Mock Playlist")
 
-        let controller = self.controller(initiallyExcludedPlaylists: [playlist])
+        let dataStore = MockDataStore()
+
+        self.controller(dataStore: dataStore).exclude(playlist)
+
+        let controller = self.controller(dataStore: dataStore)
 
         controller.excludedPlaylists
             .sink { excludedPlaylists in
@@ -101,7 +105,11 @@ final class PlaylistControllerTests: XCTestCase {
 
         let playlist = Playlist(name: "Mock Playlist")
 
-        let controller = self.controller(initiallyExcludedPlaylists: [playlist])
+        let dataStore = MockDataStore()
+
+        self.controller(dataStore: dataStore).exclude(playlist)
+
+        let controller = self.controller(dataStore: dataStore)
 
         controller.includedPlaylists
             .sink { includedPlaylists in
@@ -129,18 +137,33 @@ final class PlaylistControllerTests: XCTestCase {
     }
 }
 
-extension PlaylistControllerTests {
+private extension PlaylistControllerTests {
 
-    private func controller(initiallyExcludedPlaylists: [Playlist] = []) -> PlaylistController {
-
-        var excludedIds: Set<String> = Set(initiallyExcludedPlaylists.map { $0.name })
-
-        return PlaylistController(getExcludedIds: { excludedIds },
-                                  setExcludedIds: { excludedIds = $0 })
+    func controller(dataStore: DataStore = MockDataStore()) -> PlaylistController {
+        PlaylistController(dataStore: dataStore)
     }
 }
 
-struct PlaylistController {
+class MockDataStore: DataStore {
+
+    var data: Data?
+
+    func getData() -> Data? {
+        data
+    }
+
+    func setData(_ data: Data) {
+        self.data = data
+    }
+}
+
+protocol DataStore {
+
+    func getData() -> Data?
+    func setData(_ data: Data)
+}
+
+class PlaylistController {
 
     var includedPlaylists: AnyPublisher<[Playlist], Never> {
         filteredPlaylists(excluded: false)
@@ -150,18 +173,27 @@ struct PlaylistController {
         filteredPlaylists(excluded: true)
     }
 
+    private let dataStore: DataStore
     private let playlists = CurrentValueSubject<[Playlist]?, Never>(nil)
-    private let excludedIds: CurrentValueSubject<Set<String>, Never>
+    private let excludedIdsSubject = CurrentValueSubject<Set<String>, Never>([])
 
-    private let getExcludedIds: () -> Set<String>
-    private let setExcludedIds: (Set<String>) -> Void
+    private var excludedIds: Set<String> {
+        get {
+            dataStore.getData()
+                .flatMap { data in
+                    try? JSONDecoder().decode(Set<String>.self, from: data)
+                }
+                ?? []
+        }
+        set {
+            (try? JSONEncoder().encode(newValue))
+                .map(dataStore.setData)
+        }
+    }
 
-    init(getExcludedIds: @escaping () -> Set<String>,
-         setExcludedIds: @escaping (Set<String>) -> Void) {
-
-        self.getExcludedIds = getExcludedIds
-        self.setExcludedIds = setExcludedIds
-        self.excludedIds = .init(getExcludedIds())
+    init(dataStore: DataStore) {
+        self.dataStore = dataStore
+        excludedIdsSubject.send(excludedIds)
     }
 
     func load(_ playlists: [Playlist]) {
@@ -169,28 +201,30 @@ struct PlaylistController {
     }
 
     func exclude(_ playlist: Playlist) {
-        let excludedIds = getExcludedIds().union([Self.id(playlist)])
-        setExcludedIds(excludedIds)
-        self.excludedIds.send(excludedIds)
+        excludedIds = excludedIds
+            .union([Self.id(for: playlist)])
+
+        excludedIdsSubject.send(excludedIds)
     }
 
     func include(_ playlist: Playlist) {
-        let excludedIds = getExcludedIds().subtracting([Self.id(playlist)])
-        setExcludedIds(excludedIds)
-        self.excludedIds.send(excludedIds)
+        excludedIds = excludedIds
+            .subtracting([Self.id(for: playlist)])
+
+        excludedIdsSubject.send(excludedIds)
     }
 
-    private static func id(_ playlist: Playlist) -> String {
+    static func id(for playlist: Playlist) -> String {
         playlist.name
     }
 
     private func filteredPlaylists(excluded: Bool) -> AnyPublisher<[Playlist], Never> {
         playlists
             .compactMap { $0 }
-            .combineLatest(excludedIds)
+            .combineLatest(excludedIdsSubject)
             .map { playlists, excludedIds in
                 playlists.filter { playlist in
-                    excludedIds.contains(Self.id(playlist)) == excluded
+                    excludedIds.contains(Self.id(for: playlist)) == excluded
                 }
             }
             .eraseToAnyPublisher()
