@@ -1,9 +1,5 @@
-//
-//  Extensions.swift
-//  Spuffle
-//
-//  Created by André on 2020-04-16.
-//
+//  Copyright (c) 2021 André Gillfrost
+//  Licensed under the MIT license
 
 import UIKit
 import SwiftUI

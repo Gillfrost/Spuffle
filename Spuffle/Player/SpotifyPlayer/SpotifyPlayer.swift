@@ -19,8 +19,7 @@ extension SpotifyPlayer {
     static var playlistAdapter = { (sptPlaylist: SPTPartialPlaylist) in
         Playlist(uri: sptPlaylist.uri,
                  name: sptPlaylist.name,
-                 trackCount: sptPlaylist.trackCount,
-                 excluded: false)
+                 trackCount: sptPlaylist.trackCount)
     }
 
     private static func setup(_ spotify: SpotifyController,
@@ -195,14 +194,12 @@ extension SpotifyPlayer {
     }
 
     private static func pickRandomPlaylist(_ playlists: [Playlist]) -> Playlist? {
-        let includedPlaylists = playlists.filter { !$0.excluded }
-
-        guard !includedPlaylists.isEmpty else {
+        guard !playlists.isEmpty else {
             return nil
         }
 
         func playlist(containing trackIndex: UInt, playlistIndex: Int = 0) -> Playlist {
-            let list = includedPlaylists[playlistIndex]
+            let list = playlists[playlistIndex]
 
             return trackIndex <= list.trackCount
                 ? list
@@ -210,7 +207,7 @@ extension SpotifyPlayer {
                            playlistIndex: playlistIndex + 1)
         }
 
-        let includedTrackCount = includedPlaylists
+        let includedTrackCount = playlists
             .map { $0.trackCount }
             .reduce(0, +)
 
