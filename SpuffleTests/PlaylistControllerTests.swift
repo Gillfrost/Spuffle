@@ -7,24 +7,33 @@ import Combine
 
 final class PlaylistControllerTests: XCTestCase {
 
-    private var cancellable: AnyCancellable?
+    private var cancellables: Set<AnyCancellable> = []
+
+    override func setUp() {
+        super.setUp()
+        cancellables = []
+    }
 
     func testLoadPlaylists() {
 
         let expectation = self.expectation(description: #function)
 
         let controller = self.controller()
-        let inputPlaylists = [MockPlaylist(name: "Mock Playlist 1"),
-                              MockPlaylist(name: "Mock Playlist 2")]
+        let playlists = [Playlist(name: "Mock Playlist 1"),
+                         Playlist(name: "Mock Playlist 2")]
 
-        cancellable = controller.playlists
-            .sink { outputPlaylists in
-                XCTAssertEqual(outputPlaylists.map { $0.name },
-                               inputPlaylists.map { $0.name })
+        controller.includedPlaylists
+            .combineLatest(controller.excludedPlaylists)
+            .sink { includedPlaylists, excludedPlaylists in
+
+                XCTAssertEqual(includedPlaylists, playlists)
+                XCTAssertEqual(excludedPlaylists, [])
+
                 expectation.fulfill()
             }
+            .store(in: &cancellables)
 
-        controller.load(inputPlaylists)
+        controller.load(playlists)
 
         waitForExpectations(timeout: 0.1)
     }
@@ -33,18 +42,18 @@ final class PlaylistControllerTests: XCTestCase {
 
         let expectation = self.expectation(description: #function)
 
-        let playlist = MockPlaylist(name: "Mock Playlist")
+        let playlist = Playlist(name: "Mock Playlist")
 
-        let controller = self.controller(initiallyExcludedPlaylists: [playlist.name])
+        let controller = self.controller(initiallyExcludedPlaylists: [playlist])
 
-        cancellable = controller.playlists
-            .sink { playlists in
+        controller.excludedPlaylists
+            .sink { excludedPlaylists in
 
-                XCTAssertEqual(playlists.count, 1)
-                XCTAssertEqual(playlists.first?.isExcluded, true)
+                XCTAssertEqual(excludedPlaylists, [playlist])
 
                 expectation.fulfill()
             }
+            .store(in: &cancellables)
 
         controller.load([playlist])
 
@@ -56,21 +65,29 @@ final class PlaylistControllerTests: XCTestCase {
         let includedExpectation = expectation(description: "included")
         let excludedExpectation = expectation(description: "excluded")
 
-        let playlist = MockPlaylist(name: "Mock Playlist")
+        let playlist = Playlist(name: "Mock Playlist")
 
         let controller = self.controller()
 
-        cancellable = controller.playlists
-            .sink { playlists in
-                XCTAssertEqual(playlists.count, 1)
-                playlists.first?.isExcluded == true
-                    ? excludedExpectation.fulfill()
-                    : includedExpectation.fulfill()
+        controller.includedPlaylists
+            .sink { includedPlaylists in
+                if includedPlaylists.contains(playlist) {
+                    includedExpectation.fulfill()
+                }
             }
+            .store(in: &cancellables)
+
+        controller.excludedPlaylists
+            .sink { excludedPlaylists in
+                if excludedPlaylists.contains(playlist) {
+                    excludedExpectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
 
         controller.load([playlist])
 
-        controller.exclude(id: playlist.name)
+        controller.exclude(playlist)
 
         wait(for: [includedExpectation, excludedExpectation],
              timeout: 0.1,
@@ -82,21 +99,29 @@ final class PlaylistControllerTests: XCTestCase {
         let excludedExpectation = expectation(description: "excluded")
         let includedExpectation = expectation(description: "included")
 
-        let playlist = MockPlaylist(name: "Mock Playlist")
+        let playlist = Playlist(name: "Mock Playlist")
 
-        let controller = self.controller(initiallyExcludedPlaylists: [playlist.name])
+        let controller = self.controller(initiallyExcludedPlaylists: [playlist])
 
-        cancellable = controller.playlists
-            .sink { playlists in
-                XCTAssertEqual(playlists.count, 1)
-                playlists.first?.isExcluded == true
-                    ? excludedExpectation.fulfill()
-                    : includedExpectation.fulfill()
+        controller.includedPlaylists
+            .sink { includedPlaylists in
+                if includedPlaylists.contains(playlist) {
+                    includedExpectation.fulfill()
+                }
             }
+            .store(in: &cancellables)
+
+        controller.excludedPlaylists
+            .sink { excludedPlaylists in
+                if excludedPlaylists.contains(playlist) {
+                    excludedExpectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
 
         controller.load([playlist])
 
-        controller.include(id: playlist.name)
+        controller.include(playlist)
 
         wait(for: [excludedExpectation, includedExpectation],
              timeout: 0.1,
@@ -106,9 +131,9 @@ final class PlaylistControllerTests: XCTestCase {
 
 extension PlaylistControllerTests {
 
-    private func controller(initiallyExcludedPlaylists: Set<String> = []) -> PlaylistController {
+    private func controller(initiallyExcludedPlaylists: [Playlist] = []) -> PlaylistController {
 
-        var excludedIds: Set<String> = initiallyExcludedPlaylists
+        var excludedIds: Set<String> = Set(initiallyExcludedPlaylists.map { $0.name })
 
         return PlaylistController(getExcludedIds: { excludedIds },
                                   setExcludedIds: { excludedIds = $0 })
@@ -117,20 +142,16 @@ extension PlaylistControllerTests {
 
 struct PlaylistController {
 
-    var playlists: AnyPublisher<[PlaylistX], Never> {
-        publishPlaylistsTrigger
-            .map { [playlistsSubject, getExcludedIds] in
-                playlistsSubject.value
-                    .map { playlist in
-                        PlaylistX(name: playlist.name,
-                                  isExcluded: getExcludedIds().contains(playlist.name))
-                    }
-            }
-            .eraseToAnyPublisher()
+    var includedPlaylists: AnyPublisher<[Playlist], Never> {
+        filteredPlaylists(excluded: false)
     }
 
-    private let playlistsSubject = CurrentValueSubject<[MockPlaylist], Never>([])
-    private let publishPlaylistsTrigger = PassthroughSubject<Void, Never>()
+    var excludedPlaylists: AnyPublisher<[Playlist], Never> {
+        filteredPlaylists(excluded: true)
+    }
+
+    private let playlists = CurrentValueSubject<[Playlist]?, Never>(nil)
+    private let excludedIds: CurrentValueSubject<Set<String>, Never>
 
     private let getExcludedIds: () -> Set<String>
     private let setExcludedIds: (Set<String>) -> Void
@@ -140,31 +161,42 @@ struct PlaylistController {
 
         self.getExcludedIds = getExcludedIds
         self.setExcludedIds = setExcludedIds
+        self.excludedIds = .init(getExcludedIds())
     }
 
-    func load(_ playlists: [MockPlaylist]) {
-        playlistsSubject.send(playlists)
-        publishPlaylistsTrigger.send(())
+    func load(_ playlists: [Playlist]) {
+        self.playlists.send(playlists)
     }
 
-    func exclude(id: String) {
-        let excludedIds = getExcludedIds().union([id])
+    func exclude(_ playlist: Playlist) {
+        let excludedIds = getExcludedIds().union([Self.id(playlist)])
         setExcludedIds(excludedIds)
-        publishPlaylistsTrigger.send(())
+        self.excludedIds.send(excludedIds)
     }
 
-    func include(id: String) {
-        let excludedIds = getExcludedIds().subtracting([id])
+    func include(_ playlist: Playlist) {
+        let excludedIds = getExcludedIds().subtracting([Self.id(playlist)])
         setExcludedIds(excludedIds)
-        publishPlaylistsTrigger.send(())
+        self.excludedIds.send(excludedIds)
+    }
+
+    private static func id(_ playlist: Playlist) -> String {
+        playlist.name
+    }
+
+    private func filteredPlaylists(excluded: Bool) -> AnyPublisher<[Playlist], Never> {
+        playlists
+            .compactMap { $0 }
+            .combineLatest(excludedIds)
+            .map { playlists, excludedIds in
+                playlists.filter { playlist in
+                    excludedIds.contains(Self.id(playlist)) == excluded
+                }
+            }
+            .eraseToAnyPublisher()
     }
 }
 
-struct MockPlaylist {
+struct Playlist: Equatable {
     let name: String
-}
-
-struct PlaylistX {
-    let name: String
-    let isExcluded: Bool
 }
