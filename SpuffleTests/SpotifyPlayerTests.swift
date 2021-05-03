@@ -42,7 +42,6 @@ final class SpotifyPlayerTests: XCTestCase {
         verifyStates(.loading,
                      .error,
                      .loading,
-                     .loaded,
                      for: player(spotify: mock))
     }
 
@@ -58,7 +57,6 @@ final class SpotifyPlayerTests: XCTestCase {
         verifyStates(.loading,
                      .error,
                      .loading,
-                     .loaded,
                      for: player(spotify: mock))
     }
 
@@ -72,7 +70,6 @@ final class SpotifyPlayerTests: XCTestCase {
         )
 
         verifyStates(.loading,
-                     .loaded,
                      .paused,
                      .loading,
                      .error,
@@ -85,12 +82,14 @@ private extension SpotifyPlayerTests {
 
     var error: Error { SpotifyPlayerError.genericError }
 
-    enum State { case loading, error, loaded, paused }
+    enum State { case loading, error, paused }
 
     func player(spotify: SpotifyMock = .init(),
                 token: AnyPublisher<String, Never> = Just("").eraseToAnyPublisher()) -> SpotifyPlayer {
 
-        SpotifyPlayer(spotify: spotify, token: token)
+        SpotifyPlayer(spotify: spotify,
+                      playlistController: PlaylistController(dataStore: MockDataStore()),
+                      token: token)
     }
 
     func publisherFactory<Output, Failure>(_ sequentialResults: Result<Output, Failure>...) -> () -> AnyPublisher<Output, Failure> {
@@ -131,8 +130,7 @@ private extension SpotifyPlayerTests {
                 let expectation = expectations[index]
 
                 switch (state, states[index]) {
-                case (.loading, .loading),
-                     (.loaded, .loaded):
+                case (.loading, .loading):
 
                     expectation.fulfill()
 
