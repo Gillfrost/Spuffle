@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		65209EAC25DE2D5900A93346 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65209EAB25DE2D5900A93346 /* Player.swift */; };
+		652EB1A52640F5970040F751 /* RandomPlaylistPickerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652EB1A42640F5970040F751 /* RandomPlaylistPickerTest.swift */; };
+		652EB1AB2640FCE60040F751 /* RandomPlaylistPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652EB1AA2640FCE60040F751 /* RandomPlaylistPicker.swift */; };
 		654D536023F662DA007E65A8 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654D535F23F662DA007E65A8 /* Alert.swift */; };
 		65785507263F22B1000C2AE0 /* DataStorageMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65785506263F22B1000C2AE0 /* DataStorageMock.swift */; };
 		6578550C263F2309000C2AE0 /* DataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6578550B263F2309000C2AE0 /* DataStorage.swift */; };
@@ -49,6 +51,8 @@
 
 /* Begin PBXFileReference section */
 		65209EAB25DE2D5900A93346 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		652EB1A42640F5970040F751 /* RandomPlaylistPickerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomPlaylistPickerTest.swift; sourceTree = "<group>"; };
+		652EB1AA2640FCE60040F751 /* RandomPlaylistPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomPlaylistPicker.swift; sourceTree = "<group>"; };
 		654D535F23F662DA007E65A8 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		65785506263F22B1000C2AE0 /* DataStorageMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStorageMock.swift; sourceTree = "<group>"; };
 		6578550B263F2309000C2AE0 /* DataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStorage.swift; sourceTree = "<group>"; };
@@ -104,6 +108,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		652EB1A32640F55A0040F751 /* Playlist */ = {
+			isa = PBXGroup;
+			children = (
+				65C63C5026359F4000BFC201 /* PlaylistControllerTests.swift */,
+				652EB1A42640F5970040F751 /* RandomPlaylistPickerTest.swift */,
+			);
+			path = Playlist;
+			sourceTree = "<group>";
+		};
 		658E84492607CE2E00DDACBA /* SpotifyPlayer */ = {
 			isa = PBXGroup;
 			children = (
@@ -138,9 +151,9 @@
 		658E84602609A3EB00DDACBA /* SpuffleTests */ = {
 			isa = PBXGroup;
 			children = (
+				652EB1A32640F55A0040F751 /* Playlist */,
 				658E84612609A3EB00DDACBA /* SpotifyPlayerTests.swift */,
 				658F1E9C261B5E8C001C4BA4 /* SpotifyMock.swift */,
-				65C63C5026359F4000BFC201 /* PlaylistControllerTests.swift */,
 				65785506263F22B1000C2AE0 /* DataStorageMock.swift */,
 				658E84632609A3EB00DDACBA /* Info.plist */,
 			);
@@ -152,6 +165,7 @@
 			children = (
 				658E844B2607CE8900DDACBA /* Playlist.swift */,
 				65785511263F23A1000C2AE0 /* PlaylistController.swift */,
+				652EB1AA2640FCE60040F751 /* RandomPlaylistPicker.swift */,
 			);
 			path = Playlist;
 			sourceTree = "<group>";
@@ -315,6 +329,7 @@
 				65C63C5126359F4000BFC201 /* PlaylistControllerTests.swift in Sources */,
 				65785507263F22B1000C2AE0 /* DataStorageMock.swift in Sources */,
 				658F1E9D261B5E8C001C4BA4 /* SpotifyMock.swift in Sources */,
+				652EB1A52640F5970040F751 /* RandomPlaylistPickerTest.swift in Sources */,
 				658E84622609A3EB00DDACBA /* SpotifyPlayerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -328,6 +343,7 @@
 				DCC0B52E23139181007F76A6 /* SignInViewController.swift in Sources */,
 				6578550C263F2309000C2AE0 /* DataStorage.swift in Sources */,
 				DCC0B52C23139181007F76A6 /* AppDelegate.swift in Sources */,
+				652EB1AB2640FCE60040F751 /* RandomPlaylistPicker.swift in Sources */,
 				65BA947D23E9F4AF000E4E11 /* Log.swift in Sources */,
 				65209EAC25DE2D5900A93346 /* Player.swift in Sources */,
 				658E84542607D31100DDACBA /* Spotify.swift in Sources */,
