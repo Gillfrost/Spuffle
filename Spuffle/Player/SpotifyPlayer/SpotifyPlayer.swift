@@ -209,13 +209,15 @@ extension SpotifyPlayer {
 
         playlistController.includedPlaylists
             .setFailureType(to: Error.self)
-            .flatMap { playlists -> AnyPublisher<Void, Error> in
-
-                guard let playlist = pickRandomPlaylist(playlists) else {
-                    return Result.failure(SpotifyPlayerError.genericError)
-                        .publisher
-                        .eraseToAnyPublisher()
+            .map(RandomPlaylistPicker.pickRandomPlaylist)
+            .tryMap { playlist -> Playlist in
+                guard let playlist = playlist else {
+                    throw SpotifyPlayerError.genericError
                 }
+                return playlist
+            }
+            .flatMap { playlist -> AnyPublisher<Void, Error> in
+
                 let trackNumber = UInt.random(in: 0..<playlist.trackCount)
 
                 return spotify.playSpotifyURI(playlist.uri.absoluteString,
@@ -223,28 +225,5 @@ extension SpotifyPlayer {
                     .eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
-    }
-
-    private static func pickRandomPlaylist(_ playlists: [Playlist]) -> Playlist? {
-        guard !playlists.isEmpty else {
-            return nil
-        }
-
-        func playlist(containing trackIndex: UInt, playlistIndex: Int = 0) -> Playlist {
-            let list = playlists[playlistIndex]
-
-            return trackIndex <= list.trackCount
-                ? list
-                : playlist(containing: trackIndex - list.trackCount,
-                           playlistIndex: playlistIndex + 1)
-        }
-
-        let includedTrackCount = playlists
-            .map { $0.trackCount }
-            .reduce(0, +)
-
-        let randomTrackIndex = UInt.random(in: 0...includedTrackCount)
-
-        return playlist(containing: randomTrackIndex)
     }
 }
