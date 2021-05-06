@@ -10,6 +10,10 @@ struct Spotify: SpotifyController {
         delegate.event
     }
 
+    var track: AnyPublisher<SpotifyDelegate.Track, Never> {
+        delegate.track.eraseToAnyPublisher()
+    }
+
     var isPlaying: Bool {
         controller.playbackState.isPlaying
     }

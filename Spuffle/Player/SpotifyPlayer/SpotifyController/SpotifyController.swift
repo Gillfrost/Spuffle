@@ -7,6 +7,7 @@ import Combine
 protocol SpotifyController {
 
     var isPlaying: Bool { get }
+
     var event: AnyPublisher<SpotifyDelegate.Event, Never> { get }
 
     func start(withClientId: String) -> Future<Void, Error>
