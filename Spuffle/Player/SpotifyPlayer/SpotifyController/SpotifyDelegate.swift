@@ -12,22 +12,16 @@ final class SpotifyDelegate: NSObject {
         case didStopPlayingTrack
     }
 
-    struct Track {
-        let name: String
-        let artist: String
-        let album: String
-    }
-
     var event: AnyPublisher<Event, Never> {
         eventSubject.eraseToAnyPublisher()
     }
 
-    var track: AnyPublisher<Track, Never> {
+    var track: AnyPublisher<SPTPlaybackTrack, Never> {
         trackSubject.eraseToAnyPublisher()
     }
 
     private let eventSubject = PassthroughSubject<Event, Never>()
-    private let trackSubject = PassthroughSubject<Track, Never>()
+    private let trackSubject = PassthroughSubject<SPTPlaybackTrack, Never>()
 }
 
 extension SpotifyDelegate: SPTAudioStreamingDelegate {
@@ -97,13 +91,7 @@ extension SpotifyDelegate: SPTAudioStreamingPlaybackDelegate {
 
     func audioStreaming(_ audioStreaming: SPTAudioStreamingController, didChange metadata: SPTPlaybackMetadata) {
         Log.info("Spotify did change metadata. current: \(metadata.currentTrack?.name ?? "")")
-        guard let currentTrack = metadata.currentTrack else {
-            return
-        }
-        let track = Track(name: currentTrack.name,
-                          artist: currentTrack.artistName,
-                          album: currentTrack.albumName)
-        trackSubject.send(track)
+        metadata.currentTrack.map(trackSubject.send)
     }
 
     func audioStreaming(_ audioStreaming: SPTAudioStreamingController, didStartPlayingTrack trackUri: String) {

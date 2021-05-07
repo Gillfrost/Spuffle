@@ -9,6 +9,7 @@ protocol SpotifyController {
     var isPlaying: Bool { get }
 
     var event: AnyPublisher<SpotifyDelegate.Event, Never> { get }
+    var track: AnyPublisher<SPTPlaybackTrack, Never> { get }
 
     func start(withClientId: String) -> Future<Void, Error>
     func requestCurrentUser(withAccessToken token: String) -> Future<SPTUser, Error>
