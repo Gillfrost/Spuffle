@@ -5,9 +5,11 @@ import Combine
 @testable import Spuffle
 
 final class SpotifyMock: SpotifyController {
+
     var isPlaying = false
 
     var event: AnyPublisher<SpotifyDelegate.Event, Never>
+    var track: AnyPublisher<SPTPlaybackTrack, Never>
 
     private let _start: (String) -> Future<Void, Error>
     private let _requestCurrentUser: (String) -> Future<SPTUser, Error>
@@ -16,6 +18,7 @@ final class SpotifyMock: SpotifyController {
 
     init(
         event: AnyPublisher<SpotifyDelegate.Event, Never> = Empty().eraseToAnyPublisher(),
+        track: AnyPublisher<SPTPlaybackTrack, Never> = Empty().eraseToAnyPublisher(),
         start: @escaping (String) -> Future<Void, Error> = { _ in
             Future { $0(.success(())) }
         },
@@ -30,6 +33,7 @@ final class SpotifyMock: SpotifyController {
         }
     ) {
         self.event = event
+        self.track = track
         _start = start
         _requestCurrentUser = requestCurrentUser
         _playlists = playlists

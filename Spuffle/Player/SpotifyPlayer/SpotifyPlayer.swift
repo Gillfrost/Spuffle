@@ -144,37 +144,26 @@ extension SpotifyPlayer {
                 }
                 .map { _ in }
             )
-            .setFailureType(to: Error.self)
-            .flatMap {
-                playRandomTrack(spotify, playlistController)
-            }
             .eraseToAnyPublisher()
 
         let togglePlay = PassthroughSubject<Bool, Error>()
 
-        let playingState = PlayerState.playing(pause: { togglePlay.send(false) },
-                                               skip: playNextSubject.send)
-
-        let pausedState = PlayerState.paused(play: { togglePlay.send(true) })
-
-        let start: AnyPublisher<Void, Error>
-
-        if spotify.isPlaying {
-            start = Result.success(())
-                .publisher
-                .eraseToAnyPublisher()
-        } else {
-            start = activateAudioSession()
-                .flatMap {
-                    playRandomTrack(spotify, playlistController)
-                }
-                .eraseToAnyPublisher()
-        }
-
-        return start
-            .merge(with: playNext)
+        return activateAudioSession()
+            .eraseToAnyPublisher()
+            .merge(with: playNext.setFailureType(to: Error.self))
             .map {
-                togglePlay
+                playRandomTrack(spotify, playlistController)
+            }
+            .switchToLatest()
+            .map { track -> AnyPublisher<PlayerState, Error> in
+
+                let playingState = PlayerState.playing(track: track,
+                                                       pause: { togglePlay.send(false) },
+                                                       skip: playNextSubject.send)
+
+                let pausedState = PlayerState.paused(play: { togglePlay.send(true) })
+
+                return togglePlay
                     .removeDuplicates()
                     .flatMap { play in
                         spotify.setIsPlaying(play)
@@ -185,6 +174,7 @@ extension SpotifyPlayer {
                             }
                     }
                     .prepend(playingState)
+                    .eraseToAnyPublisher()
             }
             .switchToLatest()
             .eraseToAnyPublisher()
@@ -205,7 +195,33 @@ extension SpotifyPlayer {
 
     private static func playRandomTrack(_ spotify: SpotifyController,
                                         _ playlistController: PlaylistController)
-    -> AnyPublisher<Void, Error> {
+    -> AnyPublisher<Track, Error> {
+
+        randomPlaylist(playlistController)
+            .prefix(1)
+            .flatMap { playlist -> AnyPublisher<Track, Error> in
+
+                let trackNumber = UInt.random(in: 0..<playlist.trackCount)
+
+                return spotify.track
+                    .prefix(1)
+                    .map { track in
+                        Track(name: track.name,
+                              artist: track.artistName,
+                              album: track.albumName)
+                    }
+                    .setFailureType(to: Error.self)
+                    .combineLatest(spotify.playSpotifyURI(playlist.uri.absoluteString,
+                                                          startingWith: trackNumber)
+                                    .eraseToAnyPublisher())
+                    .map { track, _ in track }
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
+
+    private static func randomPlaylist(_ playlistController: PlaylistController)
+    -> AnyPublisher<Playlist, Error> {
 
         playlistController.includedPlaylists
             .setFailureType(to: Error.self)
@@ -215,14 +231,6 @@ extension SpotifyPlayer {
                     throw SpotifyPlayerError.genericError
                 }
                 return playlist
-            }
-            .flatMap { playlist -> AnyPublisher<Void, Error> in
-
-                let trackNumber = UInt.random(in: 0..<playlist.trackCount)
-
-                return spotify.playSpotifyURI(playlist.uri.absoluteString,
-                                              startingWith: trackNumber)
-                    .eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
     }

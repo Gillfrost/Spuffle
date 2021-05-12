@@ -7,7 +7,7 @@ enum PlayerState {
 
     case loading
     case paused(play: () -> Void)
-    case playing(pause: () -> Void, skip: () -> Void)
+    case playing(track: Track, pause: () -> Void, skip: () -> Void)
     case error(Error, retry: () -> Void)
 }
 
