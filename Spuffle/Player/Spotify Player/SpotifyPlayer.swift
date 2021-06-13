@@ -181,7 +181,8 @@ extension SpotifyPlayer {
                 promise(.success(()))
 
             } catch {
-                promise(.failure(error))
+                Log.error(error)
+                promise(.failure(SpotifyPlayerError.audioActivationError))
             }
         }
     }
@@ -201,7 +202,9 @@ extension SpotifyPlayer {
                     .map { track in
                         Track(name: track.name,
                               artist: track.artistName,
-                              album: track.albumName)
+                              album: track.albumName,
+                              duration: track.duration,
+                              artworkUrl: track.albumCoverArtURL.flatMap(URL.init))
                     }
                     .setFailureType(to: Error.self)
                     .combineLatest(spotify.playSpotifyURI(playlist.uri.absoluteString,

@@ -5,4 +5,6 @@ struct Track {
     let name: String
     let artist: String
     let album: String
+    let duration: TimeInterval
+    let artworkUrl: URL?
 }
