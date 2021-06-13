@@ -3,8 +3,11 @@
 
 import Foundation
 
-enum SpotifyPlayerError: String, Error {
+enum SpotifyPlayerError: String, LocalizedError {
 
-    case setupError = "Couldn't setup Spotify. Please try again"
-    case genericError = "An error occured"
+    case setupError = "Struggling a little with setting up Spotify..."
+    case audioActivationError = "Hmm. We can't play audio right now for some reason..."
+    case genericError = "There's some unknown mischief going on..."
+
+    var errorDescription: String? { rawValue }
 }
