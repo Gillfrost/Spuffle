@@ -11,20 +11,17 @@ final class RandomPlaylistPickerTests: XCTestCase {
     }
 
     func testNoPlaylistIsPickedIfEmpty() {
-        let emptyPlaylist = Playlist(uri: .mock,
-                                     name: "Empty",
-                                     trackCount: 0)
+        let emptyPlaylist = Playlist.mock(name: "Empty",
+                                          trackCount: 0)
 
         XCTAssertNil(Picker.pickRandomPlaylist(from: [emptyPlaylist]))
     }
 
     func testOnlyPlaylistWithTrackIsPicked() {
-        let emptyPlaylist = Playlist(uri: .mock,
-                                     name: "Empty",
-                                     trackCount: 0)
-        let nonEmptyPlaylist = Playlist(uri: .mock,
-                                        name: "Non-empty",
-                                        trackCount: 1)
+        let emptyPlaylist = Playlist.mock(name: "Empty",
+                                          trackCount: 0)
+        let nonEmptyPlaylist = Playlist.mock(name: "Non-empty",
+                                             trackCount: 1)
         let playlists = [emptyPlaylist, nonEmptyPlaylist]
 
         XCTAssertEqual(Picker.pickRandomPlaylist(from: playlists),

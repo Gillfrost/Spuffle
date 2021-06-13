@@ -22,44 +22,16 @@ final class PlaylistControllerTests: XCTestCase {
         let playlists = [Playlist.mock(name: "Mock Playlist 1"),
                          Playlist.mock(name: "Mock Playlist 2")]
 
-        controller.includedPlaylists
-            .combineLatest(controller.excludedPlaylists)
-            .sink { includedPlaylists, excludedPlaylists in
+        controller.playlists
+            .sink { outputPlaylists in
 
-                XCTAssertEqual(includedPlaylists, playlists)
-                XCTAssertEqual(excludedPlaylists, [])
+                XCTAssertEqual(outputPlaylists, playlists)
 
                 expectation.fulfill()
             }
             .store(in: &cancellables)
 
         controller.load(playlists)
-
-        waitForExpectations(timeout: 0.1)
-    }
-
-    func testInitiallyExcludedPlaylist() {
-
-        let expectation = self.expectation(description: #function)
-
-        let playlist = Playlist.mock()
-
-        let dataStore = MockDataStore()
-
-        self.controller(dataStore: dataStore).exclude(playlist)
-
-        let controller = self.controller(dataStore: dataStore)
-
-        controller.excludedPlaylists
-            .sink { excludedPlaylists in
-
-                XCTAssertEqual(excludedPlaylists, [playlist])
-
-                expectation.fulfill()
-            }
-            .store(in: &cancellables)
-
-        controller.load([playlist])
 
         waitForExpectations(timeout: 0.1)
     }
@@ -75,65 +47,64 @@ final class PlaylistControllerTests: XCTestCase {
 
         controller.includedPlaylists
             .sink { includedPlaylists in
+
                 if includedPlaylists.contains(playlist) {
                     includedExpectation.fulfill()
-                }
-            }
-            .store(in: &cancellables)
 
-        controller.excludedPlaylists
-            .sink { excludedPlaylists in
-                if excludedPlaylists.contains(playlist) {
+                    DispatchQueue.main.async {
+                        includedPlaylists.first?.toggleIsExcluded()
+                    }
+
+                } else {
                     excludedExpectation.fulfill()
                 }
             }
             .store(in: &cancellables)
 
         controller.load([playlist])
-
-        controller.exclude(playlist)
 
         wait(for: [includedExpectation, excludedExpectation],
              timeout: 0.1,
              enforceOrder: true)
     }
 
-    func testIncludePlaylist() {
+    func testInitiallyExcludedPlaylist() {
 
-        let excludedExpectation = expectation(description: "excluded")
-        let includedExpectation = expectation(description: "included")
+        let includedExpectation = self.expectation(description: "included")
+        let excludedExpectation = self.expectation(description: "excluded")
 
         let playlist = Playlist.mock()
 
         let dataStore = MockDataStore()
 
-        self.controller(dataStore: dataStore).exclude(playlist)
+        let controller1 = controller(dataStore: dataStore)
 
-        let controller = self.controller(dataStore: dataStore)
+        controller1.load([playlist])
+        controller1.includedPlaylists
+            .sink { playlists in
+                playlists.first?.toggleIsExcluded()
+                includedExpectation.fulfill()
+            }
+            .store(in: &cancellables)
 
-        controller.includedPlaylists
+        wait(for: [includedExpectation], timeout: 0.1)
+
+        let controller2 = self.controller(dataStore: dataStore)
+
+        controller2.includedPlaylists
             .sink { includedPlaylists in
+
                 if includedPlaylists.contains(playlist) {
-                    includedExpectation.fulfill()
+                    XCTFail("Playlist should be excluded")
                 }
+
+                excludedExpectation.fulfill()
             }
             .store(in: &cancellables)
 
-        controller.excludedPlaylists
-            .sink { excludedPlaylists in
-                if excludedPlaylists.contains(playlist) {
-                    excludedExpectation.fulfill()
-                }
-            }
-            .store(in: &cancellables)
+        controller2.load([playlist])
 
-        controller.load([playlist])
-
-        controller.include(playlist)
-
-        wait(for: [excludedExpectation, includedExpectation],
-             timeout: 0.1,
-             enforceOrder: true)
+        wait(for: [excludedExpectation], timeout: 0.1)
     }
 }
 
@@ -144,11 +115,24 @@ private extension PlaylistControllerTests {
     }
 }
 
-private extension Playlist {
+extension Playlist: InputPlaylist {
 
-    static func mock(name: String = "Mock Playlist") -> Playlist {
+    static func mock(name: String = "Mock Playlist",
+                     trackCount: UInt = 0) -> Playlist {
+
         Playlist(uri: URL(string: "www.example.com")!,
                  name: name,
-                 trackCount: 0)
+                 trackCount: trackCount,
+                 isExcluded: Just(false).eraseToAnyPublisher(),
+                 toggleIsExcluded: {})
+    }
+}
+
+extension Playlist: Equatable {
+
+    public static func == (lhs: Playlist, rhs: Playlist) -> Bool {
+        lhs.uri == rhs.uri
+            && lhs.name == rhs.name
+            && lhs.trackCount == rhs.trackCount
     }
 }

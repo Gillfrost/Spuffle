@@ -21,12 +21,6 @@ final class SpotifyPlayer: Player {
 
 extension SpotifyPlayer {
 
-    static var playlistAdapter = { (sptPlaylist: SPTPartialPlaylist) in
-        Playlist(uri: sptPlaylist.uri,
-                 name: sptPlaylist.name,
-                 trackCount: sptPlaylist.trackCount)
-    }
-
     private static func setup(_ spotify: SpotifyController,
                               _ playlistController: PlaylistController,
                               token: AnyPublisher<String, Never>)
@@ -88,7 +82,6 @@ extension SpotifyPlayer {
         spotify
             .requestCurrentUser(withAccessToken: token)
             .flatMap { spotify.playlists(user: $0, token: token) }
-            .map { $0.map(playlistAdapter) }
             .map(playlistController.load)
             .eraseToAnyPublisher()
     }
@@ -224,6 +217,7 @@ extension SpotifyPlayer {
     -> AnyPublisher<Playlist, Error> {
 
         playlistController.includedPlaylists
+            .prefix(1)
             .setFailureType(to: Error.self)
             .map(RandomPlaylistPicker.pickRandomPlaylist)
             .tryMap { playlist -> Playlist in

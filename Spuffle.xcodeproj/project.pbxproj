@@ -12,8 +12,9 @@
 		652EB1AB2640FCE60040F751 /* RandomPlaylistPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652EB1AA2640FCE60040F751 /* RandomPlaylistPicker.swift */; };
 		652EB1AF2644EFFD0040F751 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652EB1AE2644EFFD0040F751 /* Track.swift */; };
 		654D536023F662DA007E65A8 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654D535F23F662DA007E65A8 /* Alert.swift */; };
+		656CA5A0264D866500C24DB1 /* UserDefaults+DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656CA59F264D866500C24DB1 /* UserDefaults+DataStore.swift */; };
 		65785507263F22B1000C2AE0 /* DataStorageMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65785506263F22B1000C2AE0 /* DataStorageMock.swift */; };
-		6578550C263F2309000C2AE0 /* DataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6578550B263F2309000C2AE0 /* DataStorage.swift */; };
+		6578550C263F2309000C2AE0 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6578550B263F2309000C2AE0 /* DataStore.swift */; };
 		65785512263F23A1000C2AE0 /* PlaylistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65785511263F23A1000C2AE0 /* PlaylistController.swift */; };
 		657C299224480FF100EE8066 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657C299124480FF100EE8066 /* Extensions.swift */; };
 		658E84472607CE0B00DDACBA /* SpotifyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E84462607CE0B00DDACBA /* SpotifyController.swift */; };
@@ -26,6 +27,7 @@
 		658F1E9D261B5E8C001C4BA4 /* SpotifyMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658F1E9C261B5E8C001C4BA4 /* SpotifyMock.swift */; };
 		65BA947D23E9F4AF000E4E11 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BA947C23E9F4AF000E4E11 /* Log.swift */; };
 		65C63C5126359F4000BFC201 /* PlaylistControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C63C5026359F4000BFC201 /* PlaylistControllerTests.swift */; };
+		65CE85582652213700DD00B4 /* SPTPartialPlaylist+InputPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CE85572652213600DD00B4 /* SPTPartialPlaylist+InputPlaylist.swift */; };
 		65EDB8F2245F3D64008D01EA /* SpotifyiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65EDB8F1245F3D64008D01EA /* SpotifyiOS.framework */; };
 		65F436BB25FF9BA10047B3FD /* SpPlaybackEvent+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F436BA25FF9BA10047B3FD /* SpPlaybackEvent+CustomStringConvertible.swift */; };
 		65F436BE25FF9E8A0047B3FD /* SpotifyPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F436BD25FF9E8A0047B3FD /* SpotifyPlayer.swift */; };
@@ -56,8 +58,9 @@
 		652EB1AA2640FCE60040F751 /* RandomPlaylistPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomPlaylistPicker.swift; sourceTree = "<group>"; };
 		652EB1AE2644EFFD0040F751 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		654D535F23F662DA007E65A8 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		656CA59F264D866500C24DB1 /* UserDefaults+DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+DataStore.swift"; sourceTree = "<group>"; };
 		65785506263F22B1000C2AE0 /* DataStorageMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStorageMock.swift; sourceTree = "<group>"; };
-		6578550B263F2309000C2AE0 /* DataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStorage.swift; sourceTree = "<group>"; };
+		6578550B263F2309000C2AE0 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		65785511263F23A1000C2AE0 /* PlaylistController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistController.swift; sourceTree = "<group>"; };
 		657C299124480FF100EE8066 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		658E84462607CE0B00DDACBA /* SpotifyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyController.swift; sourceTree = "<group>"; };
@@ -71,6 +74,7 @@
 		658F1E9C261B5E8C001C4BA4 /* SpotifyMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyMock.swift; sourceTree = "<group>"; };
 		65BA947C23E9F4AF000E4E11 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		65C63C5026359F4000BFC201 /* PlaylistControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistControllerTests.swift; sourceTree = "<group>"; };
+		65CE85572652213600DD00B4 /* SPTPartialPlaylist+InputPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SPTPartialPlaylist+InputPlaylist.swift"; sourceTree = "<group>"; };
 		65EDB8F1245F3D64008D01EA /* SpotifyiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyiOS.framework; path = Frameworks/SpotifyiOS.framework; sourceTree = "<group>"; };
 		65F436BA25FF9BA10047B3FD /* SpPlaybackEvent+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SpPlaybackEvent+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		65F436BD25FF9E8A0047B3FD /* SpotifyPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyPlayer.swift; sourceTree = "<group>"; };
@@ -119,21 +123,31 @@
 			path = Playlist;
 			sourceTree = "<group>";
 		};
-		658E84492607CE2E00DDACBA /* SpotifyPlayer */ = {
+		656CA598264D860A00C24DB1 /* Data Store */ = {
 			isa = PBXGroup;
 			children = (
-				658E84522607D2EA00DDACBA /* SpotifyController */,
+				6578550B263F2309000C2AE0 /* DataStore.swift */,
+				656CA59F264D866500C24DB1 /* UserDefaults+DataStore.swift */,
+			);
+			path = "Data Store";
+			sourceTree = "<group>";
+		};
+		658E84492607CE2E00DDACBA /* Spotify Player */ = {
+			isa = PBXGroup;
+			children = (
+				658E84522607D2EA00DDACBA /* Spotify Controller */,
 				65F436BD25FF9E8A0047B3FD /* SpotifyPlayer.swift */,
 				658E8457260858CD00DDACBA /* SpotifyPlayerError.swift */,
 				65F436BA25FF9BA10047B3FD /* SpPlaybackEvent+CustomStringConvertible.swift */,
+				65CE85572652213600DD00B4 /* SPTPartialPlaylist+InputPlaylist.swift */,
 			);
-			path = SpotifyPlayer;
+			path = "Spotify Player";
 			sourceTree = "<group>";
 		};
 		658E844A2607CE4700DDACBA /* Player */ = {
 			isa = PBXGroup;
 			children = (
-				658E84492607CE2E00DDACBA /* SpotifyPlayer */,
+				658E84492607CE2E00DDACBA /* Spotify Player */,
 				65209EAB25DE2D5900A93346 /* Player.swift */,
 				658E844E2607CFF000DDACBA /* PlayerState.swift */,
 				652EB1AE2644EFFD0040F751 /* Track.swift */,
@@ -141,14 +155,14 @@
 			path = Player;
 			sourceTree = "<group>";
 		};
-		658E84522607D2EA00DDACBA /* SpotifyController */ = {
+		658E84522607D2EA00DDACBA /* Spotify Controller */ = {
 			isa = PBXGroup;
 			children = (
 				658E84532607D31100DDACBA /* Spotify.swift */,
 				658E84462607CE0B00DDACBA /* SpotifyController.swift */,
 				65F436C025FF9F160047B3FD /* SpotifyDelegate.swift */,
 			);
-			path = SpotifyController;
+			path = "Spotify Controller";
 			sourceTree = "<group>";
 		};
 		658E84602609A3EB00DDACBA /* SpuffleTests */ = {
@@ -206,7 +220,7 @@
 				DCAEADE6232B4E8D006FCC49 /* AppSecrets.swift */,
 				65BA947C23E9F4AF000E4E11 /* Log.swift */,
 				657C299124480FF100EE8066 /* Extensions.swift */,
-				6578550B263F2309000C2AE0 /* DataStorage.swift */,
+				656CA598264D860A00C24DB1 /* Data Store */,
 				65C63C4F26359E5500BFC201 /* Playlist */,
 				658E844A2607CE4700DDACBA /* Player */,
 			);
@@ -343,8 +357,9 @@
 			files = (
 				654D536023F662DA007E65A8 /* Alert.swift in Sources */,
 				658E844C2607CE8900DDACBA /* Playlist.swift in Sources */,
+				65CE85582652213700DD00B4 /* SPTPartialPlaylist+InputPlaylist.swift in Sources */,
 				DCC0B52E23139181007F76A6 /* SignInViewController.swift in Sources */,
-				6578550C263F2309000C2AE0 /* DataStorage.swift in Sources */,
+				6578550C263F2309000C2AE0 /* DataStore.swift in Sources */,
 				DCC0B52C23139181007F76A6 /* AppDelegate.swift in Sources */,
 				652EB1AB2640FCE60040F751 /* RandomPlaylistPicker.swift in Sources */,
 				65BA947D23E9F4AF000E4E11 /* Log.swift in Sources */,
@@ -356,6 +371,7 @@
 				658E84472607CE0B00DDACBA /* SpotifyController.swift in Sources */,
 				DCAEADE7232B4E8D006FCC49 /* AppSecrets.swift in Sources */,
 				65F436BE25FF9E8A0047B3FD /* SpotifyPlayer.swift in Sources */,
+				656CA5A0264D866500C24DB1 /* UserDefaults+DataStore.swift in Sources */,
 				658E844F2607CFF000DDACBA /* PlayerState.swift in Sources */,
 				65F436C125FF9F160047B3FD /* SpotifyDelegate.swift in Sources */,
 				657C299224480FF100EE8066 /* Extensions.swift in Sources */,

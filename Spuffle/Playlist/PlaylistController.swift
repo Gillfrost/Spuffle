@@ -4,18 +4,42 @@
 import Foundation
 import Combine
 
+protocol InputPlaylist {
+
+    var uri: URL { get }
+    var name: String { get }
+    var trackCount: UInt { get }
+}
+
 class PlaylistController {
 
-    var includedPlaylists: AnyPublisher<[Playlist], Never> {
-        filteredPlaylists(excluded: false)
+    var playlists: AnyPublisher<[Playlist], Never> {
+        playlistsSubject
+            .compactMap { $0 }
+            .eraseToAnyPublisher()
     }
 
-    var excludedPlaylists: AnyPublisher<[Playlist], Never> {
-        filteredPlaylists(excluded: true)
+    var includedPlaylists: AnyPublisher<[Playlist], Never> {
+        playlists
+            .map { playlists in
+                playlists
+                    .reduce(Just([Playlist]()).eraseToAnyPublisher()) { playlists, playlist in
+                        playlists
+                            .combineLatest(playlist.isExcluded)
+                            .map { playlists, isExcluded in
+                                isExcluded
+                                    ? playlists
+                                    : playlists + [playlist]
+                            }
+                            .eraseToAnyPublisher()
+                    }
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
     }
 
     private let dataStore: DataStore
-    private let playlists = CurrentValueSubject<[Playlist]?, Never>(nil)
+    private let playlistsSubject = CurrentValueSubject<[Playlist]?, Never>(nil)
     private let excludedIdsSubject = CurrentValueSubject<Set<String>, Never>([])
 
     private var excludedIds: Set<String> {
@@ -37,37 +61,28 @@ class PlaylistController {
         excludedIdsSubject.send(excludedIds)
     }
 
-    func load(_ playlists: [Playlist]) {
-        self.playlists.send(playlists)
-    }
+    func load(_ inputPlaylists: [InputPlaylist]) {
+        let playlists = inputPlaylists
+            .map { inputPlaylist -> Playlist in
 
-    func exclude(_ playlist: Playlist) {
-        excludedIds = excludedIds
-            .union([Self.id(for: playlist)])
+                let id = inputPlaylist.uri.absoluteString
 
-        excludedIdsSubject.send(excludedIds)
-    }
+                let isExcluded = excludedIdsSubject
+                    .map { $0.contains(id) }
+                    .eraseToAnyPublisher()
 
-    func include(_ playlist: Playlist) {
-        excludedIds = excludedIds
-            .subtracting([Self.id(for: playlist)])
-
-        excludedIdsSubject.send(excludedIds)
-    }
-
-    static func id(for playlist: Playlist) -> String {
-        playlist.name
-    }
-
-    private func filteredPlaylists(excluded: Bool) -> AnyPublisher<[Playlist], Never> {
-        playlists
-            .compactMap { $0 }
-            .combineLatest(excludedIdsSubject)
-            .map { playlists, excludedIds in
-                playlists.filter { playlist in
-                    excludedIds.contains(Self.id(for: playlist)) == excluded
-                }
+                return Playlist(uri: inputPlaylist.uri,
+                                name: inputPlaylist.name,
+                                trackCount: inputPlaylist.trackCount,
+                                isExcluded: isExcluded,
+                                toggleIsExcluded: { [weak self] in self?.toggleIsExcluded(id: id) })
             }
-            .eraseToAnyPublisher()
+
+        self.playlistsSubject.send(playlists)
+    }
+
+    private func toggleIsExcluded(id: String) {
+        excludedIds.formSymmetricDifference([id])
+        excludedIdsSubject.send(excludedIds)
     }
 }
