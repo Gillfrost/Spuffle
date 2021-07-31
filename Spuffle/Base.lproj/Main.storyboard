@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -31,7 +32,7 @@ account, and get ready to Spuffle!</string>
                                         <color key="textColor" white="0.75" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fOM-kB-tcB">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fOM-kB-tcB">
                                         <rect key="frame" x="72" y="391.5" width="250" height="55"/>
                                         <color key="backgroundColor" red="0.11372549019607843" green="0.72549019607843135" blue="0.32941176470588235" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
@@ -51,7 +52,7 @@ account, and get ready to Spuffle!</string>
                                             <action selector="signIn" destination="BYZ-38-t0r" eventType="touchUpInside" id="F6Z-CT-WAs"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZTe-gl-DKr">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZTe-gl-DKr">
                                         <rect key="frame" x="144" y="785" width="106" height="33"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <state key="normal" title="Privacy Policy">
@@ -75,6 +76,7 @@ account, and get ready to Spuffle!</string>
                                 </constraints>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="dpo-Gi-69L" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="HdC-WQ-x3X"/>
@@ -84,7 +86,6 @@ account, and get ready to Spuffle!</string>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="dpo-Gi-69L" secondAttribute="trailing" constant="10" id="qBL-4h-oGJ"/>
                             <constraint firstItem="gNF-FY-clg" firstAttribute="centerY" secondItem="fOM-kB-tcB" secondAttribute="centerY" id="x23-ab-y0I"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="contentView" destination="dpo-Gi-69L" id="l7Q-gI-tnc"/>
@@ -108,7 +109,7 @@ account, and get ready to Spuffle!</string>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LJ9-OJ-U1d">
                                         <rect key="frame" x="0.0" y="0.0" width="382" height="0.0"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="height" id="n7p-sN-6yM"/>
                                         </constraints>
@@ -119,7 +120,7 @@ account, and get ready to Spuffle!</string>
                                         <color key="textColor" red="1" green="0.35398955815202798" blue="0.23388574822052111" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vtf-OS-bND">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vtf-OS-bND">
                                         <rect key="frame" x="0.0" y="28.5" width="382" height="33"/>
                                         <color key="backgroundColor" red="1" green="0.26219446680000003" blue="0.18823529410000001" alpha="0.66235017126712337" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -156,7 +157,11 @@ account, and get ready to Spuffle!</string>
                                             <constraint firstAttribute="width" secondItem="fLV-89-A5I" secondAttribute="height" id="SGC-2U-6eu"/>
                                         </constraints>
                                     </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Q6-Ch-NDG">
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="QLk-a1-bLD">
+                                        <rect key="frame" x="188.5" y="360" width="37" height="37"/>
+                                        <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </activityIndicatorView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Q6-Ch-NDG">
                                         <rect key="frame" x="172" y="343.5" width="70" height="70"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="70" id="Hnf-AM-AUa"/>
@@ -170,8 +175,8 @@ account, and get ready to Spuffle!</string>
                                             <action selector="togglePlay" destination="Amm-qq-O7W" eventType="touchUpInside" id="6a0-DJ-713"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tjl-Np-7Xe">
-                                        <rect key="frame" x="380" y="351" width="34" height="55"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tjl-Np-7Xe">
+                                        <rect key="frame" x="384" y="351" width="30" height="55"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="36"/>
                                         <state key="normal" title="►|">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -181,9 +186,9 @@ account, and get ready to Spuffle!</string>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Bluetooth Headphones" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HEj-X4-bJm">
-                                        <rect key="frame" x="105.5" y="443.5" width="203.5" height="20.5"/>
+                                        <rect key="frame" x="106" y="443.5" width="202.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="textColor" systemColor="systemBlueColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -192,6 +197,7 @@ account, and get ready to Spuffle!</string>
                                     <constraint firstItem="5Q6-Ch-NDG" firstAttribute="centerY" secondItem="Dx3-Ek-WAh" secondAttribute="centerY" id="2Px-4y-VOr"/>
                                     <constraint firstAttribute="trailing" secondItem="9qo-V3-Hu3" secondAttribute="trailing" id="8bh-CA-fPd"/>
                                     <constraint firstItem="tjl-Np-7Xe" firstAttribute="centerY" secondItem="5Q6-Ch-NDG" secondAttribute="centerY" id="A4V-vN-PUD"/>
+                                    <constraint firstItem="QLk-a1-bLD" firstAttribute="centerY" secondItem="5Q6-Ch-NDG" secondAttribute="centerY" id="HhN-Bn-hMX"/>
                                     <constraint firstItem="5Q6-Ch-NDG" firstAttribute="centerX" secondItem="Dx3-Ek-WAh" secondAttribute="centerX" id="JP1-UX-Uy4"/>
                                     <constraint firstItem="HEj-X4-bJm" firstAttribute="centerY" secondItem="Dx3-Ek-WAh" secondAttribute="centerY" multiplier="1.2" id="KR1-Ng-JWW"/>
                                     <constraint firstItem="fLV-89-A5I" firstAttribute="top" secondItem="9qo-V3-Hu3" secondAttribute="bottom" constant="16" id="Kqw-qO-ZxC"/>
@@ -203,6 +209,7 @@ account, and get ready to Spuffle!</string>
                                     <constraint firstItem="tjl-Np-7Xe" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5Q6-Ch-NDG" secondAttribute="trailing" id="fjl-DO-vBS"/>
                                     <constraint firstItem="5Q6-Ch-NDG" firstAttribute="top" secondItem="fLV-89-A5I" secondAttribute="bottom" constant="8" id="gmY-SZ-CgQ"/>
                                     <constraint firstItem="HEj-X4-bJm" firstAttribute="centerX" secondItem="Dx3-Ek-WAh" secondAttribute="centerX" id="jv7-ZL-YWk"/>
+                                    <constraint firstItem="QLk-a1-bLD" firstAttribute="centerX" secondItem="5Q6-Ch-NDG" secondAttribute="centerX" id="ql9-Ze-237"/>
                                     <constraint firstAttribute="trailing" secondItem="tjl-Np-7Xe" secondAttribute="trailing" id="rlp-MN-ttV"/>
                                     <constraint firstItem="7g7-QA-qkv" firstAttribute="leading" secondItem="Dx3-Ek-WAh" secondAttribute="leading" id="us4-Ts-2o1"/>
                                 </constraints>
@@ -231,7 +238,7 @@ account, and get ready to Spuffle!</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Include:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Z7-MP-u0Z">
-                                                <rect key="frame" x="16" y="55.5" width="60.5" height="20.5"/>
+                                                <rect key="frame" x="16" y="55.5" width="60" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -242,7 +249,7 @@ account, and get ready to Spuffle!</string>
                                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c7i-U1-iH3">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c7i-U1-iH3">
                                                 <rect key="frame" x="0.0" y="0.0" width="394" height="80"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <connections>
@@ -328,6 +335,7 @@ account, and get ready to Spuffle!</string>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="1Yq-t0-fb6"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="iL7-oh-9Fc" firstAttribute="leading" secondItem="1Yq-t0-fb6" secondAttribute="leading" constant="16" id="158-wv-M58"/>
@@ -345,9 +353,9 @@ account, and get ready to Spuffle!</string>
                             <constraint firstItem="1Yq-t0-fb6" firstAttribute="leading" secondItem="Dx3-Ek-WAh" secondAttribute="leading" id="qYd-Um-TxM"/>
                             <constraint firstItem="Cop-IJ-HVq" firstAttribute="leading" secondItem="eAD-b6-LMO" secondAttribute="leading" id="yAr-Bw-Wz1"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="1Yq-t0-fb6"/>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="QLk-a1-bLD" id="QbY-nU-QTp"/>
                         <outlet property="artistLabel" destination="9qo-V3-Hu3" id="rGL-jb-b9a"/>
                         <outlet property="bluetoothLabel" destination="HEj-X4-bJm" id="gRj-3u-4T4"/>
                         <outlet property="coverImage" destination="fLV-89-A5I" id="Sh7-Fv-BYp"/>
@@ -377,5 +385,11 @@ account, and get ready to Spuffle!</string>
     </scenes>
     <resources>
         <image name="logo" width="390" height="390"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
     </resources>
 </document>

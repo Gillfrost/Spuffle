@@ -2,45 +2,17 @@
 //  Licensed under the MIT license
 
 import UIKit
-import AVFoundation
 import MediaPlayer
+import Combine
+import SwiftUI
 
 final class SpuffleViewController: UIViewController {
 
     private enum State {
-        case initial, loaded, playing, paused
-    }
-
-    private struct Playlist {
-        let uri: URL
-        let name: String
-        let trackCount: UInt
-
-        private (set) var excluded: Bool
-
-        init(uri: URL, name: String, trackCount: UInt, excluded: Bool) {
-            self.uri = uri
-            self.name = name
-            self.trackCount = trackCount
-            self.excluded = excluded
-        }
-
-        mutating func toggleExcluded() {
-            excluded.toggle()
-        }
-    }
-
-    private struct Metadata {
-        let track: String
-        let artist: String
-        let duration: TimeInterval
+        case initial, playing, paused
     }
 
     var session: SPTSession?
-
-    private var controller: SPTAudioStreamingController {
-        return .sharedInstance()
-    }
 
     private var state = State.initial {
         didSet {
@@ -48,10 +20,11 @@ final class SpuffleViewController: UIViewController {
         }
     }
 
-    private var metadata: Metadata? {
+    private var track: Track? {
         didSet {
-            trackLabel.text = metadata.map { "\"\($0.track)\"" }
-            artistLabel.text = metadata.map { $0.artist }
+            trackLabel.text = track.map { "\"\($0.name)\"" }
+            artistLabel.text = track.map { $0.artist }
+            artworkUrl = track?.artworkUrl
             setNowPlayingInfo()
         }
     }
@@ -61,9 +34,9 @@ final class SpuffleViewController: UIViewController {
             MPMediaItemArtwork(boundsSize: image.size) { _ in image }
         }.map { [MPMediaItemPropertyArtwork: $0] }
             ?? [:]
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = metadata.map {
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = track.map {
             [
-                MPMediaItemPropertyTitle: $0.track,
+                MPMediaItemPropertyTitle: $0.name,
                 MPMediaItemPropertyArtist: $0.artist,
                 MPMediaItemPropertyPlaybackDuration: NSNumber(value: $0.duration),
                 MPNowPlayingInfoPropertyPlaybackRate: 1.0
@@ -107,6 +80,7 @@ final class SpuffleViewController: UIViewController {
     @IBOutlet weak private var trackLabel: UILabel!
     @IBOutlet weak private var artistLabel: UILabel!
     @IBOutlet weak private var coverImage: UIImageView!
+    @IBOutlet weak private var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak private var playButton: UIButton!
     @IBOutlet weak private var skipButton: UIButton!
     @IBOutlet weak private var playlistHandle: UIView!
@@ -131,37 +105,7 @@ final class SpuffleViewController: UIViewController {
 
     private var playlists: [Playlist] = [] {
         didSet {
-            if state == .initial {
-                state = .loaded
-            }
-        }
-    }
-
-    private enum StorageKey: String {
-        case excludedPlaylistUris
-    }
-
-    private var excludedPlaylistUris: Set<String> {
-        get {
-            return UserDefaults.standard
-                .data(forKey: StorageKey.excludedPlaylistUris.rawValue)
-                .flatMap {
-                    try? JSONDecoder()
-                        .decode(Set<String>.self, from: $0)
-                }
-                ?? []
-        }
-        set {
-            do {
-                let data = try JSONEncoder()
-                    .encode(newValue)
-
-                UserDefaults.standard
-                    .set(data, forKey: StorageKey.excludedPlaylistUris.rawValue)
-
-            } catch {
-                Log.error(error)
-            }
+            tableView.reloadData()
         }
     }
 
@@ -169,8 +113,61 @@ final class SpuffleViewController: UIViewController {
         super.viewDidLoad()
 
         setupViews()
-        setupAudioController()
+
+        playlistController.playlists
+            .sink { [weak self] playlists in
+                self?.playlists = playlists
+            }
+            .store(in: &cancellables)
+
+        let player: Player? = session.map { session in
+            let token = Just(session.accessToken)
+                .eraseToAnyPublisher()
+
+            return SpotifyPlayer(spotify: Spotify(),
+                                 playlistController: playlistController,
+                                 token: token)
+        }
+
+        player?.state.sink { [weak self] state in
+            switch state {
+            case .loading:
+                self?.playButton.isHidden = true
+                self?.activityIndicator.isHidden = false
+            case .paused(play: let play):
+                self?.state = .paused
+                self?.activityIndicator.isHidden = true
+                self?.playButton.isHidden = false
+                self?.skipButton.isHidden = true
+                self?.playButton.setTitle("▷", for: .normal)
+                self?.didTogglePlay = play
+            case .playing(track: let track, pause: let pause, skip: let skip):
+                self?.state = .playing
+                self?.track = track
+                self?.activityIndicator.isHidden = true
+                self?.playButton.isHidden = false
+                self?.skipButton.isHidden = false
+                self?.playButton.setTitle("||", for: .normal)
+                self?.didTogglePlay = pause
+                self?.didSkip = skip
+            case .error(let error, retry: let retry):
+                self?.state = .paused
+                self?.activityIndicator.isHidden = true
+                self?.showError(error.localizedDescription, tryAgain: retry)
+            }
+        }
+        .store(in: &cancellables)
     }
+
+    private var didTogglePlay: (() -> Void)?
+    private var didSkip: (() -> Void)?
+
+    private var cancellables: Set<AnyCancellable> = []
+
+    private let playlistController = PlaylistController(
+        dataStore: UserDefaults.standard
+            .dataStore(forKey: "playlistController")
+    )
 
     private func setupViews() {
         errorLabel.isHidden = true
@@ -181,8 +178,11 @@ final class SpuffleViewController: UIViewController {
         setButtonsAndMetadataVisibility()
         setInclusionLabelVisibilities(playlistVisibility: .collapsed)
         clearMetadataLabels()
+        setupBluetoothLabel()
         setBluetoothLabel()
         tableView.tableFooterView = UIView()
+        tableView.register(TableViewCell.self,
+                           forCellReuseIdentifier: String(describing: TableViewCell.self))
         #if DEBUG
         addDebugButton()
         #endif
@@ -194,42 +194,16 @@ final class SpuffleViewController: UIViewController {
         animateLayout()
     }
 
-    deinit {
-        deactivateAudioSession()
-    }
-
-    private func activateAudioSession() {
-        try? AVAudioSession.sharedInstance().setActive(true, options: [])
-    }
-
-    private func deactivateAudioSession() {
-        try? AVAudioSession.sharedInstance().setActive(false, options: [])
-    }
-
     private func clearMetadataLabels() {
         trackLabel.text = nil
         artistLabel.text = nil
     }
 
-    private func setupAudioController() {
-        Log.info(#function)
-        controller.delegate = self
-        controller.playbackDelegate = self
-        do {
-            try controller.start(withClientId: AppSecrets.clientId)
-            try AVAudioSession.sharedInstance().setCategory(.playback)
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(handleAudioRouteChange),
-                                                   name: AVAudioSession.routeChangeNotification,
-                                                   object: nil)
-
-            loadPlaylists()
-        } catch {
-            Log.error(error)
-            showError("There was a problem setting up music playback. Please try again.") { [weak self] in
-                self?.setupAudioController()
-            }
-        }
+    private func setupBluetoothLabel() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleAudioRouteChange),
+                                               name: AVAudioSession.routeChangeNotification,
+                                               object: nil)
     }
 
     @objc
@@ -248,7 +222,7 @@ final class SpuffleViewController: UIViewController {
                     .outputs
                     .contains(where: self.isBluetooth) {
 
-                self.pause()
+                self.didTogglePlay?()
             }
         }
     }
@@ -274,16 +248,10 @@ final class SpuffleViewController: UIViewController {
     // MARK: - Playback
 
     @IBAction private func togglePlay() {
-        state == .playing ? pause() : play()
+        didTogglePlay?()
     }
 
     private func setButtonsAndMetadataVisibility() {
-        let title = state == .playing ? "||" : "▷"
-        playButton.setTitle(title, for: .normal)
-        playButton.isHidden = state == .initial
-
-        skipButton.isHidden = state != .playing
-
         let metadataAlpha: CGFloat = state == .playing ? 1 : 0.5
         trackLabel.alpha = metadataAlpha
         artistLabel.alpha = metadataAlpha
@@ -320,8 +288,10 @@ final class SpuffleViewController: UIViewController {
         guard state != .initial else {
             return
         }
-        playControlSubscription = commandCenter
-            .togglePlayPauseCommand
+        let togglePlayCommand = state == .paused
+            ? commandCenter.playCommand
+            : commandCenter.pauseCommand
+        playControlSubscription = togglePlayCommand
             .addTarget { [weak self] event in
                 Log.info("MPRemote: togglePlayPauseCommand")
                 guard let strongSelf = self else {
@@ -344,71 +314,8 @@ final class SpuffleViewController: UIViewController {
         }
     }
 
-    private var playingList: Playlist? = nil
-
     @IBAction private func play() {
-        Log.info(#function)
-        guard let playlist = randomPlaylist() else {
-            Log.error("Play called without playlists")
-            return
-        }
-        playingList = playlist
-
-        defer { state = .playing }
-        guard controller.loggedIn else {
-            login()
-            return
-        }
-        switch state {
-        case .initial:
-            Log.error("Play called when state was .initial")
-        case .playing, .loaded:
-            Log.info("Play Spotify URI")
-            controller.playSpotifyURI(playlist.uri.absoluteString,
-                                      startingWith: UInt.random(in: 0..<playlist.trackCount),
-                                      startingWithPosition: 0) { $0.map { Log.error($0) }}
-        case .paused:
-            controller.setIsPlaying(true) { $0.map { Log.error($0) }}
-        }
-    }
-
-    private func randomPlaylist() -> Playlist? {
-        let includedPlaylists = playlists.filter { !$0.excluded }
-
-        guard !includedPlaylists.isEmpty else {
-            return nil
-        }
-
-        func playlist(containing trackIndex: UInt, playlistIndex: Int = 0) -> Playlist {
-            let list = includedPlaylists[playlistIndex]
-
-            return trackIndex <= list.trackCount
-                ? list
-                : playlist(containing: trackIndex - list.trackCount,
-                           playlistIndex: playlistIndex + 1)
-        }
-
-        let includedTrackCount = includedPlaylists
-            .map { $0.trackCount }
-            .reduce(0, +)
-
-        let randomTrackIndex = UInt.random(in: 0...includedTrackCount)
-
-        return playlist(containing: randomTrackIndex)
-    }
-
-    private func login() {
-        guard let token = session?.accessToken else {
-            Log.error("Login called without session")
-            return
-        }
-        controller.login(withAccessToken: token)
-    }
-
-    private func pause() {
-        Log.info(#function)
-        controller.setIsPlaying(false) { $0.map { Log.error($0) }}
-        state = .paused
+        didSkip?()
     }
 
     // MARK: - Playlists
@@ -499,98 +406,6 @@ final class SpuffleViewController: UIViewController {
                        animations: animations)
     }
 
-    private func loadPlaylists() {
-        guard let token = session?.accessToken else {
-            Log.error("Load playlists called without token")
-            return
-        }
-        getPlaylists(token: token) { [weak self] result in
-            switch result {
-            case .success(let playlists):
-                self?.playlists = playlists
-                self?.tableView.reloadData()
-            case .failure(let error):
-                Log.error(error)
-                self?.showError("There was a problem loading your playlists. Please try again.") {
-                    self?.loadPlaylists()
-                }
-            }
-        }
-    }
-
-    private func getPlaylists(token: String, completion: @escaping (Result<[Playlist], Error>) -> Void) {
-        SPTUser.requestCurrentUser(withAccessToken: token) { [weak self] error, result in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            guard let user = result as? SPTUser else {
-                assertionFailure()
-                return
-            }
-            self?.getPlaylists(user: user.canonicalUserName, token: token, completion: completion)
-        }
-    }
-
-    private func getPlaylists(user: String,
-                              token: String,
-                              completion: @escaping (Result<[Playlist], Error>) -> Void) {
-
-        SPTPlaylistList.playlists(forUser: user,
-                                  withAccessToken: token) { [weak self] (error, result) in
-                                    self?.playlistCallback(error: error, result: result, token: token, completion: completion)
-        }
-    }
-
-    private func playlistCallback(error: Error?,
-                                  result: Any?,
-                                  token: String,
-                                  completion: @escaping (Result<[Playlist], Error>) -> Void) {
-        if let error = error {
-            completion(.failure(error))
-            return
-        }
-        guard let result = result else {
-            Log.error("Nil result in playlist callback")
-            assertionFailure()
-            return
-        }
-        guard let listPage = result as? SPTListPage else {
-            Log.error("Playlist callback result is not SPTListPage")
-            assertionFailure()
-            return
-        }
-
-        let excludedPlaylistUris = self.excludedPlaylistUris
-
-        let playlists = listPage.tracksForPlayback()?
-            .compactMap { $0 as? SPTPartialPlaylist }
-            .map {
-                Playlist(uri: $0.playableUri,
-                         name: $0.name,
-                         trackCount: $0.trackCount,
-                         excluded: excludedPlaylistUris.contains($0.playableUri.absoluteString))
-
-            } ?? []
-
-        if listPage.hasNextPage {
-            listPage.requestNextPage(withAccessToken: token) { [weak self] in
-                self?.playlistCallback(error: $0,
-                                       result: $1,
-                                       token: token,
-                                       completion: {
-                                        guard case .success(let morePlaylists) = $0 else {
-                                            completion($0)
-                                            return
-                                        }
-                                        completion(.success(playlists + morePlaylists))
-                })
-            }
-        } else {
-            completion(.success(playlists))
-        }
-    }
-
     // MARK: - Error Handling
 
     @objc private func didPressTryAgain() {
@@ -633,19 +448,29 @@ extension SpuffleViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "playlist_cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: TableViewCell.self),
+                                                 for: indexPath) as! TableViewCell
 
         configure(cell, for: indexPath)
 
         return cell
     }
 
-    private func configure(_ cell: UITableViewCell, for indexPath: IndexPath) {
+    private func configure(_ cell: TableViewCell, for indexPath: IndexPath) {
         let playlist = playlists[indexPath.row]
         cell.textLabel?.text = playlist.name
-        cell.textLabel?.font = .systemFont(ofSize: 17, weight: playlist.excluded ? .regular : .semibold)
-        cell.textLabel?.textAlignment = playlist.excluded ? .right : .left
+
+        cell.cancellable = playlist.isExcluded.print()
+            .sink { [weak cell] isExcluded in
+                cell?.textLabel?.font = .systemFont(ofSize: 17, weight: isExcluded ? .regular : .semibold)
+                cell?.textLabel?.textAlignment = isExcluded ? .right : .left
+            }
     }
+}
+
+final class TableViewCell: UITableViewCell {
+
+    var cancellable: AnyCancellable?
 }
 
 extension SpuffleViewController: UITableViewDelegate {
@@ -653,29 +478,33 @@ extension SpuffleViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
-        guard !isLastIncludedPlaylist(indexPath) else {
-            alertForLastIncludedPlaylist()
-            return
-        }
-
-        playlists[indexPath.row].toggleExcluded()
         let playlist = playlists[indexPath.row]
-        if playlist.excluded {
-            excludedPlaylistUris.insert(playlist.uri.absoluteString)
-        } else {
-            excludedPlaylistUris.remove(playlist.uri.absoluteString)
-        }
 
-        tableView.cellForRow(at: indexPath).map {
-            configure($0, for: indexPath)
-        }
+        isLastIncludedPlaylist(playlist)
+            .prefix(1)
+            .sink { [weak self] isLastIncludedPlaylist in
 
-        setInclusionLabelVisibilities(playlistVisibility: .expanded, animated: true)
+                isLastIncludedPlaylist
+                    ? self?.alertForLastIncludedPlaylist()
+                    : playlist.toggleIsExcluded()
+
+                self?.setInclusionLabelVisibilities(playlistVisibility: .expanded,
+                                                    animated: true)
+            }
+            .store(in: &cancellables)
     }
 
-    private func isLastIncludedPlaylist(_ indexPath: IndexPath) -> Bool {
-        return !playlists[indexPath.row].excluded
-            && playlists.filter { !$0.excluded }.count == 1
+    private func isLastIncludedPlaylist(_ playlist: Playlist) -> AnyPublisher<Bool, Never> {
+
+        let hasOnlyOneIncludedPlaylist = playlistController.includedPlaylists
+            .map { $0.count == 1 }
+
+        return playlist.isExcluded
+            .combineLatest(hasOnlyOneIncludedPlaylist)
+            .map { isExcluded, hasOnlyOneIncludedPlaylist in
+                !isExcluded && hasOnlyOneIncludedPlaylist
+            }
+            .eraseToAnyPublisher()
     }
 
     private func alertForLastIncludedPlaylist() {
@@ -686,74 +515,40 @@ extension SpuffleViewController: UITableViewDelegate {
     }
 
     private func setInclusionLabelVisibilities(playlistVisibility: PlaylistVisibility, animated: Bool = false) {
-        let isListCollapsed = playlistVisibility == .collapsed
-        let allPlaylistsAreIncluded = playlists.map { $0.excluded }.allSatisfy(!)
+        let isListCollapsed = Just(playlistVisibility == .collapsed)
+
+        let allPlaylistsAreIncluded = playlistController.playlists
+            .map { $0.count }
+            .combineLatest(playlistController
+                            .includedPlaylists
+                            .map { $0.count })
+            .map { total, included in
+                total == included
+            }
 
         let hide = isListCollapsed
-            || allPlaylistsAreIncluded
+            .combineLatest(allPlaylistsAreIncluded)
+            .map { $0 || $1 }
 
-        let set = { [includeLabel, excludeLabel] in
-            [includeLabel, excludeLabel].forEach {
-                $0?.alpha = hide ? 0 : 1
+        hide
+            .prefix(1)
+            .sink { [includeLabel, excludeLabel] hide in
+
+                let set = {
+                    [includeLabel, excludeLabel].forEach {
+                        $0?.alpha = hide ? 0 : 1
+                    }
+                }
+
+                if animated {
+                    UIView.animate(withDuration: 0.25,
+                                   delay: 0,
+                                   options: [.beginFromCurrentState],
+                                   animations: set)
+                } else {
+                    set()
+                }
             }
-        }
-
-        if animated {
-            UIView.animate(withDuration: 0.25,
-                           delay: 0,
-                           options: [.beginFromCurrentState],
-                           animations: set)
-        } else {
-            set()
-        }
-    }
-}
-
-extension SpuffleViewController: SPTAudioStreamingDelegate {
-
-    func audioStreamingDidLogin(_ audioStreaming: SPTAudioStreamingController) {
-        activateAudioSession()
-        if state == .playing {
-            play()
-        }
-    }
-
-    func audioStreamingDidLogout(_ audioStreaming: SPTAudioStreamingController) {
-        Log.info(#function)
-    }
-
-    func audioStreamingDidDisconnect(_ audioStreaming: SPTAudioStreamingController) {
-        Log.info(#function)
-        showError("Bad connection")
-    }
-
-    func audioStreamingDidReconnect(_ audioStreaming: SPTAudioStreamingController) {
-        Log.info(#function)
-        hideError()
-    }
-
-    func audioStreamingDidLosePermission(forPlayback audioStreaming: SPTAudioStreamingController) {
-        Log.info(#function)
-    }
-
-    func audioStreaming(_ audioStreaming: SPTAudioStreamingController, didReceiveError error: Error) {
-        Log.error(error)
-    }
-
-    func audioStreamingDidEncounterTemporaryConnectionError(_ audioStreaming: SPTAudioStreamingController) {
-        Log.info(#function)
-    }
-}
-
-extension SpuffleViewController: SPTAudioStreamingPlaybackDelegate {
-
-    func audioStreaming(_ audioStreaming: SPTAudioStreamingController, didChange metadata: SPTPlaybackMetadata) {
-        self.metadata = metadata.currentTrack
-            .map { ($0.name, $0.artistName, $0.duration) }
-            .map(Metadata.init)
-
-        artworkUrl = metadata.currentTrack?
-            .albumCoverArtURL
-            .flatMap(URL.init)
+            .store(in: &cancellables)
     }
 }
