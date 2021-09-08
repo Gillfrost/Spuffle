@@ -1,9 +1,5 @@
-//
-//  DataStorageMock.swift
-//  SpuffleTests
-//
-//  Created by André on 2021-05-02.
-//
+//  Copyright (c) 2021 André Gillfrost
+//  Licensed under the MIT license
 
 @testable import Spuffle
 
