@@ -8,17 +8,14 @@ import SwiftUI
 
 final class SpuffleViewController: UIViewController {
 
-    private enum State {
-        case initial, playing, paused
-    }
-
     var session: SPTSession?
 
-    private var state = State.initial {
-        didSet {
-            setButtonsAndMetadataVisibility()
-        }
-    }
+    private var viewModel: SpuffleViewModel?
+
+    private let playlistController = PlaylistController(
+        dataStore: UserDefaults.standard
+            .dataStore(forKey: "playlistController")
+    )
 
     private var track: Track? {
         didSet {
@@ -109,6 +106,8 @@ final class SpuffleViewController: UIViewController {
         }
     }
 
+    private var cancellables: Set<AnyCancellable> = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -120,54 +119,76 @@ final class SpuffleViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        let player: Player? = session.map { session in
-            let token = Just(session.accessToken)
-                .eraseToAnyPublisher()
-
-            return SpotifyPlayer(spotify: Spotify(),
-                                 playlistController: playlistController,
-                                 token: token)
+        guard let session = session else {
+            return
         }
 
-        player?.state.sink { [weak self] state in
-            switch state {
-            case .loading:
-                self?.playButton.isHidden = true
-                self?.activityIndicator.isHidden = false
-            case .paused(play: let play):
-                self?.state = .paused
-                self?.activityIndicator.isHidden = true
-                self?.playButton.isHidden = false
-                self?.skipButton.isHidden = true
-                self?.playButton.setTitle("▷", for: .normal)
-                self?.didTogglePlay = play
-            case .playing(track: let track, pause: let pause, skip: let skip):
-                self?.state = .playing
-                self?.track = track
-                self?.activityIndicator.isHidden = true
-                self?.playButton.isHidden = false
-                self?.skipButton.isHidden = false
-                self?.playButton.setTitle("||", for: .normal)
-                self?.didTogglePlay = pause
-                self?.didSkip = skip
-            case .error(let error, retry: let retry):
-                self?.state = .paused
-                self?.activityIndicator.isHidden = true
-                self?.showError(error.localizedDescription, tryAgain: retry)
+        let token = Just(session.accessToken)
+            .eraseToAnyPublisher()
+
+        let player = SpotifyPlayer(spotify: Spotify(),
+                                   playlistController: playlistController,
+                                   token: token)
+
+        let viewModel = SpuffleViewModel(state: player.state.eraseToAnyPublisher())
+
+        self.viewModel = viewModel
+
+        viewModel.$isLoading
+            .map(!)
+            .assign(to: \.isHidden, on: activityIndicator)
+            .store(in: &cancellables)
+
+        viewModel.$canTogglePlay
+            .map(!)
+            .assign(to: \.isHidden, on: playButton)
+            .store(in: &cancellables)
+
+        viewModel.$isPlaying
+            .map { $0 ? "||" : "▷" }
+            .sink { [weak self] title in
+                self?.playButton.setTitle(title, for: .normal)
             }
-        }
-        .store(in: &cancellables)
+            .store(in: &cancellables)
+
+        viewModel.$isPlaying
+            .sink { [weak self] isPlaying in
+                self?.setButtonsAndMetadataVisibility(isPlaying: isPlaying)
+            }
+            .store(in: &cancellables)
+
+        viewModel.$canTogglePlay
+            .combineLatest(viewModel.$isPlaying)
+            .sink { [weak self] canTogglePlay, isPlaying in
+                self?.removeControlSubscriptions()
+                guard canTogglePlay else {
+                    return
+                }
+                self?.setupControlSubscriptions(isPlaying: isPlaying)
+            }
+            .store(in: &cancellables)
+
+        viewModel.$canSkip
+            .map(!)
+            .assign(to: \.isHidden, on: skipButton)
+            .store(in: &cancellables)
+
+        viewModel.$track
+            .sink { [weak self] track in
+                self?.track = track
+            }
+            .store(in: &cancellables)
+
+        viewModel.$error
+            .sink { [weak self] error in
+                error.map { spuffleError in
+                    self?.showError(spuffleError.errorDescription,
+                                    tryAgain: spuffleError.retry)
+                }
+                ?? self?.hideError()
+            }
+            .store(in: &cancellables)
     }
-
-    private var didTogglePlay: (() -> Void)?
-    private var didSkip: (() -> Void)?
-
-    private var cancellables: Set<AnyCancellable> = []
-
-    private let playlistController = PlaylistController(
-        dataStore: UserDefaults.standard
-            .dataStore(forKey: "playlistController")
-    )
 
     private func setupViews() {
         errorLabel.isHidden = true
@@ -175,7 +196,7 @@ final class SpuffleViewController: UIViewController {
         tryAgainButton.addTarget(self,
                                  action: #selector(didPressTryAgain),
                                  for: .touchUpInside)
-        setButtonsAndMetadataVisibility()
+        setButtonsAndMetadataVisibility(isPlaying: false)
         setInclusionLabelVisibilities(playlistVisibility: .collapsed)
         clearMetadataLabels()
         setupBluetoothLabel()
@@ -217,12 +238,12 @@ final class SpuffleViewController: UIViewController {
                 return
             }
 
-            if self.state == .playing &&
+            if self.viewModel?.isPlaying == true &&
                 previousRoute
                     .outputs
                     .contains(where: self.isBluetooth) {
 
-                self.didTogglePlay?()
+                self.viewModel?.togglePlay?()
             }
         }
     }
@@ -248,35 +269,38 @@ final class SpuffleViewController: UIViewController {
     // MARK: - Playback
 
     @IBAction private func togglePlay() {
-        didTogglePlay?()
+        viewModel?.togglePlay?()
     }
 
-    private func setButtonsAndMetadataVisibility() {
-        let metadataAlpha: CGFloat = state == .playing ? 1 : 0.5
+    private func setButtonsAndMetadataVisibility(isPlaying: Bool) {
+        let metadataAlpha: CGFloat = isPlaying ? 1 : 0.5
         trackLabel.alpha = metadataAlpha
         artistLabel.alpha = metadataAlpha
         coverImage.alpha = metadataAlpha
 
-        let playlistHandleAlpha: CGFloat = state == .paused || playlistEditorIsNotCollapsed
+        let playlistHandleAlpha: CGFloat = !isPlaying || playlistEditorIsNotCollapsed
             ? 1
             : 0.5
         playlistHandle.alpha = playlistHandleAlpha
-
-        removeControlSubscriptions()
-        setupControlSubscriptions()
     }
 
     private var commandCenter: MPRemoteCommandCenter {
         return .shared()
     }
-    private var playControlSubscription: Any?
+    private var playOrPauseControlSubscription: Any?
+    private var togglePlayControlSubscription: Any?
     private var nextControlSubscription: Any?
 
     private func removeControlSubscriptions() {
-        playControlSubscription.map(
+        playOrPauseControlSubscription.map(
             commandCenter.togglePlayPauseCommand.removeTarget
         )
-        playControlSubscription = nil
+        playOrPauseControlSubscription = nil
+
+        togglePlayControlSubscription.map(
+            commandCenter.togglePlayPauseCommand.removeTarget
+        )
+        togglePlayControlSubscription = nil
 
         nextControlSubscription.map(
             commandCenter.nextTrackCommand.removeTarget
@@ -284,38 +308,49 @@ final class SpuffleViewController: UIViewController {
         nextControlSubscription = nil
     }
 
-    private func setupControlSubscriptions() {
-        guard state != .initial else {
-            return
-        }
-        let togglePlayCommand = state == .paused
-            ? commandCenter.playCommand
-            : commandCenter.pauseCommand
-        playControlSubscription = togglePlayCommand
-            .addTarget { [weak self] event in
-                Log.info("MPRemote: togglePlayPauseCommand")
-                guard let strongSelf = self else {
+    private func setupControlSubscriptions(isPlaying: Bool) {
+
+        let playOrPauseCommand = isPlaying
+            ? commandCenter.pauseCommand
+            : commandCenter.playCommand
+
+        playOrPauseControlSubscription = playOrPauseCommand
+            .addTarget { [weak viewModel] event in
+                Log.info("MPRemote: \(isPlaying ? "pauseCommand" : "playCommand")")
+                guard let togglePlay = viewModel?.togglePlay else {
                     return .commandFailed
                 }
-                strongSelf.togglePlay()
+                togglePlay()
                 return .success
         }
-        if state == .playing {
+
+        togglePlayControlSubscription = commandCenter
+            .togglePlayPauseCommand
+            .addTarget { [weak viewModel] event in
+                Log.info("MPRemote: togglePlayPauseCommand")
+                guard let togglePlay = viewModel?.togglePlay else {
+                    return .commandFailed
+                }
+                togglePlay()
+                return .success
+            }
+
+        if isPlaying {
             nextControlSubscription = commandCenter
                 .nextTrackCommand
-                .addTarget { [weak self] event in
+                .addTarget { [weak viewModel] event in
                     Log.info("MPRemote: nextTrackCommand")
-                    guard let strongSelf = self else {
+                    guard let skip = viewModel?.skip else {
                         return .commandFailed
                     }
-                    strongSelf.play()
+                    skip()
                     return .success
             }
         }
     }
 
-    @IBAction private func play() {
-        didSkip?()
+    @IBAction private func skip() {
+        viewModel?.skip?()
     }
 
     // MARK: - Playlists
@@ -379,7 +414,8 @@ final class SpuffleViewController: UIViewController {
 
         listHeightConstraint.constant = endHeight
         setInclusionLabelVisibilities(playlistVisibility: visibility)
-        playlistHandle.alpha = visibility == .expanded || state == .paused
+        let isPaused = viewModel?.canTogglePlay == true && viewModel?.isPlaying == false
+        playlistHandle.alpha = visibility == .expanded || isPaused
             ? 1
             : 0.5
         fadeViewsByListHeight()
