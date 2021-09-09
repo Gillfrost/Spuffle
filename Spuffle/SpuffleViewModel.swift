@@ -70,6 +70,7 @@ final class SpuffleViewModel: ObservableObject {
             }
             return track
         }
+        .removeDuplicates()
         .assign(to: &$track)
 
         state.map {

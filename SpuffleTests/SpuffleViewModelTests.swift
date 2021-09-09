@@ -90,13 +90,70 @@ final class SpuffleViewModelTests: XCTestCase {
     func test_canNotSkip_whenFailed() {
         XCTAssertFalse(viewModel(state: .error).canSkip)
     }
+
+    // MARK: Track
+
+    func test_trackIsNil_initially() {
+        XCTAssertNil(viewModel().track)
+    }
+
+    func test_trackIsSet_whenPlaying() {
+        let track = Track.unique()
+        let state = PassthroughSubject<PlayerState, Never>()
+        let viewModel = SpuffleViewModel(state: state.eraseToAnyPublisher())
+
+        state.send(PlayerState.playing(track: track,
+                                       pause: {},
+                                       skip: {}))
+
+        XCTAssertEqual(viewModel.track, track)
+    }
+
+    func test_trackIsNotChanged_whenPaused() {
+        let track = Track.unique()
+        let state = PassthroughSubject<PlayerState, Never>()
+        let viewModel = SpuffleViewModel(state: state.eraseToAnyPublisher())
+
+        state.send(PlayerState.playing(track: track,
+                                       pause: {},
+                                       skip: {}))
+
+        state.send(.paused(play: {}))
+
+        XCTAssertEqual(viewModel.track, track)
+    }
+
+    func test_trackIsNiled_whenLoading() {
+        let state = PassthroughSubject<PlayerState, Never>()
+        let viewModel = SpuffleViewModel(state: state.eraseToAnyPublisher())
+
+        state.send(PlayerState.playing(track: .unique(),
+                                       pause: {},
+                                       skip: {}))
+        state.send(.loading)
+
+        XCTAssertNil(viewModel.track)
+    }
+
+    func test_trackIsNiled_whenFailed() {
+        let state = PassthroughSubject<PlayerState, Never>()
+        let viewModel = SpuffleViewModel(state: state.eraseToAnyPublisher())
+
+        state.send(PlayerState.playing(track: .unique(),
+                                       pause: {},
+                                       skip: {}))
+        state.send(.error(SpotifyPlayerError.genericError,
+                          retry: {}))
+
+        XCTAssertNil(viewModel.track)
+    }
 }
 
 private extension SpuffleViewModelTests {
 
-    private enum State { case loading, paused, playing, error }
+    enum State { case loading, paused, playing, error }
 
-    private func viewModel(state: State...) -> SpuffleViewModel {
+    func viewModel(state: State...) -> SpuffleViewModel {
         let stateSubject = PassthroughSubject<PlayerState, Never>()
         let viewModel = SpuffleViewModel(state: stateSubject.eraseToAnyPublisher())
 
@@ -106,7 +163,7 @@ private extension SpuffleViewModelTests {
         return viewModel
     }
 
-    private func toPlayerState(state: State) -> PlayerState {
+    func toPlayerState(state: State) -> PlayerState {
         switch state {
         case .loading:
             return PlayerState.loading
@@ -124,5 +181,16 @@ private extension SpuffleViewModelTests {
             return PlayerState.error(SpotifyPlayerError.genericError,
                                      retry: {})
         }
+    }
+}
+
+private extension Track {
+
+    static func unique() -> Track {
+        .init(name: UUID().uuidString,
+              artist: .init(),
+              album: .init(),
+              duration: .init(),
+              artworkUrl: nil)
     }
 }
