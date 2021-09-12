@@ -14,6 +14,8 @@ final class SpuffleViewController: UIViewController {
 
     private var mediaInfoCenter: MediaInfoCenter?
 
+    private let bluetoothInfo = BluetoothInfo()
+
     private let playlistController = PlaylistController(
         dataStore: UserDefaults.standard
             .dataStore(forKey: "playlistController")
@@ -150,6 +152,19 @@ final class SpuffleViewController: UIViewController {
             .drop { $0 == nil }
             .assign(to: \.image, on: coverImage)
             .store(in: &cancellables)
+
+        bluetoothInfo.$bluetoothName
+            .assign(to: \.text, on: bluetoothLabel)
+            .store(in: &cancellables)
+
+        bluetoothInfo.$didChangeFromBluetooth
+            .filter { $0 }
+            .sink { [viewModel] _ in
+                if viewModel.isPlaying {
+                    viewModel.togglePlay?()
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func setupViews() {
@@ -160,8 +175,6 @@ final class SpuffleViewController: UIViewController {
                                  for: .touchUpInside)
         setButtonsAndMetadataVisibility(isPlaying: false)
         setInclusionLabelVisibilities(playlistVisibility: .collapsed)
-        setupBluetoothLabel()
-        setBluetoothLabel()
         tableView.tableFooterView = UIView()
         tableView.register(TableViewCell.self,
                            forCellReuseIdentifier: String(describing: TableViewCell.self))
@@ -174,52 +187,6 @@ final class SpuffleViewController: UIViewController {
         super.viewDidAppear(animated)
         setPlaylistVisibility(.collapsed)
         animateLayout()
-    }
-
-    private func setupBluetoothLabel() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(handleAudioRouteChange),
-                                               name: AVAudioSession.routeChangeNotification,
-                                               object: nil)
-    }
-
-    @objc
-    private func handleAudioRouteChange(notification: Notification) {
-        DispatchQueue.main.async {
-            Log.info(#function)
-
-            self.setBluetoothLabel()
-
-            guard let previousRoute = notification.userInfo?[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription else {
-                return
-            }
-
-            if self.viewModel?.isPlaying == true &&
-                previousRoute
-                    .outputs
-                    .contains(where: self.isBluetooth) {
-
-                self.viewModel?.togglePlay?()
-            }
-        }
-    }
-
-    private func isBluetooth(port: AVAudioSessionPortDescription) -> Bool {
-        return [AVAudioSession.Port.bluetoothA2DP,
-                .bluetoothHFP,
-                .bluetoothLE]
-            .contains(port.portType)
-    }
-
-    private func setBluetoothLabel() {
-        let name = AVAudioSession
-            .sharedInstance()
-            .currentRoute
-            .outputs
-            .first(where: isBluetooth)?
-            .portName
-
-        bluetoothLabel.text = name
     }
 
     // MARK: - Playback
