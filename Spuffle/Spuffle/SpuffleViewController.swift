@@ -12,64 +12,12 @@ final class SpuffleViewController: UIViewController {
 
     private var viewModel: SpuffleViewModel?
 
+    private var mediaInfoCenter: MediaInfoCenter?
+
     private let playlistController = PlaylistController(
         dataStore: UserDefaults.standard
             .dataStore(forKey: "playlistController")
     )
-
-    private var track: Track? {
-        didSet {
-            trackLabel.text = track.map { "\"\($0.name)\"" }
-            artistLabel.text = track.map { $0.artist }
-            artworkUrl = track?.artworkUrl
-            setNowPlayingInfo()
-        }
-    }
-
-    private func setNowPlayingInfo() {
-        let artworkProperty = artwork.map { image in
-            MPMediaItemArtwork(boundsSize: image.size) { _ in image }
-        }.map { [MPMediaItemPropertyArtwork: $0] }
-            ?? [:]
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = track.map {
-            [
-                MPMediaItemPropertyTitle: $0.name,
-                MPMediaItemPropertyArtist: $0.artist,
-                MPMediaItemPropertyPlaybackDuration: NSNumber(value: $0.duration),
-                MPNowPlayingInfoPropertyPlaybackRate: 1.0
-                ]
-                .merging(artworkProperty) { $1 }
-        }
-    }
-
-    private var artworkUrl: URL? {
-        didSet {
-            guard artworkUrl != oldValue else {
-                return
-            }
-            artwork = nil
-            guard let artworkUrl = artworkUrl else {
-                return
-            }
-            URLSession.shared
-                .dataTask(with: artworkUrl) { [weak self] (data, response, error) in
-                    DispatchQueue.main.async {
-                        self?.artwork = data.flatMap(UIImage.init)
-                    }
-            }.resume()
-        }
-    }
-
-    private var artwork: UIImage? {
-        didSet {
-            guard let artwork = artwork else {
-                coverImage.image = nil
-                return
-            }
-            coverImage.image = artwork
-            setNowPlayingInfo()
-        }
-    }
 
     @IBOutlet weak private var errorLabel: UILabel!
     @IBOutlet weak private var tryAgainButton: UIButton!
@@ -134,6 +82,10 @@ final class SpuffleViewController: UIViewController {
 
         self.viewModel = viewModel
 
+        let mediaInfoCenter = MediaInfoCenter()
+
+        self.mediaInfoCenter = mediaInfoCenter
+
         viewModel.$isLoading
             .map(!)
             .assign(to: \.isHidden, on: activityIndicator)
@@ -174,8 +126,9 @@ final class SpuffleViewController: UIViewController {
             .store(in: &cancellables)
 
         viewModel.$track
-            .sink { [weak self] track in
-                self?.track = track
+            .sink { [trackLabel, artistLabel] track in
+                trackLabel?.text = track.map { "\"\($0.name)\"" }
+                artistLabel?.text = track.map { $0.artist }
             }
             .store(in: &cancellables)
 
@@ -187,6 +140,15 @@ final class SpuffleViewController: UIViewController {
                 }
                 ?? self?.hideError()
             }
+            .store(in: &cancellables)
+
+        viewModel.$track
+            .assign(to: \.track, on: mediaInfoCenter)
+            .store(in: &cancellables)
+
+        mediaInfoCenter.$artwork
+            .drop { $0 == nil }
+            .assign(to: \.image, on: coverImage)
             .store(in: &cancellables)
     }
 
