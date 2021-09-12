@@ -160,7 +160,6 @@ final class SpuffleViewController: UIViewController {
                                  for: .touchUpInside)
         setButtonsAndMetadataVisibility(isPlaying: false)
         setInclusionLabelVisibilities(playlistVisibility: .collapsed)
-        clearMetadataLabels()
         setupBluetoothLabel()
         setBluetoothLabel()
         tableView.tableFooterView = UIView()
@@ -175,11 +174,6 @@ final class SpuffleViewController: UIViewController {
         super.viewDidAppear(animated)
         setPlaylistVisibility(.collapsed)
         animateLayout()
-    }
-
-    private func clearMetadataLabels() {
-        trackLabel.text = nil
-        artistLabel.text = nil
     }
 
     private func setupBluetoothLabel() {
