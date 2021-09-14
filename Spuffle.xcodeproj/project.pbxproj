@@ -13,6 +13,7 @@
 		652EB1AF2644EFFD0040F751 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652EB1AE2644EFFD0040F751 /* Track.swift */; };
 		653DA4E826EE45A4008855B5 /* MediaInfoCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653DA4E726EE45A4008855B5 /* MediaInfoCenter.swift */; };
 		653DA4EA26EE5733008855B5 /* BluetoothInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653DA4E926EE5733008855B5 /* BluetoothInfo.swift */; };
+		653DA4EC26F05483008855B5 /* RemoteCommandCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653DA4EB26F05483008855B5 /* RemoteCommandCenter.swift */; };
 		6549C7ED26CF5BCE00497DCB /* SpuffleViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549C7EC26CF5BCE00497DCB /* SpuffleViewModelTests.swift */; };
 		654D536023F662DA007E65A8 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654D535F23F662DA007E65A8 /* Alert.swift */; };
 		656CA5A0264D866500C24DB1 /* UserDefaults+DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656CA59F264D866500C24DB1 /* UserDefaults+DataStore.swift */; };
@@ -64,6 +65,7 @@
 		652EB1AE2644EFFD0040F751 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		653DA4E726EE45A4008855B5 /* MediaInfoCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaInfoCenter.swift; sourceTree = "<group>"; };
 		653DA4E926EE5733008855B5 /* BluetoothInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothInfo.swift; sourceTree = "<group>"; };
+		653DA4EB26F05483008855B5 /* RemoteCommandCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommandCenter.swift; sourceTree = "<group>"; };
 		6549C7EC26CF5BCE00497DCB /* SpuffleViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpuffleViewModelTests.swift; sourceTree = "<group>"; };
 		654D535F23F662DA007E65A8 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		656CA59F264D866500C24DB1 /* UserDefaults+DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+DataStore.swift"; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 				65789AFF26E941C9000E8E94 /* SpuffleViewModel.swift */,
 				653DA4E726EE45A4008855B5 /* MediaInfoCenter.swift */,
 				653DA4E926EE5733008855B5 /* BluetoothInfo.swift */,
+				653DA4EB26F05483008855B5 /* RemoteCommandCenter.swift */,
 			);
 			path = Spuffle;
 			sourceTree = "<group>";
@@ -383,6 +386,7 @@
 				658E844C2607CE8900DDACBA /* Playlist.swift in Sources */,
 				653DA4EA26EE5733008855B5 /* BluetoothInfo.swift in Sources */,
 				65CE85582652213700DD00B4 /* SPTPartialPlaylist+InputPlaylist.swift in Sources */,
+				653DA4EC26F05483008855B5 /* RemoteCommandCenter.swift in Sources */,
 				DCC0B52E23139181007F76A6 /* SignInViewController.swift in Sources */,
 				653DA4E826EE45A4008855B5 /* MediaInfoCenter.swift in Sources */,
 				65789B0226E9425A000E8E94 /* SpuffleError.swift in Sources */,

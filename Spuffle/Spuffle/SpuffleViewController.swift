@@ -2,9 +2,7 @@
 //  Licensed under the MIT license
 
 import UIKit
-import MediaPlayer
 import Combine
-import SwiftUI
 
 final class SpuffleViewController: UIViewController {
 
@@ -15,6 +13,8 @@ final class SpuffleViewController: UIViewController {
     private var mediaInfoCenter: MediaInfoCenter?
 
     private let bluetoothInfo = BluetoothInfo()
+
+    private var remoteCommandCenter: RemoteCommandCenter?
 
     private let playlistController = PlaylistController(
         dataStore: UserDefaults.standard
@@ -88,6 +88,25 @@ final class SpuffleViewController: UIViewController {
 
         self.mediaInfoCenter = mediaInfoCenter
 
+        remoteCommandCenter = RemoteCommandCenter(
+            isPlaying: viewModel.$isPlaying.eraseToAnyPublisher(),
+            togglePlay: {
+                if viewModel.canTogglePlay {
+                    viewModel.togglePlay?()
+                    return true
+                } else {
+                    return false
+                }
+            }, skip: {
+                if viewModel.canSkip {
+                    viewModel.skip?()
+                    return true
+                } else {
+                    return false
+                }
+            }
+        )
+
         viewModel.$isLoading
             .map(!)
             .assign(to: \.isHidden, on: activityIndicator)
@@ -108,17 +127,6 @@ final class SpuffleViewController: UIViewController {
         viewModel.$isPlaying
             .sink { [weak self] isPlaying in
                 self?.setButtonsAndMetadataVisibility(isPlaying: isPlaying)
-            }
-            .store(in: &cancellables)
-
-        viewModel.$canTogglePlay
-            .combineLatest(viewModel.$isPlaying)
-            .sink { [weak self] canTogglePlay, isPlaying in
-                self?.removeControlSubscriptions()
-                guard canTogglePlay else {
-                    return
-                }
-                self?.setupControlSubscriptions(isPlaying: isPlaying)
             }
             .store(in: &cancellables)
 
@@ -205,71 +213,6 @@ final class SpuffleViewController: UIViewController {
             ? 1
             : 0.5
         playlistHandle.alpha = playlistHandleAlpha
-    }
-
-    private var commandCenter: MPRemoteCommandCenter {
-        return .shared()
-    }
-    private var playOrPauseControlSubscription: Any?
-    private var togglePlayControlSubscription: Any?
-    private var nextControlSubscription: Any?
-
-    private func removeControlSubscriptions() {
-        playOrPauseControlSubscription.map(
-            commandCenter.togglePlayPauseCommand.removeTarget
-        )
-        playOrPauseControlSubscription = nil
-
-        togglePlayControlSubscription.map(
-            commandCenter.togglePlayPauseCommand.removeTarget
-        )
-        togglePlayControlSubscription = nil
-
-        nextControlSubscription.map(
-            commandCenter.nextTrackCommand.removeTarget
-        )
-        nextControlSubscription = nil
-    }
-
-    private func setupControlSubscriptions(isPlaying: Bool) {
-
-        let playOrPauseCommand = isPlaying
-            ? commandCenter.pauseCommand
-            : commandCenter.playCommand
-
-        playOrPauseControlSubscription = playOrPauseCommand
-            .addTarget { [weak viewModel] event in
-                Log.info("MPRemote: \(isPlaying ? "pauseCommand" : "playCommand")")
-                guard let togglePlay = viewModel?.togglePlay else {
-                    return .commandFailed
-                }
-                togglePlay()
-                return .success
-        }
-
-        togglePlayControlSubscription = commandCenter
-            .togglePlayPauseCommand
-            .addTarget { [weak viewModel] event in
-                Log.info("MPRemote: togglePlayPauseCommand")
-                guard let togglePlay = viewModel?.togglePlay else {
-                    return .commandFailed
-                }
-                togglePlay()
-                return .success
-            }
-
-        if isPlaying {
-            nextControlSubscription = commandCenter
-                .nextTrackCommand
-                .addTarget { [weak viewModel] event in
-                    Log.info("MPRemote: nextTrackCommand")
-                    guard let skip = viewModel?.skip else {
-                        return .commandFailed
-                    }
-                    skip()
-                    return .success
-            }
-        }
     }
 
     @IBAction private func skip() {
