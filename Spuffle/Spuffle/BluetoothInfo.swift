@@ -10,6 +10,7 @@ final class BluetoothInfo: ObservableObject {
     @Published private (set) var didChangeFromBluetooth = false
 
     init() {
+        setBluetoothName()
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(audioRouteDidChange),
                                                name: AVAudioSession.routeChangeNotification,
